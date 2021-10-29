@@ -6,9 +6,14 @@
       </div>
       <div class="nav-links">
         <ul>
-          <router-link class="link" to="#"><searchIcon /></router-link>
-          <router-link class="link" to="#"><profileIcon /></router-link>
-          <router-link class="link" to="#"><settingsIcon /></router-link>
+          <router-link class="link-icon" to="#"><searchIcon /></router-link>
+          <router-link class="link" to="#">Login/Register</router-link>
+          <router-link v-if="temp" class="link" to="#"
+            ><profileIcon
+          /></router-link>
+          <router-link v-if="temp" class="link" to="#"
+            ><settingsIcon
+          /></router-link>
         </ul>
       </div>
     </nav>
@@ -73,7 +78,7 @@ header {
       align-items: center;
 
       .header {
-        font-weight: 300;
+        font-weight: 900;
         font-size: 24px;
         color: #39c75a;
         text-decoration: none;
@@ -87,10 +92,16 @@ header {
       justify-content: flex-end;
 
       ul {
-        margin-right: 32px;
+        margin-right: 0;
 
         .link {
           margin-right: 32px;
+          color: #39c75a;
+        }
+
+        .link-icon {
+          right: 10rem;
+          position: absolute;
         }
 
         .link:last-child {
