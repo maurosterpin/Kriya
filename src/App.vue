@@ -2,7 +2,6 @@
   <div class="app-wrapper">
     <div class="app">
       <Navigation />
-      <ToDoList />
       <router-view />
     </div>
   </div>
@@ -10,12 +9,11 @@
 
 <script>
 import Navigation from "./components/Navigation.vue";
-import ToDoList from "./components/ToDoList.vue";
+
 export default {
   name: "app",
   components: {
     Navigation,
-    ToDoList,
   },
   data() {
     return {};
@@ -54,7 +52,6 @@ body {
 .link {
   cursor: pointer;
   text-decoration: none;
-  text-transform: uppercase;
   color: black;
   font-weight: 900;
 }

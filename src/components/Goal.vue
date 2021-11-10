@@ -1,40 +1,42 @@
 <template>
-  <div class="wrapper">
-    <header>Daily to-do</header>
-    <div v-if="!submited" class="inputField">
-      <input v-model="task" type="text" placeholder="Add a new daily task" />
-      <addIcon v-on:click="addTask" class="addIcon" />
+  <div>
+    <div v-if="submited">
+      <form>
+        <label for="goalDescription"><h3>Goal description</h3></label>
+        <input
+          class="inputField"
+          type="text"
+          id="goalDescription"
+          name="description"
+          placeholder="Description.."
+        />
+
+        <label for="goalReason"
+          ><h4>Why are you working towards this goal?</h4></label
+        >
+        <input
+          class="inputField"
+          type="text"
+          id="goalReason"
+          name="theWhy"
+          placeholder="This is a reminder.."
+        />
+
+        <span v-on:click="submitTasks" class="button">Submit</span>
+      </form>
     </div>
-    <ul class="todoList">
-      <li v-for="(item, index) in cTasks" :key="index">
-        {{ item }}
-        <cancelIcon
-          v-if="!submited"
-          v-on:click="removeTask(index)"
-          class="cancelIcon"
-        />
-        <checkMarkIcon
-          v-else-if="!cTasks[index].includes('✔️')"
-          v-on:click="checkTask(index)"
-          class="cancelIcon"
-        />
-      </li>
-    </ul>
-    <div class="footer">
-      <span class="pending"
-        >You have {{ this.tasks.length }} pending tasks</span
-      >
-      <span v-if="!submited" v-on:click="submitTasks" class="button"
-        >Submit</span
-      >
+    <div class="wrapper">
+      <header>
+        Start a new goal!<addIcon v-on:click="addGoal" class="addIcon" />
+      </header>
     </div>
   </div>
 </template>
 
 <script>
 import addIcon from "../assets/Icons/add-icon.svg";
-import cancelIcon from "../assets/Icons/cancel-Icon.svg";
-import checkMarkIcon from "../assets/Icons/check-mark.svg";
+//import cancelIcon from "../assets/Icons/cancel-Icon.svg";
+//import checkMarkIcon from "../assets/Icons/check-mark.svg";
 export default {
   data() {
     return {
@@ -43,41 +45,15 @@ export default {
       submited: false,
     };
   },
-  name: "ToDoList",
+  name: "Goal",
   methods: {
-    addTask() {
-      if (this.task != null) {
-        this.tasks.push(this.task);
-        console.log(this.tasks);
-        this.task = null;
-      } else {
-        console.log("The field is empty!");
-      }
-    },
-    removeTask(index) {
-      this.tasks.splice(index, 1);
-      console.log("Task removed!");
-    },
-    submitTasks() {
-      console.log("submitTasks");
-      this.submited = true;
-    },
-    checkTask(index) {
-      console.log("checkTask");
-      this.tasks[index] += " ✔️";
-
-      console.log(this.cTasks[index]);
+    addGoal() {
+      this.submited = !this.submited;
     },
   },
-  computed: {
-    cTasks() {
-      return this.tasks;
-    },
-  },
+  computed: {},
   components: {
     addIcon,
-    cancelIcon,
-    checkMarkIcon,
   },
 };
 </script>
@@ -87,6 +63,24 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+form {
+  margin: 55px auto;
+  max-width: 350px;
+
+  background-color: #141518;
+  padding: 45px;
+  border-radius: 8px;
+  color: #39c75a;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 4px 35px 0px black;
+}
+
+input {
+  margin: 25px;
+  border: none;
 }
 
 .wrapper {
@@ -104,14 +98,13 @@ export default {
 .wrapper header {
   font-weight: 900;
   font-size: 25px;
-  margin-bottom: 15px;
 }
 
-.wrapper .inputField {
+.inputField {
   display: flex;
   height: 35px;
   width: 100%;
-  margin: 10px 0;
+  margin: 50px 0;
   border-bottom: 2px solid #39c75a;
 }
 
@@ -125,6 +118,7 @@ export default {
   color: #39c75a;
   font-size: 15px;
   font-weight: 900;
+  border-bottom: 1px solid #39c75a;
 }
 
 *:focus {
@@ -149,7 +143,7 @@ export default {
   justify-content: space-between;
 }
 
-.footer .button {
+.button {
   border: none;
   outline: none;
   font-size: 16px;
@@ -158,9 +152,11 @@ export default {
   float: right;
   border: 2px solid #39c75a;
   border-radius: 5px;
+  width: 75px;
+  margin: auto;
 }
 
-.footer .button:hover {
+.button:hover {
   color: #141518;
   background-color: #39c75a;
   transition: 0.5s;
@@ -171,7 +167,7 @@ export default {
 }
 
 .addIcon {
-  margin-top: 3px;
+  margin-top: 7px;
   float: right;
   cursor: pointer;
   background-color: #141518;

@@ -2,19 +2,21 @@
   <header>
     <nav class="container">
       <div class="branding">
-        <router-link class="header" :to="{ Home }">Kriya</router-link>
+        <router-link class="header" to="/">Kriya</router-link>
       </div>
       <div class="nav-links">
-        <ul>
-          <router-link class="link-icon" to="#"><searchIcon /></router-link>
-          <router-link class="link" to="#">Login/Register</router-link>
-          <router-link v-if="temp" class="link" to="#"
-            ><profileIcon
-          /></router-link>
-          <router-link v-if="temp" class="link" to="#"
-            ><settingsIcon
-          /></router-link>
-        </ul>
+        <router-link class="link-icon" to="#"><searchIcon /></router-link>
+        <router-link v-if="!logged" class="link" to="/signup"
+          >Login/Register</router-link
+        >
+        <a href="#" v-if="logged" class="link" @click="logout">Sign Out</a>
+
+        <router-link v-if="temp" class="link" to="#"
+          ><profileIcon
+        /></router-link>
+        <router-link v-if="temp" class="link" to="#"
+          ><settingsIcon
+        /></router-link>
       </div>
     </nav>
   </header>
@@ -24,6 +26,8 @@
 import profileIcon from "../assets/Icons/user-icon.svg";
 import settingsIcon from "../assets/Icons/user-settings.svg";
 import searchIcon from "../assets/Icons/search-icon.svg";
+import store from "@/store";
+import firebase from "@/firebase";
 export default {
   name: "navigation",
   components: {
@@ -36,9 +40,11 @@ export default {
       mobile: null,
       mobileNav: null,
       windowWidth: null,
+      logged: store.logged,
     };
   },
   created() {
+    console.log(store.logged);
     window.addEventListenter("resize", this.checkScreen);
     this.checkScreen();
   },
@@ -52,6 +58,15 @@ export default {
       this.mobile = false;
       this.mobileNav = false;
       return;
+    },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          store.logged = false;
+          console.log(store.logged);
+        });
     },
 
     toggleMobileNav() {
@@ -88,25 +103,23 @@ header {
       position: relative;
       display: flex;
       flex: 1;
-      align-items: center;
+
       justify-content: flex-end;
+      align-items: center;
 
-      ul {
+      .link {
+        margin-right: 32px;
+        color: #39c75a;
+      }
+
+      .link-icon {
+        right: 8rem;
+        position: absolute;
+        margin-top: 6px;
+      }
+
+      .link:last-child {
         margin-right: 0;
-
-        .link {
-          margin-right: 32px;
-          color: #39c75a;
-        }
-
-        .link-icon {
-          right: 10rem;
-          position: absolute;
-        }
-
-        .link:last-child {
-          margin-right: 0;
-        }
       }
     }
   }
