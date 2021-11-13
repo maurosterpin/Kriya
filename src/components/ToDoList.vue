@@ -1,8 +1,11 @@
 <template>
   <div class="wrapper">
-    <header>Daily to-do</header>
+    <div class="header">
+      <header>Daily to-do</header>
+      <p v-if="submited">just now</p>
+    </div>
     <div v-if="!submited" class="inputField">
-      <input v-model="task" type="text" placeholder="Add a new daily task" />
+      <input v-model="task" type="text" placeholder="Task name..." />
       <addIcon v-on:click="addTask" class="addIcon" />
     </div>
     <ul class="todoList">
@@ -14,16 +17,13 @@
           class="cancelIcon"
         />
         <checkMarkIcon
-          v-else-if="!cTasks[index].includes('✔️')"
+          v-else
           v-on:click="checkTask(index)"
-          class="cancelIcon"
+          class="checkMarkIcon"
         />
       </li>
     </ul>
     <div class="footer">
-      <span class="pending"
-        >You have {{ this.tasks.length }} pending tasks</span
-      >
       <span v-if="!submited" v-on:click="submitTasks" class="button"
         >Submit</span
       >
@@ -63,10 +63,7 @@ export default {
       this.submited = true;
     },
     checkTask(index) {
-      console.log("checkTask");
-      this.tasks[index] += " ✔️";
-
-      console.log(this.cTasks[index]);
+      console.log("checkTask", index);
     },
   },
   computed: {
@@ -94,24 +91,28 @@ export default {
   max-width: 370px;
   width: 100%;
   background-color: #141518;
-  color: #39c75a;
-  padding: 25px;
-  border-radius: 7px;
-  font-weight: 900;
+  color: #fff;
+  padding: 35px;
+  border-radius: 35px;
   box-shadow: 4px 4px 35px 0px black;
 }
 
-.wrapper header {
-  font-weight: 900;
-  font-size: 25px;
+.wrapper .header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wrapper .header header {
+  font-size: 20px;
   margin-bottom: 15px;
 }
 
+.wrapper .header p {
+  margin-top: 5px;
+}
+
 .wrapper .inputField {
-  display: flex;
-  height: 35px;
   width: 100%;
-  margin: 10px 0;
   border-bottom: 2px solid #39c75a;
 }
 
@@ -122,9 +123,8 @@ export default {
   background-color: #141518;
   padding: 5px 10px;
   caret-color: #39c75a;
-  color: #39c75a;
-  font-size: 15px;
-  font-weight: 900;
+  color: #fff !important;
+  font-size: 14px;
 }
 
 *:focus {
@@ -132,38 +132,42 @@ export default {
 }
 
 ::placeholder {
-  color: #39c75a;
-  font-size: 15px;
-  font-weight: 900;
+  color: #fff !important;
+  font-size: 14px;
 }
 
 .todoList li {
   margin-top: 30px;
-  margin-left: 18px;
+  list-style: none;
+}
+
+.todoList li:before {
+  content: "·";
+  font-size: 65px;
+  vertical-align: left;
+  line-height: 5px;
+  float: left;
+  margin-right: 10px;
+  margin-top: 4px;
 }
 
 .wrapper .footer {
   display: flex;
   width: 100%;
   margin-top: 20px;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .footer .button {
-  border: none;
+  position: absolute;
   outline: none;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  padding: 4px 10px;
+  padding: 9px 17px;
   float: right;
-  border: 2px solid #39c75a;
-  border-radius: 5px;
-}
-
-.footer .button:hover {
-  color: #141518;
+  margin-top: 13px;
   background-color: #39c75a;
-  transition: 0.5s;
+  border-radius: 35px;
 }
 
 .footer .pending {
@@ -171,25 +175,25 @@ export default {
 }
 
 .addIcon {
-  margin-top: 3px;
+  margin-top: 12px;
+  margin-right: 5px;
   float: right;
   cursor: pointer;
+  fill: #fff;
   background-color: #141518;
-  border-radius: 50%;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.addIcon:hover {
-  background-color: #39c75a;
-
-  transition: 0.5s;
-  fill: black;
+  width: 10px;
 }
 
 .cancelIcon {
+  margin-left: 20px;
+  margin-top: 7px;
+  cursor: pointer;
+  width: 8px;
+}
+
+.checkMarkIcon {
   float: right;
-  margin-right: 8px;
+  margin-right: 6px;
   cursor: pointer;
 }
 </style>

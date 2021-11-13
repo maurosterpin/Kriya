@@ -1,23 +1,16 @@
 <template>
-  <div class="app-wrapper">
-    <div class="app">
-      <Goal />
-      <ToDoList />
+  <div class="home-wrapper">
+    <div class="home">
       <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import ToDoList from "../components/ToDoList.vue";
-import Goal from "../components/Goal.vue";
 import store from "@/store";
 export default {
   name: "Home",
-  components: {
-    ToDoList,
-    Goal,
-  },
+  components: {},
   data() {
     return {};
   },
@@ -30,4 +23,8 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.home {
+  background-color: #39c75a;
+}
+</style>

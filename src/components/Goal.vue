@@ -1,33 +1,29 @@
 <template>
   <div>
-    <div v-if="submited">
+    <div v-if="!submited">
       <form>
-        <label for="goalDescription"><h3>Goal description</h3></label>
         <input
           class="inputField"
           type="text"
           id="goalDescription"
           name="description"
-          placeholder="Description.."
+          placeholder="Goal name..."
         />
 
-        <label for="goalReason"
-          ><h4>Why are you working towards this goal?</h4></label
-        >
         <input
           class="inputField"
           type="text"
           id="goalReason"
           name="theWhy"
-          placeholder="This is a reminder.."
+          placeholder="The why..."
         />
 
-        <span v-on:click="submitTasks" class="button">Submit</span>
+        <span v-on:click="submitTasks" class="button"><p>Submit</p></span>
       </form>
     </div>
     <div class="wrapper">
       <header>
-        Start a new goal!<addIcon v-on:click="addGoal" class="addIcon" />
+        Add new goal<addIcon v-on:click="addGoal" class="addIcon" />
       </header>
     </div>
   </div>
@@ -68,11 +64,9 @@ export default {
 form {
   margin: 55px auto;
   max-width: 350px;
-
-  background-color: #141518;
+  background-color: #39c75a;
   padding: 45px;
-  border-radius: 8px;
-  color: #39c75a;
+  border-radius: 35px;
   display: flex;
   flex-direction: column;
   box-shadow: 4px 4px 35px 0px black;
@@ -87,38 +81,39 @@ input {
   margin: 120px auto;
   max-width: 370px;
   width: 100%;
-  background-color: #141518;
-  color: #39c75a;
-  padding: 25px;
-  border-radius: 7px;
-  font-weight: 900;
+  background-color: #39c75a;
+  color: #fff;
+  padding: 20px;
+  border-radius: 35px;
   box-shadow: 4px 4px 35px 0px black;
 }
 
 .wrapper header {
-  font-weight: 900;
-  font-size: 25px;
+  font-size: 20px;
+  margin-left: 15px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .inputField {
   display: flex;
   height: 35px;
   width: 100%;
-  margin: 50px 0;
+  margin: 20px 0;
   border-bottom: 2px solid #39c75a;
+  padding: 25px;
+  border-radius: 20px;
 }
 
 .inputField input {
   width: 90%;
   height: 100%;
-  border: none;
-  background-color: #141518;
   padding: 5px 10px;
   caret-color: #39c75a;
-  color: #39c75a;
+  color: #fff !important;
   font-size: 15px;
   font-weight: 900;
-  border-bottom: 1px solid #39c75a;
+  border-bottom: 1px solid #39c75a !important;
 }
 
 *:focus {
@@ -126,9 +121,8 @@ input {
 }
 
 ::placeholder {
-  color: #39c75a;
-  font-size: 15px;
-  font-weight: 900;
+  color: #fff !important;
+  font-size: 14px;
 }
 
 .todoList li {
@@ -136,30 +130,16 @@ input {
   margin-left: 18px;
 }
 
-.wrapper .footer {
-  display: flex;
-  width: 100%;
-  margin-top: 20px;
-  justify-content: space-between;
-}
-
 .button {
-  border: none;
-  outline: none;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  padding: 4px 10px;
-  float: right;
-  border: 2px solid #39c75a;
-  border-radius: 5px;
-  width: 75px;
+  padding: 9px 17px;
+  border-radius: 25px;
   margin: auto;
-}
-
-.button:hover {
-  color: #141518;
-  background-color: #39c75a;
-  transition: 0.5s;
+  color: #fff;
+  background-color: #141518;
+  display: flex;
+  justify-content: center;
 }
 
 .footer .pending {
@@ -167,20 +147,11 @@ input {
 }
 
 .addIcon {
-  margin-top: 7px;
-  float: right;
+  margin-top: 3px;
+  margin-right: 5px;
   cursor: pointer;
-  background-color: #141518;
-  border-radius: 50%;
-  opacity: 1;
   pointer-events: auto;
-}
-
-.addIcon:hover {
-  background-color: #39c75a;
-
-  transition: 0.5s;
-  fill: black;
+  width: 10px;
 }
 
 .cancelIcon {

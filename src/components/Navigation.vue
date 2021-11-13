@@ -1,14 +1,16 @@
 <template>
   <header>
     <nav class="container">
+      <logo class="logo" />
       <div class="branding">
         <router-link class="header" to="/">Kriya</router-link>
       </div>
       <div class="nav-links">
         <router-link class="link-icon" to="#"><searchIcon /></router-link>
-        <router-link v-if="!logged" class="link" to="/signup"
-          >Login/Register</router-link
-        >
+        <router-link class="link-icon" to="/profile"
+          ><profileIcon
+        /></router-link>
+
         <a href="#" v-if="logged" class="link" @click="logout">Sign Out</a>
 
         <router-link v-if="temp" class="link" to="#"
@@ -23,6 +25,7 @@
 </template>
 
 <script>
+import logo from "../assets/Icons/logo.svg";
 import profileIcon from "../assets/Icons/user-icon.svg";
 import settingsIcon from "../assets/Icons/user-settings.svg";
 import searchIcon from "../assets/Icons/search-icon.svg";
@@ -34,6 +37,7 @@ export default {
     profileIcon,
     settingsIcon,
     searchIcon,
+    logo,
   },
   data() {
     return {
@@ -77,6 +81,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  width: 25px;
+  margin-right: 8px;
+}
+
 header {
   background-color: #141518;
   padding: 0 25px;
@@ -86,17 +95,18 @@ header {
 
   nav {
     display: flex;
-    padding: 25px 0;
+    padding: 20px 0;
 
     .branding {
       display: flex;
       align-items: center;
 
       .header {
-        font-weight: 900;
-        font-size: 24px;
-        color: #39c75a;
+        font-weight: 100;
+        font-size: 23.5px;
+        color: #fff;
         text-decoration: none;
+        margin-top: 3px;
       }
     }
     .nav-links {
@@ -109,13 +119,13 @@ header {
 
       .link {
         margin-right: 32px;
-        color: #39c75a;
+        color: #fff;
       }
 
       .link-icon {
         right: 8rem;
-        position: absolute;
         margin-top: 6px;
+        margin-left: 15px;
       }
 
       .link:last-child {
