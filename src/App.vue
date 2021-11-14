@@ -9,6 +9,18 @@
 
 <script>
 import Navigation from "./components/Navigation.vue";
+import firebase from "@/firebase";
+import store from "@/store";
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log(user.email);
+    store.logged = true;
+  } else {
+    console.log("No user");
+    store.logged = false;
+  }
+});
 
 export default {
   name: "app",
@@ -16,7 +28,9 @@ export default {
     Navigation,
   },
   data() {
-    return {};
+    return {
+      store,
+    };
   },
   created() {},
   mounted() {},

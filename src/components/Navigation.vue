@@ -11,14 +11,9 @@
           ><profileIcon
         /></router-link>
 
-        <a href="#" v-if="logged" class="link" @click="logout">Sign Out</a>
-
-        <router-link v-if="temp" class="link" to="#"
-          ><profileIcon
-        /></router-link>
-        <router-link v-if="temp" class="link" to="#"
-          ><settingsIcon
-        /></router-link>
+        <a href="#" v-if="store.logged" class="link" @click="logout"
+          >Sign Out</a
+        >
       </div>
     </nav>
   </header>
@@ -27,7 +22,6 @@
 <script>
 import logo from "../assets/Icons/logo.svg";
 import profileIcon from "../assets/Icons/user-icon.svg";
-import settingsIcon from "../assets/Icons/user-settings.svg";
 import searchIcon from "../assets/Icons/search-icon.svg";
 import store from "@/store";
 import firebase from "@/firebase";
@@ -35,7 +29,7 @@ export default {
   name: "navigation",
   components: {
     profileIcon,
-    settingsIcon,
+
     searchIcon,
     logo,
   },
@@ -44,14 +38,13 @@ export default {
       mobile: null,
       mobileNav: null,
       windowWidth: null,
-      logged: store.logged,
+      store,
     };
   },
   created() {
-    console.log(store.logged);
-    window.addEventListenter("resize", this.checkScreen);
     this.checkScreen();
   },
+  mounted() {},
   methods: {
     checkScreen() {
       this.windowWidth = window.innerWidth;
@@ -67,16 +60,14 @@ export default {
       firebase
         .auth()
         .signOut()
-        .then(() => {
-          store.logged = false;
-          console.log(store.logged);
-        });
+        .then(() => {});
     },
 
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
     },
   },
+  computed: {},
 };
 </script>
 

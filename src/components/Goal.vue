@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!submited">
+    <div v-if="submited">
       <form>
         <input
           class="inputField"
@@ -78,7 +78,7 @@ input {
 }
 
 .wrapper {
-  margin: 120px auto;
+  margin: 0 auto 50px;
   max-width: 370px;
   width: 100%;
   background-color: #39c75a;
