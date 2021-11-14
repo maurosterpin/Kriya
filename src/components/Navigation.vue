@@ -13,10 +13,6 @@
         <router-link v-else class="link-icon" to="/login"
           ><profileIcon
         /></router-link>
-
-        <a href="#" v-if="store.logged" class="link" @click="logout"
-          >Sign Out</a
-        >
       </div>
     </nav>
   </header>

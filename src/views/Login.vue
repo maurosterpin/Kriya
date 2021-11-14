@@ -42,13 +42,14 @@
     </div>
     <div class="bg-white p-4 mx-auto mt-3 round" style="width:350px">
       Don't have an account?
-      <a href="signup" class="link2" style="font-weight:600">Sign up</a>
+      <router-link to="/signup" class="link2" style="font-weight:600"
+        >Sign up</router-link
+      >
     </div>
   </div>
 </template>
 <script>
 import firebase from "@/firebase";
-import store from "@/store";
 import logo from "../assets/Icons/logo.svg";
 
 let enable = false;
@@ -61,6 +62,13 @@ export default {
       username: "",
       password: "",
     };
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$router.replace({ name: "Home" });
+      }
+    });
   },
   components: {
     logo,
@@ -75,7 +83,6 @@ export default {
         .signInWithEmailAndPassword(this.username, this.password)
         .then((result) => {
           console.log("Uspjesna prijava", result);
-          store.logged = true;
           this.$router.replace({ name: "Home" });
         })
         .catch(function(error) {

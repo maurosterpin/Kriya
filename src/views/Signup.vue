@@ -61,7 +61,9 @@
     </div>
     <div class="bg-white p-4 mx-auto mt-3 round" style="width:350px">
       Have an account?
-      <a href="login" class="link2" style="font-weight:600">Log in</a>
+      <router-link to="/login" class="link2" style="font-weight:600"
+        >Log in</router-link
+      >
     </div>
   </div>
 </template>
@@ -93,8 +95,8 @@ export default {
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user && store.logged == true) {
-        router.push({ name: "Home" });
+      if (user) {
+        router.replace({ name: "Home" });
       }
     });
   },
@@ -106,7 +108,6 @@ export default {
           .createUserWithEmailAndPassword(this.email, this.password)
           .then(function() {
             console.log("Uspjesna registracija");
-            store.logged = true;
           })
           .catch(function(error) {
             console.log("Doslo je do greske", error);

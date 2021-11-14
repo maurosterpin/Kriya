@@ -17,11 +17,17 @@ const routes = [
     path: "/signup",
     name: "Signup",
     component: Signup,
+    meta: {
+      needsNoUser: true,
+    },
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
+    meta: {
+      needsNoUser: true,
+    },
   },
   {
     path: "/profile",
@@ -35,5 +41,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+// router.beforeEach((to, from, next) => {
+//   console.log(from.name, " -> ", to.name);
+//   const noUser = store.logged != null;
+//   if (noUser && to.meta.needsNoUser) {
+//     console.error("NE");
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
