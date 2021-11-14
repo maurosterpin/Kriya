@@ -36,25 +36,27 @@
     <div class="profile">
       <div class="username"><avatar class="avatar" />Artemis</div>
       <Goal />
-      <ToDoList />
+      <h6 class="illustrationTitle">There is nothing here</h6>
+      <illustration class="illustration" />
+
       <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import ToDoList from "../components/ToDoList.vue";
 import Goal from "../components/Goal.vue";
 import store from "@/store";
 import avatar from "../assets/Icons/avatar.svg";
 import addIcon from "../assets/Icons/add-icon.svg";
+import illustration from "../assets/Icons/illustration-empty.svg";
 export default {
   name: "Home",
   components: {
-    ToDoList,
     Goal,
     avatar,
     addIcon,
+    illustration,
   },
   data() {
     return {
@@ -89,8 +91,17 @@ export default {
 .profile {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   background-color: #141518;
+}
+
+.illustration {
+  margin: auto;
+  margin-bottom: 100px;
+}
+
+.illustrationTitle {
+  margin: auto;
+  color: #fff;
 }
 
 .quote-wrapper {
@@ -186,11 +197,12 @@ export default {
 .username {
   display: flex;
   margin: auto;
-  width: 50%;
+  width: 21%;
   color: #fff;
   margin-top: 45px;
   font-size: 15px;
   align-items: center;
+  margin-bottom: 35px;
 }
 
 .username .avatar {

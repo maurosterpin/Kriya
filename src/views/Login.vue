@@ -3,6 +3,10 @@
     <div class="container">
       <div>
         <div class="bg-white p-5 mx-auto round" style="width:350px">
+          <div class="formHeader">
+            <logo class="logo" />
+            <h1>Kriya</h1>
+          </div>
           <form>
             <div class="form-group">
               <input
@@ -45,6 +49,7 @@
 <script>
 import firebase from "@/firebase";
 import store from "@/store";
+import logo from "../assets/Icons/logo.svg";
 
 let enable = false;
 
@@ -56,6 +61,9 @@ export default {
       username: "",
       password: "",
     };
+  },
+  components: {
+    logo,
   },
 
   methods: {
@@ -87,6 +95,7 @@ export default {
 body {
   font-size: 14px;
 }
+
 input[type="email"],
 input[type="password"],
 input,

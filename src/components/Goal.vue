@@ -1,25 +1,10 @@
 <template>
   <div>
-    <div v-if="submited">
-      <form>
-        <input
-          class="inputField"
-          type="text"
-          id="goalDescription"
-          name="description"
-          placeholder="Goal name..."
-        />
-
-        <input
-          class="inputField"
-          type="text"
-          id="goalReason"
-          name="theWhy"
-          placeholder="The why..."
-        />
-
-        <span v-on:click="submitTasks" class="button"><p>Submit</p></span>
-      </form>
+    <div v-if="submited" class="goal">
+      <h5>Become full-stack dev</h5>
+      <ToDoList />
+      <ToDoList />
+      <ToDoList />
     </div>
     <div class="wrapper">
       <header>
@@ -31,8 +16,7 @@
 
 <script>
 import addIcon from "../assets/Icons/add-icon.svg";
-//import cancelIcon from "../assets/Icons/cancel-Icon.svg";
-//import checkMarkIcon from "../assets/Icons/check-mark.svg";
+import ToDoList from "../components/ToDoList.vue";
 export default {
   data() {
     return {
@@ -50,6 +34,7 @@ export default {
   computed: {},
   components: {
     addIcon,
+    ToDoList,
   },
 };
 </script>
@@ -61,15 +46,23 @@ export default {
   box-sizing: border-box;
 }
 
-form {
-  margin: 55px auto;
-  max-width: 350px;
+.goal {
+  min-height: 100px;
   background-color: #39c75a;
-  padding: 45px;
-  border-radius: 35px;
+  max-width: 400px;
+  border-radius: 25px;
+  margin: auto;
+  color: #fff;
+  padding: 25px;
   display: flex;
+  justify-content: center;
+  margin-bottom: 45px;
   flex-direction: column;
-  box-shadow: 4px 4px 35px 0px black;
+  align-items: center;
+}
+
+.goal h5 {
+  margin-bottom: 25px;
 }
 
 input {
@@ -85,7 +78,7 @@ input {
   color: #fff;
   padding: 20px;
   border-radius: 35px;
-  box-shadow: 4px 4px 35px 0px black;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .wrapper header {

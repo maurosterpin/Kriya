@@ -3,6 +3,10 @@
     <div class="container">
       <div>
         <div class="bg-white p-5 mx-auto round" style="width:350px;">
+          <div class="formHeader">
+            <logo class="logo" />
+            <h1>Kriya</h1>
+          </div>
           <form autocomplete="off">
             <div class="form-group">
               <input
@@ -63,6 +67,7 @@
 </template>
 
 <script>
+import logo from "../assets/Icons/logo.svg";
 import firebase from "@/firebase";
 import store from "@/store";
 import router from "@/router";
@@ -82,6 +87,9 @@ export default {
         "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg",
       posts: [],
     };
+  },
+  components: {
+    logo,
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -126,7 +134,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
 
 body {
-  font-size: 14px;
+  background-color: #141518;
 }
 input[type="text"],
 input[type="email"],
@@ -139,20 +147,45 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  font-size: 12px;
-  color: #39c75a !important;
+  font-size: 15px !important;
+  color: #fff !important;
   background-color: #141518 !important;
+}
+
+input {
+  margin-bottom: 40px;
+  padding: 2px 5px !important;
 }
 
 .round {
   border-radius: 7px;
   background-color: #141518 !important;
-  color: #39c75a !important;
+  color: #fff !important;
+}
+
+.formHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.formHeader h1 {
+  font-size: 55px;
+  font-weight: 100;
+  margin-left: 15px;
+  margin-top: 12px;
+}
+
+.logo {
+  width: 55px;
 }
 
 .link2 {
-  color: #39c75a !important;
+  color: #fff !important;
   text-decoration: underline !important;
+  text-decoration-color: #39c75a;
 }
 
 .bg {
@@ -160,24 +193,17 @@ select:-webkit-autofill {
   border: none;
   color: #141518;
   border-radius: 0;
-  border-bottom: 2px solid #39c75a;
+  border-bottom: 1px solid #39c75a;
   font-family: "Nunito", sans-serif !important;
 }
 
 .btn {
-  background-color: #141518;
-  border: 2px solid #39c75a;
-  color: #39c75a;
+  background-color: #39c75a;
+  border-radius: 50px;
+  color: #fff;
   margin-top: 10px;
   font-size: 15px !important;
   font-weight: 600 !important;
   font-family: "Nunito", sans-serif !important;
-}
-
-.btn:hover {
-  background-color: #39c75a;
-  border: 2px solid #39c75a;
-  color: #141518;
-  margin-top: 10px;
 }
 </style>

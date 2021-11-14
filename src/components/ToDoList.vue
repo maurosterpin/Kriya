@@ -87,12 +87,12 @@ export default {
 }
 
 .wrapper {
-  margin: 120px auto;
+  margin: 15px auto;
   max-width: 370px;
   width: 100%;
-  background-color: #141518;
+  background-color: #141518 !important;
   color: #fff;
-  padding: 35px;
+  padding: 35px !important;
   border-radius: 35px;
   box-shadow: 4px 4px 35px 0px black;
 }
@@ -168,6 +168,7 @@ export default {
   margin-top: 13px;
   background-color: #39c75a;
   border-radius: 35px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .footer .pending {

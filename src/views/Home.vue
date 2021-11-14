@@ -25,6 +25,8 @@ export default {
 
 <style lang="scss">
 .home {
+  font-size: 14px;
   background-color: #39c75a;
+  min-height: 100vh;
 }
 </style>

@@ -7,7 +7,10 @@
       </div>
       <div class="nav-links">
         <router-link class="link-icon" to="#"><searchIcon /></router-link>
-        <router-link class="link-icon" to="/profile"
+        <router-link v-if="store.logged" class="link-icon" to="/profile"
+          ><profileIcon
+        /></router-link>
+        <router-link v-else class="link-icon" to="/login"
           ><profileIcon
         /></router-link>
 
@@ -29,7 +32,6 @@ export default {
   name: "navigation",
   components: {
     profileIcon,
-
     searchIcon,
     logo,
   },

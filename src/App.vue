@@ -1,7 +1,8 @@
 <template>
   <div class="app-wrapper">
     <div class="app">
-      <Navigation />
+      <Navigation v-if="isLogged" />
+      <Sidebar v-if="isLogged" />
       <router-view />
     </div>
   </div>
@@ -9,6 +10,7 @@
 
 <script>
 import Navigation from "./components/Navigation.vue";
+import Sidebar from "./components/sidebar/Sidebar.vue";
 import firebase from "@/firebase";
 import store from "@/store";
 
@@ -26,6 +28,7 @@ export default {
   name: "app",
   components: {
     Navigation,
+    Sidebar,
   },
   data() {
     return {
@@ -35,6 +38,14 @@ export default {
   created() {},
   mounted() {},
   methods: {},
+  computed: {
+    isLogged() {
+      if (this.$route.name == "Signup") {
+        return;
+      }
+      return this.$route.name != "Login";
+    },
+  },
   watch: {},
 };
 </script>
@@ -48,14 +59,10 @@ export default {
   box-sizing: border-box;
   font-family: "Nunito", sans-serif;
 }
-body {
-  background-color: #39c75a;
-}
 
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 .container {
