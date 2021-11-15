@@ -71,6 +71,13 @@ body::-webkit-scrollbar {
 .feed-wrapper {
   max-width: 800px;
   display: flex;
+  overflow: auto;
+  max-height: 891px;
+  padding: 0 45px;
+}
+
+.feed-wrapper::-webkit-scrollbar {
+  width: 0px;
 }
 
 .feed {
