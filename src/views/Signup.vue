@@ -206,5 +206,6 @@ input {
   font-size: 15px !important;
   font-weight: 600 !important;
   font-family: "Nunito", sans-serif !important;
+  width: 100px !important;
 }
 </style>
