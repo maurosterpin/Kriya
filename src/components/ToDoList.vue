@@ -89,6 +89,7 @@ export default {
 .wrapper {
   margin: 15px auto;
   max-width: 370px;
+  min-height: 320px;
   width: 100%;
   background-color: #141518 !important;
   color: #fff;
@@ -152,13 +153,14 @@ export default {
 }
 
 .wrapper .footer {
+  position: relative;
   display: flex;
   width: 100%;
   margin-top: 20px;
   justify-content: center;
 }
 
-.footer .button {
+.button {
   position: absolute;
   outline: none;
   font-size: 15px;

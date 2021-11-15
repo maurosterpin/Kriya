@@ -1,17 +1,25 @@
 <template>
   <div class="home-wrapper">
     <div class="home">
-      <div class="feed"><ToDoList /></div>
-      <div class="public-chat">
-        <!--<h6 class="public-chat-h5">general</h6>-->
-        <Message /><Message /><Message /><Message /><Message />
-        <div class="input">
-          <input
-            class="public-chat-input"
-            type="text"
-            placeholder="Send message..."
-          />
-          <sendIcon class="send-icon" />
+      <div class="feed-wrapper">
+        <div class="feed"><ToDoList /><ToDoList /><ToDoList /></div>
+      </div>
+      <div class="public-chat-relative">
+        <div class="public-chat">
+          <h6 class="public-chat-h5">general</h6>
+          <div class="messages">
+            <div class="messages-space">
+              <Message /><Message /><Message /><Message /><Message />
+            </div>
+          </div>
+          <div class="input">
+            <input
+              class="public-chat-input"
+              type="text"
+              placeholder="Send message..."
+            />
+            <sendIcon class="send-icon" />
+          </div>
         </div>
       </div>
       <router-view />
@@ -23,6 +31,7 @@
 import store from "@/store";
 
 import ToDoList from "../components/ToDoList.vue";
+
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
 export default {
@@ -45,34 +54,84 @@ export default {
 </script>
 
 <style lang="scss">
+/* width */
+body::-webkit-scrollbar {
+  width: 0px;
+}
+
 .home {
   font-size: 14px;
   background-color: #39c75a;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
-  display: row;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.feed-wrapper {
+  max-width: 800px;
+  display: flex;
 }
 
 .feed {
-  margin-left: auto;
+  margin: auto;
   padding: 25px 0px;
-  width: 600px;
+  width: 370px;
+}
+
+.public-chat-relative {
+  width: 1000px;
+  position: relative;
+  float: right;
 }
 
 .public-chat {
-  right: 0;
-  position: relative;
+  right: 15px;
+  position: fixed;
   background-color: #39c75a;
-  max-width: 700px;
-  margin-right: auto;
-  margin-left: 50px;
-  padding: 30px 10px;
+  max-width: 1000px;
+  width: 100%;
+  margin-left: 0px;
+  padding: 30px 0px;
   border-radius: 50px;
   color: #fff;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.messages {
+  height: 710px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+}
+
+.messages-space {
+  padding: 0px 20px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #141518;
+  border-radius: 50px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3036;
 }
 
 .input {
@@ -87,7 +146,6 @@ export default {
   padding: 15px 25px;
   background-color: #141518;
   border-radius: 25px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .public-chat-input {
@@ -96,7 +154,6 @@ export default {
   border-bottom: 1px solid #141518;
   border-radius: 25px;
   padding: 15px 25px !important;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
   width: 100%;
 }
 

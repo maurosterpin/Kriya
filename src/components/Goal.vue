@@ -2,9 +2,23 @@
   <div>
     <div v-if="submited" class="goal">
       <h5>Become full-stack dev</h5>
-      <ToDoList />
-      <ToDoList />
-      <ToDoList />
+      <div class="to-do-wrapper">
+        <ToDoList class="to-do-item" /><ToDoList class="to-do-item" /><ToDoList
+          class="to-do-item"
+        />
+      </div>
+
+      <div class="to-do-wrapper">
+        <ToDoList class="to-do-item" /><AddToDoListDesktop
+          class="to-do-item"
+        /><AddToDoListDesktop class="to-do-item" />
+      </div>
+
+      <div class="to-do-wrapper">
+        <ToDoList class="to-do-item" /><AddToDoListDesktop
+          class="to-do-item"
+        /><AddToDoListDesktop class="to-do-item" />
+      </div>
     </div>
     <div class="wrapper">
       <header>
@@ -17,6 +31,7 @@
 <script>
 import addIcon from "../assets/Icons/add-icon.svg";
 import ToDoList from "../components/ToDoList.vue";
+import AddToDoListDesktop from "../components/AddToDoListDesktop.vue";
 export default {
   data() {
     return {
@@ -35,6 +50,7 @@ export default {
   components: {
     addIcon,
     ToDoList,
+    AddToDoListDesktop,
   },
 };
 </script>
@@ -49,16 +65,29 @@ export default {
 .goal {
   min-height: 100px;
   background-color: #39c75a;
-  max-width: 400px;
+  max-width: 1000px;
   border-radius: 25px;
   margin: auto;
   color: #fff;
   padding: 25px;
   display: flex;
-  justify-content: center;
   margin-bottom: 45px;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+}
+
+.to-do-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: scroll !important;
+  margin-bottom: 25px;
+}
+
+.to-do-item {
+  margin-right: 15px !important;
+  min-width: 370px;
 }
 
 .goal h5 {

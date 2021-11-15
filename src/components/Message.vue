@@ -24,7 +24,7 @@ export default {
 
 <style scoped>
 .public-chat-msg {
-  max-width: 700px;
+  max-width: 1000px;
   width: 100%;
   padding: 25px;
   border-radius: 25px;
