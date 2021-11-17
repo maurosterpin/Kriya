@@ -2,7 +2,7 @@
   <div class="home-wrapper">
     <div class="home">
       <div class="feed-wrapper">
-        <div class="feed"><ToDoList /><ToDoList /><ToDoList /></div>
+        <div class="feed"><feedCard /><feedCard /><feedCard /><feedCard /></div>
       </div>
       <div class="public-chat-relative">
         <div class="public-chat">
@@ -29,17 +29,15 @@
 
 <script>
 import store from "@/store";
-
-import ToDoList from "../components/ToDoList.vue";
-
+import feedCard from "../components/FeedCard.vue";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
 export default {
   name: "Home",
   components: {
-    ToDoList,
     sendIcon,
     Message,
+    feedCard,
   },
   data() {
     return {};
@@ -65,7 +63,7 @@ body::-webkit-scrollbar {
   height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 .feed-wrapper {
@@ -84,6 +82,7 @@ body::-webkit-scrollbar {
   margin: auto;
   padding: 25px 0px;
   width: 370px;
+  height: 891px;
 }
 
 .public-chat-relative {
@@ -93,7 +92,7 @@ body::-webkit-scrollbar {
 }
 
 .public-chat {
-  right: 15px;
+  right: 45px;
   position: fixed;
   background-color: #39c75a;
   max-width: 1000px;
@@ -106,6 +105,52 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+@media screen and (max-width: 1460px) {
+  .public-chat {
+    max-width: 800px;
+  }
+
+  .public-chat-relative {
+    max-width: 800px;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .public-chat {
+    max-width: 600px;
+  }
+
+  .public-chat-relative {
+    max-width: 600px;
+  }
+}
+
+@media screen and (max-width: 1060px) {
+  .public-chat {
+    max-width: 500px;
+  }
+
+  .public-chat-relative {
+    max-width: 5 00px;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .public-chat {
+    max-width: 0px;
+  }
+
+  .public-chat-relative {
+    max-width: 0px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .feed-wrapper {
+    padding: 0px;
+  }
 }
 
 .messages {

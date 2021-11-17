@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper feedCardToDO">
     <div class="header">
       <header>Daily to-do</header>
       <p v-if="submited">just now</p>
@@ -96,6 +96,30 @@ export default {
   padding: 35px !important;
   border-radius: 35px;
   box-shadow: 4px 4px 35px 0px black;
+}
+
+@media screen and (max-width: 380px) {
+  .wrapper {
+    max-width: 250px;
+    padding: 25px !important;
+    min-height: 0px;
+
+    header {
+      font-size: 18px !important;
+    }
+  }
+  .addIcon {
+    margin-top: 10px !important;
+    margin-right: 0px !important;
+    width: 8px !important;
+    cursor: pointer;
+    fill: #fff;
+    background-color: #141518;
+  }
+
+  .inputField input {
+    width: 85% !important;
+  }
 }
 
 .wrapper .header {
