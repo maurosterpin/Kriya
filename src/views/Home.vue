@@ -32,6 +32,8 @@ import store from "@/store";
 import feedCard from "../components/FeedCard.vue";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 export default {
   name: "Home",
   components: {
@@ -40,11 +42,37 @@ export default {
     feedCard,
   },
   data() {
-    return {};
+    return {
+      store,
+    };
   },
   created() {},
   mounted() {
-    console.log("STORE", store.logged);
+    if (this.store.logged) {
+      const user = firebase.auth().currentUser;
+      this.store.currentUserUid = user.uid;
+      console.log(this.store.currentUserUid);
+      db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          // Check if user exists
+          if (doc.exists) {
+            store.displayName = doc.data().username;
+            store.profilePic = doc.data().profilePic;
+            // Else create a new user
+          } else {
+            const dataBase = db.collection("users").doc(user.uid);
+            const UIDtest = user.uid;
+            dataBase.set({
+              username: store.displayName,
+              profilePic: store.profilePic,
+              uid: UIDtest,
+            });
+            console.log("User added!");
+          }
+        });
+    }
   },
   methods: {},
   watch: {},

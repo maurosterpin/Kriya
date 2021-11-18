@@ -32,6 +32,8 @@
 import addIcon from "../assets/Icons/add-icon.svg";
 import ToDoList from "../components/ToDoList.vue";
 import AddToDoListDesktop from "../components/AddToDoListDesktop.vue";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 export default {
   data() {
     return {
@@ -43,7 +45,21 @@ export default {
   name: "Goal",
   methods: {
     addGoal() {
-      this.submited = !this.submited;
+      this.submited = true;
+    },
+    newGoal() {
+      const user = firebase.auth().currentUser;
+      const dataBase = db
+        .collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.name);
+      dataBase.set({
+        name: this.name,
+        goalMsg: this.goalMsg,
+        completed: false,
+        date: "just now",
+      });
     },
   },
   computed: {},
