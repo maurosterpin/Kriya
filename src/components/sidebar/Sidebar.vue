@@ -9,15 +9,15 @@
           >Home</router-link
         >
         <router-link
-          class="sidebar-link"
+          class="sidebar-link appear"
           :class="{ 'slide-left': collapsed }"
-          to="/"
+          to="/public-chat"
           >Public chat</router-link
         >
         <router-link
           class="sidebar-link"
           :class="{ 'slide-left': collapsed }"
-          to="/"
+          to="/direct-messages"
           >Messages</router-link
         >
       </div>
@@ -174,5 +174,11 @@ a:hover {
 .slide-left {
   margin-left: -450px;
   transition: 0.3s ease;
+}
+
+@media screen and (min-width: 960px) {
+  .appear {
+    display: none;
+  }
 }
 </style>

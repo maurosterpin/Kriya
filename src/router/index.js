@@ -4,6 +4,8 @@ import Home from "../views/Home.vue";
 import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
 import Profile from "../views/Profile.vue";
+import PublicChat from "../views/PublicChat.vue";
+import DirectMessages from "../views/DirectMessages.vue";
 
 Vue.use(VueRouter);
 
@@ -33,6 +35,16 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/public-chat",
+    name: "PublicChat",
+    component: PublicChat,
+  },
+  {
+    path: "/direct-messages",
+    name: "DirectMessages",
+    component: DirectMessages,
   },
 ];
 

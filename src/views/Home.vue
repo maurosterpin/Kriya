@@ -133,7 +133,7 @@ body::-webkit-scrollbar {
   }
 
   .public-chat-relative {
-    max-width: 5 00px;
+    max-width: 500px;
   }
 }
 
