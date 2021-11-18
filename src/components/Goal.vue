@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="submited" class="goal">
-      <h5>Become full-stack dev</h5>
+      <h5>{{ goalTitle }}</h5>
       <div class="to-do-wrapper">
         <ToDoList class="to-do-item" /><ToDoList class="to-do-item" /><ToDoList
           class="to-do-item"
@@ -19,6 +19,38 @@
           class="to-do-item"
         /><AddToDoListDesktop class="to-do-item" />
       </div>
+    </div>
+    <div v-if="goalSetup" class="goal-form">
+      <form autocomplete="off">
+        <div class="form-group">
+          <input
+            type="text"
+            v-model="goalTitle"
+            class="form-control bg"
+            id="inputGoalName"
+            aria-describedby="GoalName"
+            placeholder="Goal title..."
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            v-model="goalMessage"
+            class="form-control bg"
+            id="inputGoalMessage"
+            aria-describedby="GoalMessage"
+            placeholder="Why are you working towards this goal..."
+          />
+        </div>
+        <button
+          type="button"
+          @click="submitGoal"
+          class="btn"
+          style="font-size: 13px; font-weight:600; width:250px;"
+        >
+          Submit
+        </button>
+      </form>
     </div>
     <div class="wrapper">
       <header>
@@ -40,12 +72,20 @@ export default {
       task: null,
       tasks: ["Practice Vue", "Practice JavaScript", "Practice CSS"],
       submited: false,
+      goalSetup: false,
+      goalTitle: "",
+      goalMessage: "",
     };
   },
+  props: ["info"],
   name: "Goal",
   methods: {
     addGoal() {
-      this.submited = true;
+      this.goalSetup = !this.goalSetup;
+    },
+    submitGoal() {
+      this.submited = !this.submited;
+      this.goalSetup = !this.goalSetup;
     },
     newGoal() {
       const user = firebase.auth().currentUser;
@@ -93,6 +133,33 @@ export default {
   align-items: center;
 }
 
+.goal-form {
+  margin: auto;
+  max-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.goal-form form {
+  margin: auto;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 55px;
+}
+
+.goal-form input {
+  margin-left: 0;
+  border-bottom: 1px solid #39c75a;
+}
+
+.btn {
+  margin: auto !important;
+  margin-top: 25px !important;
+  height: 35px;
+}
+
 .to-do-wrapper {
   display: flex;
   flex-direction: row;
@@ -117,7 +184,7 @@ input {
 
 .wrapper {
   margin: 0 auto 50px;
-  max-width: 370px;
+  max-width: 300px;
   width: 100%;
   background-color: #39c75a;
   color: #fff;
@@ -127,7 +194,7 @@ input {
 }
 
 .wrapper header {
-  font-size: 20px;
+  font-size: 15px;
   margin-left: 15px;
   display: flex;
   justify-content: space-between;

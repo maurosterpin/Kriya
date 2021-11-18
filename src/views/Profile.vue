@@ -2,17 +2,17 @@
   <div class="app-wrapper">
     <div class="quote-wrapper">
       <div v-if="quoteExist" class="quote">
-        <h1>" {{ quoteText }} "</h1>
+        <h2>" {{ quoteText }} "</h2>
         <h6>- {{ quoteAuthor }}</h6>
       </div>
 
-      <form v-else-if="addQuote">
+      <form autocomplete="off" v-else-if="addQuote" class="quote-form">
         <input
           v-model="quoteText"
           class="inputField2"
           type="text"
           id="goalDescription"
-          name="description"
+          name="content"
           placeholder="Quote..."
         />
 
@@ -21,11 +21,13 @@
           class="inputField2"
           type="text"
           id="goalReason"
-          name="theWhy"
+          name="description"
           placeholder="Author..."
         />
 
-        <span v-on:click="submitQuote" class="button"><p>Submit</p></span>
+        <span v-on:click="submitQuote" class="buttonQuote"
+          ><strong>Submit</strong></span
+        >
       </form>
 
       <div v-else v-on:click="addQuoteMethod" class="quoteAdd">
@@ -35,7 +37,7 @@
     </div>
     <div class="profile">
       <div class="username"><avatar class="avatar" />Artemis</div>
-      <Goal />
+      <Goal v-for="goal in goals" :key="goal.id" :info="goal" />
       <h6 class="illustrationTitle">There is nothing here</h6>
       <illustration class="illustration" />
 
@@ -60,6 +62,7 @@ export default {
   },
   data() {
     return {
+      goals: [{ goalTitle: "", goalMessage: "" }],
       quoteExist: false,
       addQuote: false,
       quoteText: "",
@@ -105,7 +108,7 @@ export default {
 }
 
 .quote-wrapper {
-  height: 350px;
+  min-height: 320px;
   background-color: #39c75a;
   display: flex;
   justify-content: center;
@@ -120,22 +123,28 @@ export default {
     border-radius: 35px;
     display: flex;
     flex-direction: column;
-    background-color: #141518;
+    background-color: #39c75a;
     justify-content: center;
     align-items: center;
 
-    .button {
+    .buttonQuote {
       font-size: 15px;
       cursor: pointer;
-      padding: 0px 17px;
+      padding: 8px 19px;
       border-radius: 25px;
       margin: auto;
+      margin-top: 20px;
       color: #fff;
-      background-color: #39c75a;
+      background-color: #141518;
+      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
 
       p {
         margin-top: 15px;
       }
+    }
+
+    input[type="text"] {
+      background-color: #141518 !important;
     }
 
     .inputField2 {
@@ -143,18 +152,19 @@ export default {
       width: 100%;
       margin: 20px 0;
       border: none;
-      background-color: #39c75a !important;
       outline: none;
       color: #fff !important;
+      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+      border-radius: 25px;
+      padding: 10px 20px !important;
     }
 
-    .inputField2 input {
+    .quote-form input {
       width: 90%;
       height: 100%;
       padding: 5px 10px;
       caret-color: #39c75a;
       color: #fff !important;
-      background-color: #39c75a !important;
       font-size: 15px;
       font-weight: 900;
     }
@@ -162,7 +172,7 @@ export default {
     ::placeholder {
       color: #fff !important;
       font-size: 14px;
-      background-color: #39c75a;
+      background-color: #141518 !important;
     }
   }
 
