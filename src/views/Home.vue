@@ -73,8 +73,26 @@ export default {
           }
         });
     }
+    if (this.store.quoteText == "") {
+      store.quoteExist = true;
+      this.getQuote();
+    }
   },
-  methods: {},
+  methods: {
+    getQuote() {
+      console.log("getQuote");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Get quote from user firestore collection
+      db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          store.quoteText = doc.data().Quote;
+          store.quoteAuthor = doc.data().Author;
+        });
+    },
+  },
   watch: {},
 };
 </script>

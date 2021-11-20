@@ -44,7 +44,7 @@
         </div>
         <button
           type="button"
-          @click="submitGoal"
+          @click="newGoal"
           class="btn"
           style="font-size: 13px; font-weight:600; width:250px;"
         >
@@ -93,12 +93,12 @@ export default {
         .collection("users")
         .doc(user.uid)
         .collection("goals")
-        .doc(this.name);
+        .doc(this.goalTitle);
       dataBase.set({
-        name: this.name,
-        goalMsg: this.goalMsg,
+        name: this.goalTitle,
+        goalMsg: this.goalMessage,
         completed: false,
-        date: "just now",
+        date: Date.now(),
       });
     },
   },

@@ -1,9 +1,9 @@
 <template>
   <div class="app-wrapper">
     <div class="quote-wrapper">
-      <div v-if="quoteExist" class="quote">
-        <h2>" {{ quoteText }} "</h2>
-        <h6>- {{ quoteAuthor }}</h6>
+      <div v-if="quoteExistComputed" class="quote">
+        <h2>" {{ quoteComputed }} "</h2>
+        <h6>- {{ authorComputed }}</h6>
       </div>
 
       <form autocomplete="off" v-else-if="addQuote" class="quote-form">
@@ -52,6 +52,8 @@ import store from "@/store";
 import avatar from "../assets/Icons/avatar.svg";
 import addIcon from "../assets/Icons/add-icon.svg";
 import illustration from "../assets/Icons/illustration-empty.svg";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 export default {
   name: "Home",
   components: {
@@ -63,15 +65,13 @@ export default {
   data() {
     return {
       goals: [{ goalTitle: "", goalMessage: "" }],
-      quoteExist: false,
       addQuote: false,
-      quoteText: "",
-      quoteAuthor: "",
+      store,
     };
   },
   created() {},
   mounted() {
-    console.log("STORE", store.logged);
+    console.log("STORE", store.currentUserUid);
   },
   methods: {
     addQuoteMethod() {
@@ -80,10 +80,32 @@ export default {
     },
     submitQuote() {
       if (this.quoteText.length > 0 && this.quoteAuthor.length > 0) {
-        this.quoteExist = !this.quoteExist;
+        store.quoteExist = true;
+        store.quoteText = this.quoteText;
+        store.quoteAuthor = this.quoteAuthor;
+        // Get current user
+        const user = firebase.auth().currentUser;
+        // Add quote to user firestore collection
+        const dataBase = db.collection("users").doc(user.uid);
+        dataBase.update({
+          Quote: this.quoteText,
+          Author: this.quoteAuthor,
+        });
+        console.log("Quote added!");
       } else {
-        console.log("Enter quote and author");
+        alert("Enter quote and author");
       }
+    },
+  },
+  computed: {
+    quoteComputed() {
+      return store.quoteText;
+    },
+    authorComputed() {
+      return store.quoteAuthor;
+    },
+    quoteExistComputed() {
+      return store.quoteExist;
     },
   },
   watch: {},

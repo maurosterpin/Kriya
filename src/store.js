@@ -3,4 +3,7 @@ export default {
   displayName: null,
   profilePic: null,
   currentUserUid: "",
+  quoteText: "",
+  quoteAuthor: "",
+  quoteExist: null,
 };
