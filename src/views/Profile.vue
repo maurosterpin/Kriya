@@ -37,12 +37,12 @@
     </div>
     <div class="profile">
       <div class="username"><avatar class="avatar" />Artemis</div>
-      <Goal v-for="item in goalCount" :key="item" />
-      <AddGoal v-for="goal in goals" :key="goal.id" :info="goal" />
-      <h6 v-if="goalCount.length < 1" class="illustrationTitle">
+      <Goal v-for="goal in goals" :key="goal.name" :info="goal" />
+      <AddGoal />
+      <h6 v-if="goals.length < 1" class="illustrationTitle">
         There is nothing here
       </h6>
-      <illustration v-if="goalCount.length < 1" class="illustration" />
+      <illustration v-if="goals.length < 1" class="illustration" />
 
       <router-view />
     </div>
@@ -69,10 +69,9 @@ export default {
   },
   data() {
     return {
-      goals: [{ goalTitle: "", goalMessage: "" }],
+      goals: [],
       addQuote: false,
       store,
-      goalCount: [],
     };
   },
   created() {},
@@ -113,7 +112,10 @@ export default {
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            this.goalCount.push(doc.data());
+            this.goals.push({
+              goalTitle: doc.data().name,
+              goalMessage: doc.data().Msg,
+            });
           });
         });
     },

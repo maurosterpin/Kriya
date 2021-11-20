@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="goal">
-      <h5>Become full stack dev</h5>
+      <h5>{{ info.goalTitle }}</h5>
       <div class="to-do-wrapper">
         <ToDoList class="to-do-item" /><ToDoList class="to-do-item" /><ToDoList
           class="to-do-item"
