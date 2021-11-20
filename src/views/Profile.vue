@@ -37,9 +37,12 @@
     </div>
     <div class="profile">
       <div class="username"><avatar class="avatar" />Artemis</div>
-      <Goal v-for="goal in goals" :key="goal.id" :info="goal" />
-      <h6 class="illustrationTitle">There is nothing here</h6>
-      <illustration class="illustration" />
+      <Goal v-for="item in goalCount" :key="item" />
+      <AddGoal v-for="goal in goals" :key="goal.id" :info="goal" />
+      <h6 v-if="goalCount.length < 1" class="illustrationTitle">
+        There is nothing here
+      </h6>
+      <illustration v-if="goalCount.length < 1" class="illustration" />
 
       <router-view />
     </div>
@@ -47,6 +50,7 @@
 </template>
 
 <script>
+import AddGoal from "../components/AddGoal.vue";
 import Goal from "../components/Goal.vue";
 import store from "@/store";
 import avatar from "../assets/Icons/avatar.svg";
@@ -57,21 +61,24 @@ import firebase from "@/firebase";
 export default {
   name: "Home",
   components: {
-    Goal,
+    AddGoal,
     avatar,
     addIcon,
     illustration,
+    Goal,
   },
   data() {
     return {
       goals: [{ goalTitle: "", goalMessage: "" }],
       addQuote: false,
       store,
+      goalCount: [],
     };
   },
   created() {},
   mounted() {
     console.log("STORE", store.currentUserUid);
+    this.getGoals();
   },
   methods: {
     addQuoteMethod() {
@@ -95,6 +102,20 @@ export default {
       } else {
         alert("Enter quote and author");
       }
+    },
+    getGoals() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Get quote from user firestore collection
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.goalCount.push(doc.data());
+          });
+        });
     },
   },
   computed: {

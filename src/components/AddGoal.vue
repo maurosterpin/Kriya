@@ -1,39 +1,55 @@
 <template>
   <div>
-    <div class="goal">
-      <h5>Become full stack dev</h5>
-      <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" /><ToDoList class="to-do-item" /><ToDoList
-          class="to-do-item"
-        />
-      </div>
-
-      <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" /><AddToDoListDesktop
-          class="to-do-item"
-        /><AddToDoListDesktop class="to-do-item" />
-      </div>
-
-      <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" /><AddToDoListDesktop
-          class="to-do-item"
-        /><AddToDoListDesktop class="to-do-item" />
-      </div>
+    <div v-if="goalSetup" class="goal-form">
+      <form autocomplete="off">
+        <div class="form-group">
+          <input
+            type="text"
+            v-model="goalTitle"
+            class="form-control bg"
+            id="inputGoalName"
+            aria-describedby="GoalName"
+            placeholder="Goal title..."
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            v-model="goalMessage"
+            class="form-control bg"
+            id="inputGoalMessage"
+            aria-describedby="GoalMessage"
+            placeholder="Why are you working towards this goal..."
+          />
+        </div>
+        <button
+          type="button"
+          @click="newGoal"
+          class="btn"
+          style="font-size: 13px; font-weight:600; width:250px;"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+    <div class="wrapper">
+      <header>
+        Add new goal<addIcon v-on:click="addGoal" class="addIcon" />
+      </header>
     </div>
   </div>
 </template>
 
 <script>
-// import addIcon from "../assets/Icons/add-icon.svg";
-import ToDoList from "./ToDoList.vue";
-import AddToDoListDesktop from "./AddToDoListDesktop.vue";
-// import { db } from "@/firebase";
-// import firebase from "@/firebase";
+import addIcon from "../assets/Icons/add-icon.svg";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 export default {
   data() {
     return {
       task: null,
       tasks: ["Practice Vue", "Practice JavaScript", "Practice CSS"],
+      submited: false,
       goalSetup: false,
       goalTitle: "",
       goalMessage: "",
@@ -41,12 +57,33 @@ export default {
   },
   props: ["info"],
   name: "Goal",
-  methods: {},
+  methods: {
+    addGoal() {
+      this.goalSetup = true;
+    },
+    submitGoal() {
+      this.submited = !this.submited;
+      this.goalSetup = !this.goalSetup;
+    },
+    newGoal() {
+      this.goalSetup = !this.goalSetup;
+      const user = firebase.auth().currentUser;
+      const dataBase = db
+        .collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalTitle);
+      dataBase.set({
+        name: this.goalTitle,
+        goalMsg: this.goalMessage,
+        completed: false,
+        date: Date.now(),
+      });
+    },
+  },
   computed: {},
   components: {
-    // addIcon,
-    ToDoList,
-    AddToDoListDesktop,
+    addIcon,
   },
 };
 </script>
