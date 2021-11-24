@@ -89,7 +89,6 @@ export default {
 .wrapper {
   margin: 15px auto;
   max-width: 370px;
-  min-height: 320px;
   width: 100%;
   background-color: #141518 !important;
   color: #fff;

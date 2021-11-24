@@ -9,15 +9,11 @@
       </div>
 
       <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" /><AddToDoListDesktop
-          class="to-do-item"
-        /><AddToDoListDesktop class="to-do-item" />
+        <ToDoList class="to-do-item" />
       </div>
 
       <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" /><AddToDoListDesktop
-          class="to-do-item"
-        /><AddToDoListDesktop class="to-do-item" />
+        <AddToDoListDesktop class="to-do-item" />
       </div>
     </div>
   </div>
@@ -69,8 +65,10 @@ export default {
   display: flex;
   margin-bottom: 45px;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+}
+
+.goal h5 {
+  margin: auto;
 }
 
 .goal-form {
@@ -103,13 +101,13 @@ export default {
 .to-do-wrapper {
   display: flex;
   flex-direction: row;
-  width: 100%;
   overflow-x: scroll !important;
   margin-bottom: 25px;
 }
 
 .to-do-item {
-  margin-right: 15px !important;
+  margin-right: 0px !important;
+  margin-left: 15px !important;
   min-width: 370px;
 }
 

@@ -128,7 +128,6 @@ body::-webkit-scrollbar {
   margin: auto;
   padding: 25px 0px;
   width: 370px;
-  height: 891px;
 }
 
 .public-chat-relative {

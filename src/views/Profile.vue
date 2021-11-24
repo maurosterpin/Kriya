@@ -36,7 +36,9 @@
       </div>
     </div>
     <div class="profile">
-      <div class="username"><avatar class="avatar" />Artemis</div>
+      <div class="username">
+        <avatar class="avatar" />{{ store.displayName }}
+      </div>
       <Goal v-for="goal in goals" :key="goal.name" :info="goal" />
       <AddGoal />
       <h6 v-if="goals.length < 1" class="illustrationTitle">
@@ -250,9 +252,8 @@ export default {
   font-weight: 100;
 }
 .username {
-  display: flex;
   margin: auto;
-  width: 21%;
+  display: flex;
   color: #fff;
   margin-top: 45px;
   font-size: 15px;
