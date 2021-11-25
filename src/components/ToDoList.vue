@@ -43,6 +43,7 @@ export default {
       submited: false,
     };
   },
+  props: ["info"],
   name: "ToDoList",
   methods: {
     addTask() {

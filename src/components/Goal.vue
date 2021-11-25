@@ -1,28 +1,45 @@
 <template>
   <div>
-    <div class="goal">
+    <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
       <h5>{{ info.goalTitle }}</h5>
-      <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" /><ToDoList class="to-do-item" /><ToDoList
+      <div v-if="this.daily.length > 0" class="to-do-wrapper">
+        <ToDoList class="to-do-item" v-for="todo1 in daily" :key="todo1.name" />
+      </div>
+      <div v-else class="addToDo">
+        <h6>Add Daily To-Do</h6>
+        <addIcon class="addIcon" />
+      </div>
+
+      <div v-if="this.weekly.length > 0" class="to-do-wrapper">
+        <ToDoList
           class="to-do-item"
+          v-for="todo2 in weekly"
+          :key="todo2.name"
         />
       </div>
-
-      <div class="to-do-wrapper">
-        <ToDoList class="to-do-item" />
+      <div v-else class="addToDo">
+        <h6>Add Weekly To-Do</h6>
+        <addIcon class="addIcon" />
       </div>
 
-      <div class="to-do-wrapper">
-        <AddToDoListDesktop class="to-do-item" />
+      <div v-if="this.monthly.length > 0" class="to-do-wrapper">
+        <ToDoList
+          class="to-do-item"
+          v-for="todo3 in monthly"
+          :key="todo3.name"
+        />
+      </div>
+      <div v-else class="addToDo">
+        <h6>Add Monthly To-Do</h6>
+        <addIcon class="addIcon" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import addIcon from "../assets/Icons/add-icon.svg";
+import addIcon from "../assets/Icons/add-icon.svg";
 import ToDoList from "./ToDoList.vue";
-import AddToDoListDesktop from "./AddToDoListDesktop.vue";
 // import { db } from "@/firebase";
 // import firebase from "@/firebase";
 export default {
@@ -33,16 +50,33 @@ export default {
       goalSetup: false,
       goalTitle: "",
       goalMessage: "",
+      daily: [],
+      weekly: [],
+      monthly: [],
+      goalCountOver1: false,
     };
+  },
+  mounted() {
+    this.checkGoalCount();
+    console.log("GOAL COUNTER", this.goalCountOver1, this.daily.length);
   },
   props: ["info"],
   name: "Goal",
-  methods: {},
+  methods: {
+    checkGoalCount() {
+      if (
+        this.daily.length > 1 ||
+        this.weekly.length > 1 ||
+        this.monthly.length > 1
+      ) {
+        this.goalCountOver1 = true;
+      }
+    },
+  },
   computed: {},
   components: {
-    // addIcon,
+    addIcon,
     ToDoList,
-    AddToDoListDesktop,
   },
 };
 </script>
@@ -65,6 +99,10 @@ export default {
   display: flex;
   margin-bottom: 45px;
   flex-direction: column;
+}
+
+.new-width {
+  width: 450px !important;
 }
 
 .goal h5 {
@@ -103,6 +141,22 @@ export default {
   flex-direction: row;
   overflow-x: scroll !important;
   margin-bottom: 25px;
+}
+
+.addToDo {
+  width: 250px;
+  background-color: #141518;
+  border-radius: 50px;
+  padding: 25px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 35px !important;
+  justify-content: space-between;
+  margin: auto;
+}
+
+.addIcon {
+  width: 15px;
 }
 
 .to-do-item {
