@@ -3,9 +3,16 @@
     <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
       <h5>{{ info.goalTitle }}</h5>
       <div v-if="this.daily.length > 0" class="to-do-wrapper">
-        <ToDoList class="to-do-item" v-for="todo1 in daily" :key="todo1.name" />
+        <ToDoList
+          class="to-do-item"
+          v-for="todo in daily"
+          :key="todo.name"
+          :info="todo"
+          listType="Daily"
+        />
       </div>
-      <div v-else class="addToDo">
+      <div v-else-if="DailyToDoStarted"><StartedToDoList info="Daily" /></div>
+      <div v-else class="addToDo" @click="startDailyToDo">
         <h6>Add Daily To-Do</h6>
         <addIcon class="addIcon" />
       </div>
@@ -13,11 +20,14 @@
       <div v-if="this.weekly.length > 0" class="to-do-wrapper">
         <ToDoList
           class="to-do-item"
-          v-for="todo2 in weekly"
-          :key="todo2.name"
+          v-for="todo in weekly"
+          :key="todo.name"
+          :info="todo"
+          listType="Weekly"
         />
       </div>
-      <div v-else class="addToDo">
+      <div v-else-if="WeeklyToDoStarted"><StartedToDoList info="Weekly" /></div>
+      <div v-else class="addToDo" @click="startWeeklyToDo">
         <h6>Add Weekly To-Do</h6>
         <addIcon class="addIcon" />
       </div>
@@ -25,11 +35,16 @@
       <div v-if="this.monthly.length > 0" class="to-do-wrapper">
         <ToDoList
           class="to-do-item"
-          v-for="todo3 in monthly"
-          :key="todo3.name"
+          v-for="todo in monthly"
+          :key="todo.name"
+          :info="todo"
+          listType="Monthly"
         />
       </div>
-      <div v-else class="addToDo">
+      <div v-else-if="MonthlyToDoStarted">
+        <StartedToDoList info="Monthly" />
+      </div>
+      <div v-else class="addToDo" @click="startMonthlyToDo">
         <h6>Add Monthly To-Do</h6>
         <addIcon class="addIcon" />
       </div>
@@ -40,8 +55,9 @@
 <script>
 import addIcon from "../assets/Icons/add-icon.svg";
 import ToDoList from "./ToDoList.vue";
-// import { db } from "@/firebase";
-// import firebase from "@/firebase";
+import StartedToDoList from "./StartedToDoList.vue";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 export default {
   data() {
     return {
@@ -54,10 +70,16 @@ export default {
       weekly: [],
       monthly: [],
       goalCountOver1: false,
+      DailyToDoStarted: false,
+      WeeklyToDoStarted: false,
+      MonthlyToDoStarted: false,
     };
   },
   mounted() {
-    this.checkGoalCount();
+    this.LoadDailyToDoLists();
+    this.LoadWeeklyToDoLists();
+    this.LoadMonthlyToDoLists();
+    //this.checkGoalCount();
     console.log("GOAL COUNTER", this.goalCountOver1, this.daily.length);
   },
   props: ["info"],
@@ -72,11 +94,108 @@ export default {
         this.goalCountOver1 = true;
       }
     },
+    startDailyToDo() {
+      this.DailyToDoStarted = !this.DailyToDoStarted;
+    },
+    startWeeklyToDo() {
+      this.WeeklyToDoStarted = !this.WeeklyToDoStarted;
+    },
+    startMonthlyToDo() {
+      this.MonthlyToDoStarted = !this.MonthlyToDoStarted;
+    },
+    LoadDailyToDoLists() {
+      console.log("LoadDailyToDoListsBegin");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access daily to-do collection for a specific goal
+      const database = db
+        .collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .collection("DailyToDos");
+
+      // get to-do lists from user/goal firestore collection
+      database
+        .orderBy("Date")
+        .get()
+        .then((query) => {
+          this.daily = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.daily.push({
+              Tasks: data.Tasks,
+              Date: data.Date,
+              Completed: data.Completed,
+            });
+          });
+          this.checkGoalCount();
+        });
+    },
+    LoadWeeklyToDoLists() {
+      console.log("LoadWeeklyToDoListsBegin");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access daily to-do collection for a specific goal
+      const database = db
+        .collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .collection("WeeklyToDos");
+
+      // get to-do lists from user/goal firestore collection
+      database
+        .orderBy("Date")
+        .get()
+        .then((query) => {
+          this.weekly = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.weekly.push({
+              Tasks: data.Tasks,
+              Date: data.Date,
+              Completed: data.Completed,
+            });
+          });
+          this.checkGoalCount();
+        });
+    },
+    LoadMonthlyToDoLists() {
+      console.log("LoadMonthlyToDoListsBegin");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access daily to-do collection for a specific goal
+      const database = db
+        .collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .collection("MonthlyToDos");
+
+      // get to-do lists from user/goal firestore collection
+      database
+        .orderBy("Date")
+        .get()
+        .then((query) => {
+          this.monthly = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.monthly.push({
+              Tasks: data.Tasks,
+              Date: data.Date,
+              Completed: data.Completed,
+            });
+          });
+          this.checkGoalCount();
+        });
+    },
   },
   computed: {},
   components: {
     addIcon,
     ToDoList,
+    StartedToDoList,
   },
 };
 </script>
@@ -140,7 +259,6 @@ export default {
   display: flex;
   flex-direction: row;
   overflow-x: scroll !important;
-  margin-bottom: 25px;
 }
 
 .addToDo {

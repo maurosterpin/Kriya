@@ -98,7 +98,9 @@ export default {
 </script>
 
 <style lang="scss">
-/* width */
+body {
+  background-color: #39c75a !important;
+}
 body::-webkit-scrollbar {
   width: 0px;
 }
@@ -110,13 +112,13 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  overflow: hidden !important;
 }
 
 .feed-wrapper {
   max-width: 800px;
   display: flex;
   overflow: auto;
-  max-height: 891px;
   padding: 0 45px;
 }
 

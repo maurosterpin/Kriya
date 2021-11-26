@@ -39,7 +39,7 @@
       <div class="username">
         <avatar class="avatar" />{{ store.displayName }}
       </div>
-      <Goal v-for="goal in goals" :key="goal.name" :info="goal" />
+      <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
       <AddGoal />
       <h6 v-if="goals.length < 1" class="illustrationTitle">
         There is nothing here
@@ -107,7 +107,7 @@ export default {
     getGoals() {
       // Get current user
       const user = firebase.auth().currentUser;
-      // Get quote from user firestore collection
+      // Get goals from user firestore collection
       db.collection("users")
         .doc(user.uid)
         .collection("goals")

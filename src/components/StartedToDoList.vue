@@ -1,23 +1,29 @@
 <template>
   <div class="wrapper feedCardToDO">
     <div class="header">
-      <header>{{ listType }} to-do</header>
-      <p>
-        {{ postedFromNow }}
-      </p>
+      <header>{{ info }} to-do</header>
+    </div>
+    <div class="inputField">
+      <input v-model="task" type="text" placeholder="Task name..." />
+      <addIcon v-on:click="addTask" class="addIcon" />
     </div>
     <ul class="todoList">
-      <li v-for="(item, index) in info.Tasks" :key="index">
+      <li v-for="(item, index) in cTasks" :key="index">
         {{ item.taskName }}
-
-        <checkMarkIcon v-on:click="checkTask(index)" class="checkMarkIcon" />
+        <cancelIcon v-on:click="removeTask(index)" class="cancelIcon" />
       </li>
     </ul>
+    <div class="footer">
+      <span v-on:click="submitToDoList" class="button">Submit</span>
+    </div>
   </div>
 </template>
 
 <script>
-import checkMarkIcon from "../assets/Icons/check-mark.svg";
+import addIcon from "../assets/Icons/add-icon.svg";
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 import moment from "moment";
 export default {
   data() {
@@ -27,7 +33,7 @@ export default {
       submited: false,
     };
   },
-  props: ["info", "listType"],
+  props: ["info"],
   name: "ToDoList",
   methods: {
     addTask() {
@@ -50,6 +56,30 @@ export default {
     checkTask(index) {
       console.log("checkTask", index);
     },
+    submitToDoList() {
+      if (this.tasks.length > 0) {
+        console.log("submitToDoListBegin");
+        // Get current user
+        const user = firebase.auth().currentUser;
+        // Access daily to-do collection for a specific goal
+        const database = db
+          .collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc("Become full stack dev")
+          .collection(`${this.info}ToDos`);
+
+        // submit to-do list to user/goal firestore collection
+        database.add({
+          Tasks: this.tasks,
+          Date: Date.now(),
+          Completed: false,
+        });
+        this.submitTasks();
+      } else {
+        console.log("To-Do list has no tasks!");
+      }
+    },
   },
   computed: {
     cTasks() {
@@ -60,7 +90,8 @@ export default {
     },
   },
   components: {
-    checkMarkIcon,
+    addIcon,
+    cancelIcon,
   },
 };
 </script>
