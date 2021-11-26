@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper feedCardToDO">
+  <div v-if="!submited" class="wrapper feedCardToDO">
     <div class="header">
       <header>{{ info }} to-do</header>
     </div>
@@ -79,6 +79,7 @@ export default {
       } else {
         console.log("To-Do list has no tasks!");
       }
+      this.submited = true;
     },
   },
   computed: {

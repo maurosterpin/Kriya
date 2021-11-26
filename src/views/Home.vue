@@ -2,7 +2,7 @@
   <div class="home-wrapper">
     <div class="home">
       <div class="feed-wrapper">
-        <div class="feed"><feedCard /><feedCard /><feedCard /><feedCard /></div>
+        <div class="feed"><feedCard /><feedCard /></div>
       </div>
       <div class="public-chat-relative">
         <div class="public-chat">
@@ -98,9 +98,7 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  background-color: #39c75a !important;
-}
+/* width */
 body::-webkit-scrollbar {
   width: 0px;
 }
@@ -119,6 +117,7 @@ body::-webkit-scrollbar {
   max-width: 800px;
   display: flex;
   overflow: auto;
+  height: 91.9vh;
   padding: 0 45px;
 }
 
@@ -127,7 +126,7 @@ body::-webkit-scrollbar {
 }
 
 .feed {
-  margin: auto;
+  margin: 5px auto;
   padding: 25px 0px;
   width: 370px;
 }

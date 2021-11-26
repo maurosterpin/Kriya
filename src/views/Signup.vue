@@ -135,7 +135,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
 
 body {
-  background-color: #141518;
+  background-color: #141518 !important;
 }
 input[type="text"],
 input[type="email"],

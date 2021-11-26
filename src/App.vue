@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper" v-on:scroll="onScroll">
+  <div class="app-wrapper">
     <div class="app">
       <Navigation v-if="isLogged" />
       <Sidebar v-if="isLogged" />
@@ -37,11 +37,7 @@ export default {
   },
   created() {},
   mounted() {},
-  methods: {
-    onScroll() {
-      console.log("Scroll test");
-    },
-  },
+  methods: {},
   computed: {
     isLogged() {
       if (this.$route.name == "Signup") {

@@ -3,6 +3,9 @@
     <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
       <h5>{{ info.goalTitle }}</h5>
       <div v-if="this.daily.length > 0" class="to-do-wrapper">
+        <div @click="startDailyToDo" class="addNewToDoListBtn">
+          <addIcon class="addIconBtn" />
+        </div>
         <ToDoList
           class="to-do-item"
           v-for="todo in daily"
@@ -11,13 +14,14 @@
           listType="Daily"
         />
       </div>
-      <div v-else-if="DailyToDoStarted"><StartedToDoList info="Daily" /></div>
       <div v-else class="addToDo" @click="startDailyToDo">
         <h6>Add Daily To-Do</h6>
         <addIcon class="addIcon" />
       </div>
+      <div v-if="DailyToDoStarted"><StartedToDoList info="Daily" /></div>
 
       <div v-if="this.weekly.length > 0" class="to-do-wrapper">
+        <div class="addNewToDoListBtn"><addIcon class="addIconBtn" /></div>
         <ToDoList
           class="to-do-item"
           v-for="todo in weekly"
@@ -33,6 +37,7 @@
       </div>
 
       <div v-if="this.monthly.length > 0" class="to-do-wrapper">
+        <div class="addNewToDoListBtn"><addIcon class="addIconBtn" /></div>
         <ToDoList
           class="to-do-item"
           v-for="todo in monthly"
@@ -117,7 +122,7 @@ export default {
 
       // get to-do lists from user/goal firestore collection
       database
-        .orderBy("Date")
+        .orderBy("Date", "desc")
         .get()
         .then((query) => {
           this.daily = [];
@@ -259,6 +264,7 @@ export default {
   display: flex;
   flex-direction: row;
   overflow-x: scroll !important;
+  margin-top: 5px;
 }
 
 .addToDo {
@@ -277,7 +283,24 @@ export default {
   width: 15px;
 }
 
+.addIconBtn {
+  position: absolute;
+  width: 30px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 50px;
+  background-color: #39c75a;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.addIconBtn:hover {
+  width: 31px;
+  transition: 0.2s;
+}
+
 .to-do-item {
+  margin-top: 5px !important;
   margin-right: 0px !important;
   margin-left: 15px !important;
   min-width: 370px;
