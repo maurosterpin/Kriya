@@ -33,7 +33,7 @@ export default {
       submited: false,
     };
   },
-  props: ["info"],
+  props: ["info", "goalName"],
   name: "ToDoList",
   methods: {
     addTask() {
@@ -66,7 +66,7 @@ export default {
           .collection("users")
           .doc(user.uid)
           .collection("goals")
-          .doc("Become full stack dev")
+          .doc(this.goalName)
           .collection(`${this.info}ToDos`);
 
         // submit to-do list to user/goal firestore collection
@@ -80,6 +80,16 @@ export default {
         console.log("To-Do list has no tasks!");
       }
       this.submited = true;
+      if (this.info == "Daily") {
+        this.$parent.startDailyToDo();
+        this.$parent.LoadDailyToDoLists();
+      } else if (this.info == "Weekly") {
+        this.$parent.startWeeklyToDo();
+        this.$parent.LoadWeeklyToDoLists();
+      } else if (this.info == "Monthly") {
+        this.$parent.startMonthlyToDo();
+        this.$parent.LoadMonthlyToDoLists();
+      }
     },
   },
   computed: {
@@ -106,7 +116,7 @@ export default {
 
 .wrapper {
   margin: 15px auto;
-  max-width: 370px;
+  min-width: 370px;
   width: 100%;
   background-color: #141518 !important;
   color: #fff;

@@ -2,9 +2,17 @@
   <div>
     <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
       <h5>{{ info.goalTitle }}</h5>
+
       <div v-if="this.daily.length > 0" class="to-do-wrapper">
-        <div @click="startDailyToDo" class="addNewToDoListBtn">
+        <div
+          v-if="!DailyToDoStarted"
+          @click="startDailyToDo"
+          class="addNewToDoListBtn"
+        >
           <addIcon class="addIconBtn" />
+        </div>
+        <div v-if="DailyToDoStarted">
+          <StartedToDoList info="Daily" :goalName="info.goalTitle" />
         </div>
         <ToDoList
           class="to-do-item"
@@ -14,14 +22,23 @@
           listType="Daily"
         />
       </div>
+
       <div v-else class="addToDo" @click="startDailyToDo">
         <h6>Add Daily To-Do</h6>
         <addIcon class="addIcon" />
       </div>
-      <div v-if="DailyToDoStarted"><StartedToDoList info="Daily" /></div>
 
       <div v-if="this.weekly.length > 0" class="to-do-wrapper">
-        <div class="addNewToDoListBtn"><addIcon class="addIconBtn" /></div>
+        <div
+          v-if="!WeeklyToDoStarted"
+          @click="startWeeklyToDo"
+          class="addNewToDoListBtn"
+        >
+          <addIcon class="addIconBtn" />
+        </div>
+        <div v-if="WeeklyToDoStarted">
+          <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
+        </div>
         <ToDoList
           class="to-do-item"
           v-for="todo in weekly"
@@ -30,14 +47,22 @@
           listType="Weekly"
         />
       </div>
-      <div v-else-if="WeeklyToDoStarted"><StartedToDoList info="Weekly" /></div>
       <div v-else class="addToDo" @click="startWeeklyToDo">
         <h6>Add Weekly To-Do</h6>
         <addIcon class="addIcon" />
       </div>
 
       <div v-if="this.monthly.length > 0" class="to-do-wrapper">
-        <div class="addNewToDoListBtn"><addIcon class="addIconBtn" /></div>
+        <div
+          v-if="!MonthlyToDoStarted"
+          @click="startMonthlyToDo"
+          class="addNewToDoListBtn"
+        >
+          <addIcon class="addIconBtn" />
+        </div>
+        <div v-if="MonthlyToDoStarted">
+          <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
+        </div>
         <ToDoList
           class="to-do-item"
           v-for="todo in monthly"
@@ -46,9 +71,7 @@
           listType="Monthly"
         />
       </div>
-      <div v-else-if="MonthlyToDoStarted">
-        <StartedToDoList info="Monthly" />
-      </div>
+
       <div v-else class="addToDo" @click="startMonthlyToDo">
         <h6>Add Monthly To-Do</h6>
         <addIcon class="addIcon" />
@@ -101,6 +124,7 @@ export default {
     },
     startDailyToDo() {
       this.DailyToDoStarted = !this.DailyToDoStarted;
+      console.log("Started Daily", this.DailyToDoStarted);
     },
     startWeeklyToDo() {
       this.WeeklyToDoStarted = !this.WeeklyToDoStarted;
@@ -151,7 +175,7 @@ export default {
 
       // get to-do lists from user/goal firestore collection
       database
-        .orderBy("Date")
+        .orderBy("Date", "desc")
         .get()
         .then((query) => {
           this.weekly = [];
@@ -180,7 +204,7 @@ export default {
 
       // get to-do lists from user/goal firestore collection
       database
-        .orderBy("Date")
+        .orderBy("Date", "desc")
         .get()
         .then((query) => {
           this.monthly = [];
@@ -265,6 +289,9 @@ export default {
   flex-direction: row;
   overflow-x: scroll !important;
   margin-top: 5px;
+  padding-top: 10px;
+  border-bottom: 15px solid #39c75a;
+  position: relative;
 }
 
 .addToDo {
@@ -304,6 +331,7 @@ export default {
   margin-right: 0px !important;
   margin-left: 15px !important;
   min-width: 370px;
+  margin-bottom: 25px !important;
 }
 
 .goal h5 {
