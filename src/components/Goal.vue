@@ -22,7 +22,9 @@
           listType="Daily"
         />
       </div>
-
+      <div v-else-if="DailyToDoStarted">
+        <StartedToDoList info="Daily" :goalName="info.goalTitle" />
+      </div>
       <div v-else class="addToDo" @click="startDailyToDo">
         <h6>Add Daily To-Do</h6>
         <addIcon class="addIcon" />
@@ -46,6 +48,9 @@
           :info="todo"
           listType="Weekly"
         />
+      </div>
+      <div v-else-if="WeeklyToDoStarted">
+        <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
       </div>
       <div v-else class="addToDo" @click="startWeeklyToDo">
         <h6>Add Weekly To-Do</h6>
@@ -71,7 +76,9 @@
           listType="Monthly"
         />
       </div>
-
+      <div v-else-if="MonthlyToDoStarted">
+        <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
+      </div>
       <div v-else class="addToDo" @click="startMonthlyToDo">
         <h6>Add Monthly To-Do</h6>
         <addIcon class="addIcon" />

@@ -151,6 +151,10 @@ export default {
   list-style: none;
 }
 
+.todoList li:first-child {
+  margin-top: 12px;
+}
+
 .todoList li:before {
   content: "·";
   font-size: 65px;
