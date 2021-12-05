@@ -114,6 +114,9 @@ export default {
       DailyToDoStarted: false,
       WeeklyToDoStarted: false,
       MonthlyToDoStarted: false,
+      LatestDailyDate: null,
+      LatestWeeklyDate: null,
+      LatestMonthlyDate: null,
     };
   },
   mounted() {
@@ -136,16 +139,40 @@ export default {
       }
     },
     startDailyToDo() {
-      this.DailyToDoStarted = !this.DailyToDoStarted;
-      console.log("Started Daily", this.DailyToDoStarted);
+      if (
+        this.LatestDailyDate <= Date.now() - 60 * 60 * 24 * 1000 ||
+        this.LatestDailyDate == undefined
+      ) {
+        this.DailyToDoStarted = !this.DailyToDoStarted;
+        console.log("Started Daily");
+      } else {
+        alert("You can start only one daily To-Do every 24 hours");
+      }
     },
     startWeeklyToDo() {
-      this.WeeklyToDoStarted = !this.WeeklyToDoStarted;
+      if (
+        this.LatestWeeklyDate <= Date.now() - 60 * 60 * 24 * 1000 * 7 ||
+        this.LatestWeeklyDate == undefined
+      ) {
+        this.WeeklyToDoStarted = !this.WeeklyToDoStarted;
+        console.log("Started Weekly");
+      } else {
+        alert("You can start only one weekly To-Do every 7 days");
+      }
     },
     startMonthlyToDo() {
-      this.MonthlyToDoStarted = !this.MonthlyToDoStarted;
+      if (
+        this.LatestMonthlyDate <= Date.now() - 60 * 60 * 24 * 1000 * 30 ||
+        this.LatestMonthlyDate == undefined
+      ) {
+        this.MonthlyToDoStarted = !this.MonthlyToDoStarted;
+        console.log("Started Monthly");
+      } else {
+        alert("You can start only one monthly To-Do every 30 days");
+      }
     },
     LoadDailyToDoLists() {
+      this.getLatestDailyToDoDate();
       console.log("LoadDailyToDoListsBegin");
       // Get current user
       const user = firebase.auth().currentUser;
@@ -176,6 +203,7 @@ export default {
         });
     },
     LoadWeeklyToDoLists() {
+      this.getLatestWeeklyToDoDate();
       console.log("LoadWeeklyToDoListsBegin");
       // Get current user
       const user = firebase.auth().currentUser;
@@ -206,6 +234,7 @@ export default {
         });
     },
     LoadMonthlyToDoLists() {
+      this.getLatestMonthlyToDoDate();
       console.log("LoadMonthlyToDoListsBegin");
       // Get current user
       const user = firebase.auth().currentUser;
@@ -233,6 +262,58 @@ export default {
             });
           });
           this.checkGoalCount();
+        });
+    },
+    getLatestDailyToDoDate() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access tasks
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            this.LatestDailyDate = doc.data().LatestDailyToDoDate;
+          } else {
+            console.log("LatestDailyToDoDate doesn't exist!");
+          }
+        });
+    },
+    getLatestWeeklyToDoDate() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access tasks
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            this.LatestWeeklyDate = doc.data().LatestWeeklyToDoDate;
+            console.log("Latest Weekly Date!!!: ", this.LatestWeeklyDate);
+          } else {
+            console.log("LatestWeeklyToDoDate doesn't exist!");
+          }
+        });
+    },
+    getLatestMonthlyToDoDate() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access tasks
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            this.LatestMonthlyDate = doc.data().LatestMonthlyToDoDate;
+          } else {
+            console.log("LatestMonthlyToDoDate doesn't exist!");
+          }
         });
     },
   },

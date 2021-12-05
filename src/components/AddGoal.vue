@@ -73,12 +73,17 @@ export default {
         .doc(user.uid)
         .collection("goals")
         .doc(this.goalTitle);
-      dataBase.set({
-        name: this.goalTitle,
-        goalMsg: this.goalMessage,
-        completed: false,
-        date: Date.now(),
-      });
+      dataBase
+        .set({
+          name: this.goalTitle,
+          goalMsg: this.goalMessage,
+          completed: false,
+          date: Date.now(),
+        })
+        .then(() => {
+          console.log("GET GOALS!");
+          this.$parent.GetGoals();
+        });
     },
   },
   computed: {},

@@ -111,6 +111,7 @@ export default {
       db.collection("users")
         .doc(user.uid)
         .collection("goals")
+        .orderBy("date", "desc")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {

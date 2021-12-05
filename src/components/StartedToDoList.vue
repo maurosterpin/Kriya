@@ -84,13 +84,49 @@ export default {
       if (this.info == "Daily") {
         this.$parent.startDailyToDo();
         this.$parent.LoadDailyToDoLists();
+        this.submitLatestDailySubmitTime();
       } else if (this.info == "Weekly") {
         this.$parent.startWeeklyToDo();
         this.$parent.LoadWeeklyToDoLists();
+        this.submitLatestWeeklySubmitTime();
       } else if (this.info == "Monthly") {
         this.$parent.startMonthlyToDo();
         this.$parent.LoadMonthlyToDoLists();
+        this.submitLatestMonthlySubmitTime();
       }
+    },
+    submitLatestDailySubmitTime() {
+      const user = firebase.auth().currentUser;
+      // Access collection for a specific goal
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalName)
+        .update({
+          LatestDailyToDoDate: Date.now(),
+        });
+    },
+    submitLatestWeeklySubmitTime() {
+      const user = firebase.auth().currentUser;
+      // Access collection for a specific goal
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalName)
+        .update({
+          LatestWeeklyToDoDate: Date.now(),
+        });
+    },
+    submitLatestMonthlySubmitTime() {
+      const user = firebase.auth().currentUser;
+      // Access collection for a specific goal
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalName)
+        .update({
+          LatestMonthlyToDoDate: Date.now(),
+        });
     },
   },
   computed: {
