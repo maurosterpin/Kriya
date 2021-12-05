@@ -20,6 +20,8 @@
           :key="todo.name"
           :info="todo"
           listType="Daily"
+          :passedID="todo.docID"
+          :goalName="info.goalTitle"
         />
       </div>
       <div v-else-if="DailyToDoStarted">
@@ -47,6 +49,8 @@
           :key="todo.name"
           :info="todo"
           listType="Weekly"
+          :passedID="todo.docID"
+          :goalName="info.goalTitle"
         />
       </div>
       <div v-else-if="WeeklyToDoStarted">
@@ -74,6 +78,8 @@
           :key="todo.name"
           :info="todo"
           listType="Monthly"
+          :passedID="todo.docID"
+          :goalName="info.goalTitle"
         />
       </div>
       <div v-else-if="MonthlyToDoStarted">
@@ -163,6 +169,7 @@ export default {
               Tasks: data.Tasks,
               Date: data.Date,
               Completed: data.Completed,
+              docID: doc.id,
             });
           });
           this.checkGoalCount();
@@ -192,6 +199,7 @@ export default {
               Tasks: data.Tasks,
               Date: data.Date,
               Completed: data.Completed,
+              docID: doc.id,
             });
           });
           this.checkGoalCount();
@@ -221,6 +229,7 @@ export default {
               Tasks: data.Tasks,
               Date: data.Date,
               Completed: data.Completed,
+              docID: doc.id,
             });
           });
           this.checkGoalCount();
@@ -294,7 +303,7 @@ export default {
 .to-do-wrapper {
   display: flex;
   flex-direction: row;
-  overflow-x: scroll !important;
+  overflow-x: auto !important;
   margin-top: 5px;
   padding-top: 10px;
   border-bottom: 15px solid #39c75a;

@@ -67,10 +67,11 @@ export default {
           .doc(user.uid)
           .collection("goals")
           .doc(this.goalName)
-          .collection(`${this.info}ToDos`);
+          .collection(`${this.info}ToDos`)
+          .doc();
 
         // submit to-do list to user/goal firestore collection
-        database.add({
+        database.set({
           Tasks: this.tasks,
           Date: Date.now(),
           Completed: false,

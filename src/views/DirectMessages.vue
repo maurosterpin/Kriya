@@ -94,11 +94,12 @@ export default {
 .contact-head {
   padding: 15px;
   background-color: #141518;
-  border-radius: 50px;
+  border-radius: 20px;
   display: flex;
   flex-direction: row;
   color: #fff;
   width: 350px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .contact-user-icon {

@@ -7,10 +7,18 @@
       </p>
     </div>
     <ul class="todoList">
-      <li v-for="(item, index) in info.Tasks" :key="index">
+      <li
+        v-for="(item, index) in info.Tasks"
+        :key="index"
+        :class="{ 'task-completed': item.completed }"
+      >
         {{ item.taskName }}
 
-        <checkMarkIcon v-on:click="checkTask(index)" class="checkMarkIcon" />
+        <checkMarkIcon
+          v-if="!item.completed"
+          v-on:click="checkTask(index)"
+          class="checkMarkIcon"
+        />
       </li>
     </ul>
   </div>
@@ -19,6 +27,8 @@
 <script>
 import checkMarkIcon from "../assets/Icons/check-mark.svg";
 import moment from "moment";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
 export default {
   data() {
     return {
@@ -27,8 +37,11 @@ export default {
       submited: false,
     };
   },
-  props: ["info", "listType"],
+  props: ["info", "listType", "passedID", "goalName"],
   name: "ToDoList",
+  mounted() {
+    this.getTasks();
+  },
   methods: {
     addTask() {
       if (this.task != null) {
@@ -49,6 +62,61 @@ export default {
     },
     checkTask(index) {
       console.log("checkTask", index);
+      this.getTasks();
+      setTimeout(() => {
+        this.tasks[index].completed = true;
+        this.updateTasks();
+      }, 150);
+    },
+    getTasks() {
+      console.log("getTasks");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access tasks
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalName)
+        .collection(`${this.listType}ToDos`)
+        .doc(this.info.docID)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            console.log("Getting tasks from firestore");
+            this.tasks = doc.data().Tasks;
+          } else {
+            console.log("To-do list document doesn't exist");
+          }
+        })
+        .then(() => {
+          console.log("Finished");
+        });
+    },
+
+    updateTasks() {
+      console.log("updateTasks");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Access tasks
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalName)
+        .collection(`${this.listType}ToDos`)
+        .doc(this.info.docID)
+        .update({
+          Tasks: this.tasks,
+        })
+        .then(() => {
+          this.getTasks();
+          if (this.listType == "Daily") {
+            this.$parent.LoadDailyToDoLists();
+          } else if (this.listType == "Weekly") {
+            this.$parent.LoadWeeklyToDoLists();
+          } else if (this.listType == "Monthly") {
+            this.$parent.LoadMonthlyToDoLists();
+          }
+        });
     },
   },
   computed: {
@@ -144,6 +212,10 @@ export default {
 ::placeholder {
   color: #fff !important;
   font-size: 14px;
+}
+
+.task-completed {
+  text-decoration: line-through;
 }
 
 .todoList li {

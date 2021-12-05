@@ -212,8 +212,9 @@ body::-webkit-scrollbar {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
   height: 6px;
+  background-color: #30a84c;
 }
 
 /* Track */
@@ -223,7 +224,7 @@ body::-webkit-scrollbar {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #141518;
+  background: #1e1f24;
   border-radius: 50px;
 }
 
