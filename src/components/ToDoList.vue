@@ -35,6 +35,7 @@ export default {
       task: null,
       tasks: [],
       submited: false,
+      completed: null,
     };
   },
   props: ["info", "listType", "passedID", "goalName"],
@@ -84,12 +85,16 @@ export default {
           if (doc.exists) {
             console.log("Getting tasks from firestore");
             this.tasks = doc.data().Tasks;
+            this.completed = doc.data().Completed;
           } else {
             console.log("To-do list document doesn't exist");
           }
         })
         .then(() => {
           console.log("Finished");
+          if (this.completed == false) {
+            this.checkIfToDoCompleted();
+          }
         });
     },
 
@@ -106,6 +111,7 @@ export default {
         .doc(this.info.docID)
         .update({
           Tasks: this.tasks,
+          Completed: this.completed,
         })
         .then(() => {
           this.getTasks();
@@ -117,6 +123,17 @@ export default {
             this.$parent.LoadMonthlyToDoLists();
           }
         });
+    },
+    checkIfToDoCompleted() {
+      console.log("checkIfToDoCompleted Started");
+      for (let i = 0; i < this.tasks.length; i++) {
+        if (this.tasks[i].completed == false) {
+          return;
+        }
+      }
+      this.completed = true;
+      console.log("ToDoCompleted, starting updateTasks", this.completed);
+      this.updateTasks();
     },
   },
   computed: {
