@@ -134,6 +134,13 @@ export default {
       this.completed = true;
       console.log("ToDoCompleted, starting updateTasks", this.completed);
       this.updateTasks();
+      this.postCompletedToDo();
+    },
+    postCompletedToDo() {
+      console.log("postCompletedToDo");
+      db.collection("posts")
+        .doc()
+        .set({ Tasks: this.tasks, Completed: this.completed });
     },
   },
   computed: {
