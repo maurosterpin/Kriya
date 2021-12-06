@@ -82,7 +82,7 @@ export default {
         })
         .then(() => {
           console.log("GET GOALS!");
-          this.$parent.GetGoals();
+          this.$root.$emit("Profile.vue");
         });
     },
   },

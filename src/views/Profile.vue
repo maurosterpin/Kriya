@@ -80,6 +80,9 @@ export default {
   mounted() {
     console.log("STORE", store.currentUserUid);
     this.getGoals();
+    this.$root.$on("Profile.vue", () => {
+      this.getGoals();
+    });
   },
   methods: {
     addQuoteMethod() {
@@ -107,6 +110,8 @@ export default {
     getGoals() {
       // Get current user
       const user = firebase.auth().currentUser;
+      // Empty goals array
+      this.goals = [];
       // Get goals from user firestore collection
       db.collection("users")
         .doc(user.uid)
