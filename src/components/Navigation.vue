@@ -1,12 +1,27 @@
 <template>
   <header>
-    <nav class="container">
+    <nav class="container" @click="checkClick">
       <logo class="logo" />
       <div class="branding">
         <router-link class="header" to="/">Kriya</router-link>
       </div>
       <div class="nav-links">
-        <router-link class="link-icon" to="#"><searchIcon /></router-link>
+        <router-link v-if="!searchActivated" class="link-icon" to="#"
+          ><searchIcon @click="changeSearchState"
+        /></router-link>
+        <div v-else-if="searchActivated" class="searchInputContainer">
+          <input v-model="searchText" ref="searchInput" type="text" />
+          <div
+            v-if="searchActivated && searchText != ''"
+            class="searchDropdown"
+          >
+            <UserSearchCard
+              v-for="card in cUsers"
+              :key="card.Username"
+              :test="card.Username"
+            />
+          </div>
+        </div>
         <router-link v-if="store.logged" class="link-icon" to="/profile"
           ><profileIcon
         /></router-link>
@@ -22,13 +37,16 @@
 import logo from "../assets/Icons/logo.svg";
 import profileIcon from "../assets/Icons/user-icon.svg";
 import searchIcon from "../assets/Icons/search-icon.svg";
+import UserSearchCard from "./UserSearchCard.vue";
 import store from "@/store";
 import firebase from "@/firebase";
+import { db } from "@/firebase";
 export default {
   name: "navigation",
   components: {
     profileIcon,
     searchIcon,
+    UserSearchCard,
     logo,
   },
   data() {
@@ -37,12 +55,17 @@ export default {
       mobileNav: null,
       windowWidth: null,
       store,
+      searchActivated: false,
+      searchText: "",
+      users: [],
     };
   },
   created() {
     this.checkScreen();
   },
-  mounted() {},
+  mounted() {
+    this.getUsers();
+  },
   methods: {
     checkScreen() {
       this.windowWidth = window.innerWidth;
@@ -60,16 +83,80 @@ export default {
         .signOut()
         .then(() => {});
     },
-
+    getUsers() {
+      db.collection("users")
+        .get()
+        .then((query) => {
+          this.users = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.users.push({
+              Username: data.username,
+              ProfilePic: data.profilePic,
+              UID: data.uid,
+            });
+          });
+        });
+    },
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
     },
+    changeSearchState() {
+      setTimeout(() => {
+        this.searchActivated = !this.searchActivated;
+        this.searchText = "";
+      }, 0);
+    },
+    checkClick(e) {
+      if (e.target != this.$refs.searchInput && this.searchActivated) {
+        this.searchActivated = !this.searchActivated;
+      }
+    },
   },
-  computed: {},
+  computed: {
+    cUsers() {
+      return this.users.filter((user) =>
+        user.Username.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+input {
+  padding: 0px;
+  margin: 0px;
+}
+
+.searchInputContainer {
+  position: relative;
+}
+
+.searchDropdown {
+  max-width: 189px;
+  max-height: 300px;
+  position: absolute;
+  margin-right: 38px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden !important;
+  border-top: 1px solid rgb(214, 214, 214);
+  border-bottom: 1px solid rgb(214, 214, 214);
+}
+
+input[type="text"],
+textarea {
+  background-color: #fff !important;
+  border: none;
+  color: #141518 !important;
+  font-weight: 600;
+}
+
+input:focus {
+  outline: none !important;
+}
+
 .logo {
   width: 25px;
   margin-right: 8px;
