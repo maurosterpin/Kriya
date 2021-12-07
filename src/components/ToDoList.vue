@@ -86,6 +86,7 @@ export default {
             console.log("Getting tasks from firestore");
             this.tasks = doc.data().Tasks;
             this.completed = doc.data().Completed;
+            this.date = doc.data().Date;
           } else {
             console.log("To-do list document doesn't exist");
           }
@@ -137,10 +138,19 @@ export default {
       this.postCompletedToDo();
     },
     postCompletedToDo() {
+      // Get current user
+      const user = firebase.auth().currentUser;
       console.log("postCompletedToDo");
       db.collection("posts")
         .doc()
-        .set({ Tasks: this.tasks, Completed: this.completed });
+        .set({
+          Tasks: this.tasks,
+          Completed: this.completed,
+          ListType: this.listType,
+          Date: this.date,
+          CompletionDate: Date.now(),
+          UID: user.uid,
+        });
     },
   },
   computed: {

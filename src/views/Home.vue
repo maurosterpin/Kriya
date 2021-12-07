@@ -2,7 +2,14 @@
   <div class="home-wrapper">
     <div class="home">
       <div class="feed-wrapper">
-        <div class="feed"><feedCard /><feedCard /></div>
+        <div class="feed">
+          <FeedCard
+            v-for="card in posts"
+            :key="card.name"
+            :info="card"
+            :listType="card.ListType"
+          />
+        </div>
       </div>
       <div class="public-chat-relative">
         <div class="public-chat">
@@ -29,7 +36,7 @@
 
 <script>
 import store from "@/store";
-import feedCard from "../components/FeedCard.vue";
+import FeedCard from "../components/FeedCard.vue";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
 import { db } from "@/firebase";
@@ -39,15 +46,17 @@ export default {
   components: {
     sendIcon,
     Message,
-    feedCard,
+    FeedCard,
   },
   data() {
     return {
       store,
+      posts: [],
     };
   },
   created() {},
   mounted() {
+    this.getPosts();
     if (this.store.logged) {
       const user = firebase.auth().currentUser;
       this.store.currentUserUid = user.uid;
@@ -90,6 +99,25 @@ export default {
         .then((doc) => {
           store.quoteText = doc.data().Quote;
           store.quoteAuthor = doc.data().Author;
+        });
+    },
+    getPosts() {
+      db.collection("posts")
+        .orderBy("Date", "desc")
+        .get()
+        .then((query) => {
+          this.posts = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.posts.push({
+              Tasks: data.Tasks,
+              ListType: data.ListType,
+              Date: data.Date,
+              Completed: data.Completed,
+              CompletionDate: data.CompletionDate,
+              UID: data.UID,
+            });
+          });
         });
     },
   },

@@ -3,17 +3,22 @@
     <div class="container-feed-card-head">
       <avatar class="feed-icon" />
       <div class="container-feed-card-head-txt">
-        <h5>username</h5>
-        <h6>time</h6>
+        <h6>{{ username }}</h6>
+        <h6>{{ postedFromNow }}</h6>
       </div>
     </div>
     <div class="container-feed-card-head-msg">
       <h5>I completed my daily to-do list!</h5>
     </div>
     <div class="container-feed-card-body">
-      <ToDoList />
+      <ToDoList :info="info" :listType="info.ListType" />
       <div class="feed-card-button-container">
-        <button class="feed-card-button">Congratulations!</button>
+        <button
+          v-if="store.currentUserUid != info.UID"
+          class="feed-card-button"
+        >
+          Congratulations!
+        </button>
       </div>
     </div>
   </div>
@@ -22,11 +27,42 @@
 <script>
 import ToDoList from "../components/ToDoList.vue";
 import avatar from "../assets/Icons/avatar.svg";
+import moment from "moment";
+import { db } from "@/firebase";
+import store from "@/store";
 export default {
   name: "feedCard",
+  props: ["info", "listType", "passedID", "goalName"],
   components: {
     ToDoList,
     avatar,
+  },
+  mounted() {
+    this.getUserData();
+    console.log("UIDS:", this.store.currentUserUid, this.info.UID);
+  },
+  methods: {
+    getUserData() {
+      db.collection("users")
+        .doc(this.info.UID)
+        .get()
+        .then((doc) => {
+          this.username = doc.data().username;
+          this.profilePic = doc.data().profilePic;
+        });
+    },
+  },
+  computed: {
+    postedFromNow() {
+      return moment(this.info.CompletionDate).fromNow();
+    },
+  },
+  data() {
+    return {
+      username: "",
+      profilePic: "",
+      store,
+    };
   },
 };
 </script>

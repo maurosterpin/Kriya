@@ -87,6 +87,10 @@ export default {
     },
     logout() {
       firebase.auth().signOut();
+      this.store.currentUserUid = "";
+      this.store.quoteText = "";
+      this.store.quoteAuthor = "";
+      this.store.quoteExist = null;
     },
   },
   computed: {
