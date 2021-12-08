@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper">
     <div class="quote-wrapper">
-      <div v-if="quoteExistComputed" class="quote">
+      <div v-if="quoteComputed != null" class="quote">
         <h2>" {{ quoteComputed }} "</h2>
         <h6>- {{ authorComputed }}</h6>
       </div>
@@ -74,26 +74,37 @@ export default {
       goals: [],
       addQuote: false,
       store,
+      quoteText: null,
+      quoteAuthor: null,
     };
   },
   created() {},
   mounted() {
-    console.log("STORE", store.currentUserUid);
+    this.getQuote();
     this.getGoals();
     this.$root.$on("Profile.vue", () => {
       this.getGoals();
     });
   },
   methods: {
+    getQuote() {
+      console.log("getQuote");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      // Get quote from user firestore collection
+      db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          this.quoteText = doc.data().Quote;
+          this.quoteAuthor = doc.data().Author;
+        });
+    },
     addQuoteMethod() {
-      console.log("ADD METHOD");
       this.addQuote = !this.addQuote;
     },
     submitQuote() {
       if (this.quoteText.length > 0 && this.quoteAuthor.length > 0) {
-        store.quoteExist = true;
-        store.quoteText = this.quoteText;
-        store.quoteAuthor = this.quoteAuthor;
         // Get current user
         const user = firebase.auth().currentUser;
         // Add quote to user firestore collection
@@ -130,13 +141,13 @@ export default {
   },
   computed: {
     quoteComputed() {
-      return store.quoteText;
+      return this.quoteText;
     },
     authorComputed() {
-      return store.quoteAuthor;
+      return this.quoteAuthor;
     },
     quoteExistComputed() {
-      return store.quoteExist;
+      return this.quoteExist;
     },
   },
   watch: {},

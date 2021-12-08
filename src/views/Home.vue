@@ -99,6 +99,7 @@ export default {
         .then((doc) => {
           store.quoteText = doc.data().Quote;
           store.quoteAuthor = doc.data().Author;
+          store.currentUserUid = user.uid;
         });
     },
     getPosts() {

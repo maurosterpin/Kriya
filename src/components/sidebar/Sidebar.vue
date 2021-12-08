@@ -56,11 +56,7 @@
       </div>
     </div>
     <div class="collapse-icon" @click="toggleSidebar">
-      <doubleArrow
-        class="doubleArrow"
-        :class="{ 'rotate-180': !collapsed }"
-        :style="{ 'margin-left': doubleArrowMarginLeft }"
-      />
+      <doubleArrow class="doubleArrow" :class="{ 'rotate-180': !collapsed }" />
     </div>
   </div>
 </template>
@@ -134,7 +130,8 @@ export default {
   fill: #fff;
   width: 38px;
   padding: 0.75em;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
+  margin-left: 20px !important;
   position: fixed;
   bottom: 0;
   z-index: 100;
@@ -145,6 +142,9 @@ export default {
 .rotate-180 {
   transform: rotate(180deg);
   transition: 0.4s ease;
+  margin-bottom: 8px;
+  padding: 0.75em;
+  margin-left: 180px !important;
 }
 
 .sidebar-link-wrapper {
