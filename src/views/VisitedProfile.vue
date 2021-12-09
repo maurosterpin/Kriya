@@ -25,7 +25,6 @@ import store from "@/store";
 import avatar from "../assets/Icons/avatar.svg";
 import illustration from "../assets/Icons/illustration-empty.svg";
 import { db } from "@/firebase";
-import firebase from "@/firebase";
 export default {
   name: "Home",
   components: {
@@ -58,7 +57,7 @@ export default {
       //const user = firebase.auth().currentUser;
       // Get quote from user firestore collection
       db.collection("users")
-        .doc("P6zvCkM3fFblFmNMBuhVAtV0I0p2")
+        .doc(this.$route.params.profileUid)
         .get()
         .then((doc) => {
           this.quoteText = doc.data().Quote;
@@ -66,29 +65,12 @@ export default {
           this.username = doc.data().username;
         });
     },
-    submitQuote() {
-      if (this.quoteText.length > 0 && this.quoteAuthor.length > 0) {
-        // Get current user
-        const user = firebase.auth().currentUser;
-        // Add quote to user firestore collection
-        const dataBase = db.collection("users").doc(user.uid);
-        dataBase.update({
-          Quote: this.quoteText,
-          Author: this.quoteAuthor,
-        });
-        console.log("Quote added!");
-      } else {
-        alert("Enter quote and author");
-      }
-    },
     getGoals() {
-      // Get current user
-      //const user = firebase.auth().currentUser;
       // Empty goals array
       this.goals = [];
       // Get goals from user firestore collection
       db.collection("users")
-        .doc("P6zvCkM3fFblFmNMBuhVAtV0I0p2")
+        .doc(this.$route.params.profileUid)
         .collection("goals")
         .get()
         .then((querySnapshot) => {

@@ -1,23 +1,65 @@
 <template>
   <div class="public-chat-msg">
-    <div class="public-chat-msg-head">
-      <avatar class="user-icon" /><strong>username</strong>
-      <span class="public-chat-msg-head-time">just now</span>
+    <div class="public-chat-msg-head" @click="visitProfile">
+      <avatar class="user-icon" /><strong>{{ username }}</strong>
+      <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
     </div>
     <div class="public-chat-msg-body">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      {{ info.Message }}
     </div>
   </div>
 </template>
 
 <script>
 import avatar from "../assets/Icons/avatar.svg";
+import moment from "moment";
+import { db } from "@/firebase";
+import firebase from "@/firebase";
+import router from "@/router";
 export default {
+  data() {
+    return {
+      username: "",
+      profilePic: null,
+    };
+  },
   name: "Message",
+  props: ["info"],
   components: {
     avatar,
+  },
+  computed: {
+    postedFromNow() {
+      return moment(this.info.Date).fromNow();
+    },
+  },
+  mounted() {
+    this.getUserData();
+  },
+  methods: {
+    getUserData() {
+      db.collection("users")
+        .doc(this.info.UID)
+        .get()
+        .then((doc) => {
+          this.username = doc.data().username;
+        });
+    },
+    visitProfile() {
+      console.log("visitProfile");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      if (user.uid != this.info.UID) {
+        router.push({
+          name: "VisitedProfile",
+          params: { profileUid: this.info.UID },
+        });
+      } else {
+        router.push({
+          name: "Profile",
+        });
+      }
+    },
   },
 };
 </script>
@@ -30,7 +72,7 @@ export default {
   border-radius: 25px;
   color: #fff;
   background-color: #141518;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
 }
 
@@ -40,12 +82,13 @@ export default {
   align-items: center;
   font-size: 15px;
   cursor: pointer;
+  margin-bottom: 5px;
 }
 
 .user-icon {
   border-radius: 50%;
   width: 40px;
-  margin-right: 7px;
+  margin-right: 12px;
 }
 
 .public-chat-msg-head-time {

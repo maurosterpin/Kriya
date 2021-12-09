@@ -16,16 +16,21 @@
           <h6 class="public-chat-h5">general</h6>
           <div class="messages">
             <div class="messages-space">
-              <Message /><Message /><Message /><Message /><Message />
+              <Message
+                v-for="message in publicChat"
+                :key="message.Date"
+                :info="message"
+              />
             </div>
           </div>
           <div class="input">
             <input
+              v-model="messageText"
               class="public-chat-input"
               type="text"
               placeholder="Send message..."
             />
-            <sendIcon class="send-icon" />
+            <sendIcon class="send-icon" @click="sendPublicChatMessage" />
           </div>
         </div>
       </div>
@@ -52,10 +57,14 @@ export default {
     return {
       store,
       posts: [],
+      chatMessages: [],
+      messageText: null,
+      publicChat: [],
     };
   },
   created() {},
   mounted() {
+    this.getPublicChatMessages();
     this.getPosts();
     if (this.store.logged) {
       const user = firebase.auth().currentUser;
@@ -116,6 +125,42 @@ export default {
               Date: data.Date,
               Completed: data.Completed,
               CompletionDate: data.CompletionDate,
+              UID: data.UID,
+            });
+          });
+        });
+    },
+    sendPublicChatMessage() {
+      console.log("sendPublicChatMessage");
+      if (this.messageText != "") {
+        // Get current user
+        const user = firebase.auth().currentUser;
+        // Add quote to user firestore collection
+        const dataBase = db.collection("public-chat");
+
+        dataBase.add({
+          Message: this.messageText,
+          UID: user.uid,
+          Date: Date.now(),
+        });
+        this.messageText = "";
+        this.getPublicChatMessages();
+      } else {
+        console.log("Unable to send empty message");
+      }
+    },
+    getPublicChatMessages() {
+      console.log("getPublicChatMessages");
+      db.collection("public-chat")
+        .orderBy("Date", "asc")
+        .get()
+        .then((query) => {
+          this.publicChat = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.publicChat.push({
+              Message: data.Message,
+              Date: data.Date,
               UID: data.UID,
             });
           });

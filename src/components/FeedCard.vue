@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="container-feed-card-head-msg">
-      <h5>I completed my daily to-do list!</h5>
+      <h5>I completed my {{ info.ListType.toLowerCase() }} to-do list!</h5>
     </div>
     <div class="container-feed-card-body">
       <ToDoList :info="info" :listType="info.ListType" />
