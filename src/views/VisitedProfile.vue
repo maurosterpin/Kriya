@@ -5,42 +5,10 @@
         <h2>" {{ quoteComputed }} "</h2>
         <h6>- {{ authorComputed }}</h6>
       </div>
-
-      <form autocomplete="off" v-else-if="addQuote" class="quote-form">
-        <input
-          v-model="quoteText"
-          class="inputField2"
-          type="text"
-          id="goalDescription"
-          name="content"
-          placeholder="Quote..."
-        />
-
-        <input
-          v-model="quoteAuthor"
-          class="inputField2"
-          type="text"
-          id="goalReason"
-          name="description"
-          placeholder="Author..."
-        />
-
-        <span v-on:click="submitQuote" class="buttonQuote"
-          ><strong>Submit</strong></span
-        >
-      </form>
-
-      <div v-else v-on:click="addQuoteMethod" class="quoteAdd">
-        <h5>Add quote</h5>
-        <addIcon class="addIcon" />
-      </div>
     </div>
     <div class="profile">
-      <div class="username">
-        <avatar class="avatar" />{{ store.displayName }}
-      </div>
+      <div class="username"><avatar class="avatar" />{{ username }}</div>
       <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
-      <AddGoal />
       <h6 v-if="goals.length < 1" class="illustrationTitle">
         There is nothing here
       </h6>
@@ -52,20 +20,16 @@
 </template>
 
 <script>
-import AddGoal from "../components/AddGoal.vue";
 import Goal from "../components/Goal.vue";
 import store from "@/store";
 import avatar from "../assets/Icons/avatar.svg";
-import addIcon from "../assets/Icons/add-icon.svg";
 import illustration from "../assets/Icons/illustration-empty.svg";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
 export default {
   name: "Home",
   components: {
-    AddGoal,
     avatar,
-    addIcon,
     illustration,
     Goal,
   },
@@ -76,6 +40,7 @@ export default {
       store,
       quoteText: null,
       quoteAuthor: null,
+      username: null,
     };
   },
   created() {},
@@ -90,18 +55,16 @@ export default {
     getQuote() {
       console.log("getQuote");
       // Get current user
-      const user = firebase.auth().currentUser;
+      //const user = firebase.auth().currentUser;
       // Get quote from user firestore collection
       db.collection("users")
-        .doc(user.uid)
+        .doc("P6zvCkM3fFblFmNMBuhVAtV0I0p2")
         .get()
         .then((doc) => {
           this.quoteText = doc.data().Quote;
           this.quoteAuthor = doc.data().Author;
+          this.username = doc.data().username;
         });
-    },
-    addQuoteMethod() {
-      this.addQuote = !this.addQuote;
     },
     submitQuote() {
       if (this.quoteText.length > 0 && this.quoteAuthor.length > 0) {
@@ -120,14 +83,13 @@ export default {
     },
     getGoals() {
       // Get current user
-      const user = firebase.auth().currentUser;
+      //const user = firebase.auth().currentUser;
       // Empty goals array
       this.goals = [];
       // Get goals from user firestore collection
       db.collection("users")
-        .doc(user.uid)
+        .doc("P6zvCkM3fFblFmNMBuhVAtV0I0p2")
         .collection("goals")
-        .orderBy("date", "desc")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {

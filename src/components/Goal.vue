@@ -5,7 +5,7 @@
 
       <div v-if="this.daily.length > 0" class="to-do-wrapper">
         <div
-          v-if="!DailyToDoStarted"
+          v-if="!DailyToDoStarted && $router.currentRoute.path == '/profile'"
           @click="startDailyToDo"
           class="addNewToDoListBtn"
         >
@@ -27,14 +27,18 @@
       <div v-else-if="DailyToDoStarted">
         <StartedToDoList info="Daily" :goalName="info.goalTitle" />
       </div>
-      <div v-else class="addToDo" @click="startDailyToDo">
+      <div
+        v-else-if="$router.currentRoute.path == '/profile'"
+        class="addToDo"
+        @click="startDailyToDo"
+      >
         <h6>Add Daily To-Do</h6>
         <addIcon class="addIcon" />
       </div>
 
       <div v-if="this.weekly.length > 0" class="to-do-wrapper">
         <div
-          v-if="!WeeklyToDoStarted"
+          v-if="!WeeklyToDoStarted && $router.currentRoute.path == '/profile'"
           @click="startWeeklyToDo"
           class="addNewToDoListBtn"
         >
@@ -56,14 +60,18 @@
       <div v-else-if="WeeklyToDoStarted">
         <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
       </div>
-      <div v-else class="addToDo" @click="startWeeklyToDo">
+      <div
+        v-else-if="$router.currentRoute.path == '/profile'"
+        class="addToDo"
+        @click="startWeeklyToDo"
+      >
         <h6>Add Weekly To-Do</h6>
         <addIcon class="addIcon" />
       </div>
 
       <div v-if="this.monthly.length > 0" class="to-do-wrapper">
         <div
-          v-if="!MonthlyToDoStarted"
+          v-if="!MonthlyToDoStarted && $router.currentRoute.path == '/profile'"
           @click="startMonthlyToDo"
           class="addNewToDoListBtn"
         >
@@ -85,7 +93,11 @@
       <div v-else-if="MonthlyToDoStarted">
         <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
       </div>
-      <div v-else class="addToDo" @click="startMonthlyToDo">
+      <div
+        v-else-if="$router.currentRoute.path == '/profile'"
+        class="addToDo"
+        @click="startMonthlyToDo"
+      >
         <h6>Add Monthly To-Do</h6>
         <addIcon class="addIcon" />
       </div>
@@ -177,30 +189,57 @@ export default {
       // Get current user
       const user = firebase.auth().currentUser;
       // Access daily to-do collection for a specific goal
-      const database = db
-        .collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.info.goalTitle)
-        .collection("DailyToDos");
+      if (this.$router.currentRoute.path == "/profile") {
+        const database = db
+          .collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .collection("DailyToDos");
 
-      // get to-do lists from user/goal firestore collection
-      database
-        .orderBy("Date", "desc")
-        .get()
-        .then((query) => {
-          this.daily = [];
-          query.forEach((doc) => {
-            const data = doc.data();
-            this.daily.push({
-              Tasks: data.Tasks,
-              Date: data.Date,
-              Completed: data.Completed,
-              docID: doc.id,
+        // get to-do lists from user/goal firestore collection
+        database
+          .orderBy("Date", "desc")
+          .get()
+          .then((query) => {
+            this.daily = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.daily.push({
+                Tasks: data.Tasks,
+                Date: data.Date,
+                Completed: data.Completed,
+                docID: doc.id,
+              });
             });
+            this.checkGoalCount();
           });
-          this.checkGoalCount();
-        });
+      } else {
+        const database = db
+          .collection("users")
+          .doc(this.$route.params.profileUid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .collection("DailyToDos");
+
+        // get to-do lists from user/goal firestore collection
+        database
+          .orderBy("Date", "desc")
+          .get()
+          .then((query) => {
+            this.daily = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.daily.push({
+                Tasks: data.Tasks,
+                Date: data.Date,
+                Completed: data.Completed,
+                docID: doc.id,
+              });
+            });
+            this.checkGoalCount();
+          });
+      }
     },
     LoadWeeklyToDoLists() {
       this.getLatestWeeklyToDoDate();
@@ -208,30 +247,57 @@ export default {
       // Get current user
       const user = firebase.auth().currentUser;
       // Access daily to-do collection for a specific goal
-      const database = db
-        .collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.info.goalTitle)
-        .collection("WeeklyToDos");
+      if (this.$router.currentRoute.path == "/profile") {
+        const database = db
+          .collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .collection("WeeklyToDos");
 
-      // get to-do lists from user/goal firestore collection
-      database
-        .orderBy("Date", "desc")
-        .get()
-        .then((query) => {
-          this.weekly = [];
-          query.forEach((doc) => {
-            const data = doc.data();
-            this.weekly.push({
-              Tasks: data.Tasks,
-              Date: data.Date,
-              Completed: data.Completed,
-              docID: doc.id,
+        // get to-do lists from user/goal firestore collection
+        database
+          .orderBy("Date", "desc")
+          .get()
+          .then((query) => {
+            this.weekly = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.weekly.push({
+                Tasks: data.Tasks,
+                Date: data.Date,
+                Completed: data.Completed,
+                docID: doc.id,
+              });
             });
+            this.checkGoalCount();
           });
-          this.checkGoalCount();
-        });
+      } else {
+        const database = db
+          .collection("users")
+          .doc(this.$route.params.profileUid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .collection("WeeklyToDos");
+
+        // get to-do lists from user/goal firestore collection
+        database
+          .orderBy("Date", "desc")
+          .get()
+          .then((query) => {
+            this.weekly = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.weekly.push({
+                Tasks: data.Tasks,
+                Date: data.Date,
+                Completed: data.Completed,
+                docID: doc.id,
+              });
+            });
+            this.checkGoalCount();
+          });
+      }
     },
     LoadMonthlyToDoLists() {
       this.getLatestMonthlyToDoDate();
@@ -239,82 +305,155 @@ export default {
       // Get current user
       const user = firebase.auth().currentUser;
       // Access daily to-do collection for a specific goal
-      const database = db
-        .collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.info.goalTitle)
-        .collection("MonthlyToDos");
+      if (this.$router.currentRoute.path == "/profile") {
+        const database = db
+          .collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .collection("MonthlyToDos");
 
-      // get to-do lists from user/goal firestore collection
-      database
-        .orderBy("Date", "desc")
-        .get()
-        .then((query) => {
-          this.monthly = [];
-          query.forEach((doc) => {
-            const data = doc.data();
-            this.monthly.push({
-              Tasks: data.Tasks,
-              Date: data.Date,
-              Completed: data.Completed,
-              docID: doc.id,
+        // get to-do lists from user/goal firestore collection
+        database
+          .orderBy("Date", "desc")
+          .get()
+          .then((query) => {
+            this.monthly = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.monthly.push({
+                Tasks: data.Tasks,
+                Date: data.Date,
+                Completed: data.Completed,
+                docID: doc.id,
+              });
             });
+            this.checkGoalCount();
           });
-          this.checkGoalCount();
-        });
+      } else {
+        const database = db
+          .collection("users")
+          .doc(this.$route.params.profileUid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .collection("MonthlyToDos");
+
+        // get to-do lists from user/goal firestore collection
+        database
+          .orderBy("Date", "desc")
+          .get()
+          .then((query) => {
+            this.monthly = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.monthly.push({
+                Tasks: data.Tasks,
+                Date: data.Date,
+                Completed: data.Completed,
+                docID: doc.id,
+              });
+            });
+            this.checkGoalCount();
+          });
+      }
     },
     getLatestDailyToDoDate() {
-      // Get current user
-      const user = firebase.auth().currentUser;
-      // Access tasks
-      db.collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.info.goalTitle)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            this.LatestDailyDate = doc.data().LatestDailyToDoDate;
-          } else {
-            console.log("LatestDailyToDoDate doesn't exist!");
-          }
-        });
+      if (this.$router.currentRoute.path == "/profile") {
+        // Get current user
+        const user = firebase.auth().currentUser;
+        // Access tasks
+        db.collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.LatestDailyDate = doc.data().LatestDailyToDoDate;
+            } else {
+              console.log("LatestDailyToDoDate doesn't exist!");
+            }
+          });
+      } else {
+        db.collection("users")
+          .doc(this.$route.params.profileUid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.LatestDailyDate = doc.data().LatestDailyToDoDate;
+            } else {
+              console.log("LatestDailyToDoDate doesn't exist!");
+            }
+          });
+      }
     },
     getLatestWeeklyToDoDate() {
-      // Get current user
-      const user = firebase.auth().currentUser;
-      // Access tasks
-      db.collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.info.goalTitle)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            this.LatestWeeklyDate = doc.data().LatestWeeklyToDoDate;
-            console.log("Latest Weekly Date!!!: ", this.LatestWeeklyDate);
-          } else {
-            console.log("LatestWeeklyToDoDate doesn't exist!");
-          }
-        });
+      if (this.$router.currentRoute.path == "/profile") {
+        // Get current user
+        const user = firebase.auth().currentUser;
+        // Access tasks
+        db.collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.LatestWeeklyDate = doc.data().LatestWeeklyToDoDate;
+              console.log("Latest Weekly Date!!!: ", this.LatestWeeklyDate);
+            } else {
+              console.log("LatestWeeklyToDoDate doesn't exist!");
+            }
+          });
+      } else {
+        db.collection("users")
+          .doc(this.$route.params.profileUid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.LatestWeeklyDate = doc.data().LatestWeeklyToDoDate;
+              console.log("Latest Weekly Date!!!: ", this.LatestWeeklyDate);
+            } else {
+              console.log("LatestWeeklyToDoDate doesn't exist!");
+            }
+          });
+      }
     },
     getLatestMonthlyToDoDate() {
-      // Get current user
-      const user = firebase.auth().currentUser;
-      // Access tasks
-      db.collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.info.goalTitle)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            this.LatestMonthlyDate = doc.data().LatestMonthlyToDoDate;
-          } else {
-            console.log("LatestMonthlyToDoDate doesn't exist!");
-          }
-        });
+      if (this.$router.currentRoute.path == "/profile") {
+        // Get current user
+        const user = firebase.auth().currentUser;
+        // Access tasks
+        db.collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.LatestMonthlyDate = doc.data().LatestMonthlyToDoDate;
+            } else {
+              console.log("LatestMonthlyToDoDate doesn't exist!");
+            }
+          });
+      } else {
+        db.collection("users")
+          .doc(this.$route.params.profileUid)
+          .collection("goals")
+          .doc(this.info.goalTitle)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.LatestMonthlyDate = doc.data().LatestMonthlyToDoDate;
+            } else {
+              console.log("LatestMonthlyToDoDate doesn't exist!");
+            }
+          });
+      }
     },
   },
   computed: {},

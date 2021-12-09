@@ -36,9 +36,7 @@
       </div>
     </div>
     <div class="profile">
-      <div class="username">
-        <avatar class="avatar" />{{ store.displayName }}
-      </div>
+      <div class="username"><avatar class="avatar" />{{ username }}</div>
       <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
       <AddGoal />
       <h6 v-if="goals.length < 1" class="illustrationTitle">
@@ -76,6 +74,7 @@ export default {
       store,
       quoteText: null,
       quoteAuthor: null,
+      username: null,
     };
   },
   created() {},
@@ -98,6 +97,8 @@ export default {
         .then((doc) => {
           this.quoteText = doc.data().Quote;
           this.quoteAuthor = doc.data().Author;
+          this.username = doc.data().username;
+          this.profilePic = doc.data().profilePic;
         });
     },
     addQuoteMethod() {
