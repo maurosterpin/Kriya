@@ -18,7 +18,7 @@
             <UserSearchCard
               v-for="card in cUsers"
               :key="card.Username"
-              :test="card.Username"
+              :test="card"
             />
           </div>
         </div>

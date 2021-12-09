@@ -1,21 +1,45 @@
 <template>
-  <div class="user-search-card-wrapper">
-    <div class="user-search-card"><avatar class="user-icon" />{{ test }}</div>
+  <div class="user-search-card-wrapper" @click="visitProfile">
+    <div class="user-search-card">
+      <avatar class="user-icon" />{{ test.Username }}
+    </div>
   </div>
 </template>
 
 <script>
 import avatar from "../assets/Icons/avatar.svg";
+import router from "@/router";
+import store from "@/store";
+import firebase from "@/firebase";
 export default {
+  data() {
+    return {
+      store,
+    };
+  },
   props: ["test"],
   name: "UserSearchCard",
   components: {
     avatar,
   },
-
-  mounted() {
-    console.log("INFO TEST", this.test);
+  methods: {
+    visitProfile() {
+      console.log("visitProfile");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      if (user.uid != this.test.UID) {
+        router.push({
+          name: "VisitedProfile",
+          params: { profileUid: this.test.UID },
+        });
+      } else {
+        router.push({
+          name: "Profile",
+        });
+      }
+    },
   },
+  mounted() {},
 };
 </script>
 

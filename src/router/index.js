@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
 import Profile from "../views/Profile.vue";
+import VisitedProfile from "../views/VisitedProfile.vue";
 import PublicChat from "../views/PublicChat.vue";
 import DirectMessages from "../views/DirectMessages.vue";
 import Settings from "../views/Settings.vue";
@@ -36,6 +37,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/visited-profile/:profileUid",
+    name: "VisitedProfile",
+    component: VisitedProfile,
   },
   {
     path: "/public-chat",

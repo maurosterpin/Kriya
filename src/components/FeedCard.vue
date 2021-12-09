@@ -1,6 +1,6 @@
 <template>
   <div class="container-feed-card">
-    <div class="container-feed-card-head">
+    <div class="container-feed-card-head" @click="visitProfile">
       <avatar class="feed-icon" />
       <div class="container-feed-card-head-txt">
         <h6>{{ username }}</h6>
@@ -30,6 +30,8 @@ import avatar from "../assets/Icons/avatar.svg";
 import moment from "moment";
 import { db } from "@/firebase";
 import store from "@/store";
+import router from "@/router";
+import firebase from "@/firebase";
 export default {
   name: "feedCard",
   props: ["info", "listType", "passedID", "goalName"],
@@ -50,6 +52,21 @@ export default {
           this.username = doc.data().username;
           this.profilePic = doc.data().profilePic;
         });
+    },
+    visitProfile() {
+      console.log("visitProfile");
+      // Get current user
+      const user = firebase.auth().currentUser;
+      if (user.uid != this.info.UID) {
+        router.push({
+          name: "VisitedProfile",
+          params: { profileUid: this.info.UID },
+        });
+      } else {
+        router.push({
+          name: "Profile",
+        });
+      }
     },
   },
   computed: {
@@ -112,6 +129,7 @@ export default {
   flex-direction: row;
   align-items: center;
   color: #fff;
+  cursor: pointer;
 }
 
 .container-feed-card-head-txt {
