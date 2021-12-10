@@ -13,7 +13,7 @@
       </div>
       <div class="public-chat-relative">
         <div class="public-chat">
-          <h6 class="public-chat-h5">general</h6>
+          <h6 class="public-chat-h5">public chat</h6>
           <div class="messages">
             <div class="messages-space">
               <Message
@@ -208,7 +208,6 @@ body::-webkit-scrollbar {
 .public-chat-relative {
   width: 1000px;
   position: relative;
-  float: right;
 }
 
 .public-chat {

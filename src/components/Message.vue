@@ -1,7 +1,7 @@
 <template>
   <div class="public-chat-msg">
     <div class="public-chat-msg-head" @click="visitProfile">
-      <avatar class="user-icon" /><strong>{{ username }}</strong>
+      <avatar class="user-icon" />{{ username }}
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
     </div>
     <div class="public-chat-msg-body">
