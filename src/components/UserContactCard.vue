@@ -1,9 +1,12 @@
 <template>
-  <div class="contact">
+  <div
+    class="contact"
+    @click="$parent.chooseContact(info.UID, info.messagesID)"
+  >
     <div class="contact-head">
       <avatar class="contact-user-icon" />
       <div class="contact-head-txt">
-        <h6>username</h6>
+        <h6>{{ username }}</h6>
         <h6>just now</h6>
       </div>
       <div class="contact-body"></div>
@@ -13,11 +16,32 @@
 
 <script>
 import avatar from "../assets/Icons/avatar.svg";
+import { db } from "@/firebase";
+
 export default {
+  data() {
+    return {
+      username: "",
+    };
+  },
   components: {
     avatar,
   },
+  props: ["info"],
   name: "UserContactCard",
+  mounted() {
+    this.getUserData();
+  },
+  methods: {
+    getUserData() {
+      db.collection("users")
+        .doc(this.info.UID)
+        .get()
+        .then((doc) => {
+          this.username = doc.data().username;
+        });
+    },
+  },
 };
 </script>
 
