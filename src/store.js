@@ -2,7 +2,7 @@ export default {
   logged: null,
   displayName: null,
   profilePic: null,
-  currentUserUid: "",
+  currentUserUid: null,
   quoteText: "",
   quoteAuthor: "",
   quoteExist: null,

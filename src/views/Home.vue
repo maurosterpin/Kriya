@@ -81,11 +81,10 @@ export default {
             // Else create a new user
           } else {
             const dataBase = db.collection("users").doc(user.uid);
-            const UIDtest = user.uid;
             dataBase.set({
               username: store.displayName,
               profilePic: store.profilePic,
-              uid: UIDtest,
+              uid: user.uid,
             });
             console.log("User added!");
           }

@@ -18,12 +18,7 @@
         </div>
       </div>
       <UserContactCard
-        v-for="contact in contacts"
-        :key="contact.key"
-        :info="contact"
-      />
-      <UserContactCard
-        v-for="contact in contacts"
+        v-for="contact in loadedContacts"
         :key="contact.key"
         :info="contact"
       />
@@ -50,7 +45,7 @@
     >
       <div class="messages">
         <Message
-          v-for="message in messages.reverse()"
+          v-for="message in loadedMessages"
           :key="message.key"
           :info="message"
         />
@@ -83,6 +78,7 @@ export default {
   data() {
     return {
       messages: [],
+      loadedMessages: [],
       messageText: "",
       contacts: [],
       LatestDmId: "",
@@ -90,6 +86,7 @@ export default {
       chosenDmId: "",
       users: [],
       searchText: "",
+      loadedContacts: [],
     };
   },
   components: {
@@ -122,15 +119,23 @@ export default {
               UID: doc.id,
             });
           });
+        })
+        .then(() => {
+          this.loadedContacts = this.contacts;
         });
     },
     chooseContact(UID, messagesID) {
-      console.log("chooseContact", UID);
+      this.chosenDmId = "";
+      this.receiverUID = "";
       this.chosenDmId = messagesID;
       this.receiverUID = UID;
-      this.getMessages();
+
+      setTimeout(() => {
+        this.getMessages();
+      }, 100);
     },
-    createContact() {
+    createContact(UID) {
+      console.log("createContact");
       // Get current user
       const user = firebase.auth().currentUser;
       // Set up contact for current user
@@ -138,7 +143,7 @@ export default {
         .collection("users")
         .doc(user.uid)
         .collection("contacts")
-        .doc(this.receiverUID);
+        .doc(UID);
 
       contactForCurrentUser.get().then((doc) => {
         if (!doc.exists) {
@@ -152,24 +157,30 @@ export default {
       // Set up contact for other user
       const contactForOtherUser = db
         .collection("users")
-        .doc(this.receiverUID)
+        .doc(UID)
         .collection("contacts")
         .doc(user.uid);
 
-      contactForOtherUser.get().then((doc) => {
-        if (!doc.exists) {
-          console.log("Contact being added");
-          contactForOtherUser.set({ messagesID: this.LatestDmId });
-          let tempLatestId = parseInt(this.LatestDmId);
-          tempLatestId += 1;
-          db.collection("direct-messages")
-            .doc("LatestDmId")
-            .set({ LatestDmId: tempLatestId });
-          this.getLatestContactId();
-        } else {
-          console.log("Contact for other user already created");
-        }
-      });
+      contactForOtherUser
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            console.log("Contact being added");
+            contactForOtherUser.set({ messagesID: this.LatestDmId });
+            let tempLatestId = parseInt(this.LatestDmId);
+            tempLatestId += 1;
+            db.collection("direct-messages")
+              .doc("LatestDmId")
+              .set({ LatestDmId: tempLatestId });
+            this.getLatestContactId();
+          } else {
+            console.log("Contact for other user already created");
+          }
+        })
+        .then(() => {
+          this.getContacts();
+          this.searchText = "";
+        });
     },
     sendMessage() {
       if (this.messageText != "") {
@@ -184,11 +195,14 @@ export default {
           Date: Date.now(),
         });
         this.messageText = "";
+        let temp = "";
+        temp += this.chosenDmId;
+        console.log("MESSGE TEXT", this.messageText);
 
         // Update direct-messages firestore collection
         console.log("Updating direct-messages collection");
         db.collection("direct-messages")
-          .doc(this.chosenDmId)
+          .doc(temp)
           .set({
             Messages: this.messages,
             Date: Date.now(),
@@ -197,21 +211,35 @@ export default {
 
         setTimeout(() => {
           this.getMessages();
-        }, 50);
+        }, 10);
       } else {
         console.log("Unable to send empty message");
       }
     },
     getMessages() {
+      let temp = "";
+      temp += this.chosenDmId;
       console.log("Getting messages");
       db.collection("direct-messages")
-        .doc(this.chosenDmId)
+        .doc(temp)
         .get()
         .then((doc) => {
-          this.messages = [];
           if (doc.exists) {
+            this.messages = [];
+
             this.messages = doc.data().Messages;
+          } else {
+            this.messages = [];
           }
+        })
+        .then(() => {
+          this.messages.sort((a, b) =>
+            a.Date > b.Date ? 1 : b.Date > a.Date ? -1 : 0
+          );
+          this.loadedMessages = [];
+        })
+        .then(() => {
+          this.loadedMessages = this.messages.reverse();
         });
     },
     getLatestContactId() {
@@ -259,6 +287,9 @@ export default {
       } else {
         return false;
       }
+    },
+    cMessages() {
+      return this.messages;
     },
   },
 };

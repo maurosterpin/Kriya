@@ -1,5 +1,8 @@
 <template>
-  <div class="user-search-card-wrapper">
+  <div
+    class="user-search-card-wrapper"
+    @click="$parent.createContact(test.UID)"
+  >
     <div class="user-search-contact-card">
       <avatar class="user-icon" />{{ test.Username }}
     </div>
