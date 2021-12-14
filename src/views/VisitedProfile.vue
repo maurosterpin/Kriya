@@ -7,7 +7,17 @@
       </div>
     </div>
     <div class="profile">
-      <div class="username"><avatar class="avatar" />{{ username }}</div>
+      <div class="username">
+        <avatar class="avatar" />{{ username
+        }}<router-link
+          @click="test"
+          class="noDecorationLink"
+          to="/direct-messages"
+        >
+          <span class="message-user">Message</span></router-link
+        >
+      </div>
+
       <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
       <h6 v-if="goals.length < 1" class="illustrationTitle">
         There is nothing here
@@ -105,6 +115,14 @@ export default {
   background-color: #141518;
 }
 
+.message-user {
+  margin-left: 22px;
+  padding: 10px 18px;
+  background-color: #39c75a;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
 .illustration {
   margin: auto;
   margin-bottom: 100px;
@@ -113,6 +131,16 @@ export default {
 .illustrationTitle {
   margin: auto;
   color: #fff;
+}
+
+.noDecorationLink {
+  color: #fff;
+  text-decoration: none;
+}
+
+.noDecorationLink:hover {
+  color: #fff;
+  text-decoration: none;
 }
 
 .quote-wrapper {

@@ -141,8 +141,6 @@ input {
   display: flex;
   flex-direction: column;
   overflow-x: hidden !important;
-  border-top: 1px solid rgb(214, 214, 214);
-  border-bottom: 1px solid rgb(214, 214, 214);
 }
 
 input[type="text"],

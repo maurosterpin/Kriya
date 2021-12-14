@@ -60,8 +60,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 25px;
   width: 100%;
+  margin-bottom: 38px;
 }
 
 .direct-messages {

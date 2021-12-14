@@ -1,11 +1,26 @@
 <template>
   <div class="direct-messages-wrapper">
     <div class="contacts">
-      <input
-        v-model="searchText"
-        class="findContactsSearch"
-        type="text"
-        placeholder="Find users"
+      <div class="search-container">
+        <input
+          v-model="searchText"
+          class="findContactsSearch"
+          :class="{ 'border-bottom-radius-none': cUsersLength }"
+          type="text"
+          placeholder="Find users"
+        />
+        <div v-if="searchText != ''" class="searchDropdown">
+          <UserSearchContactCard
+            v-for="card in cUsers"
+            :key="card.Username"
+            :test="card"
+          />
+        </div>
+      </div>
+      <UserContactCard
+        v-for="contact in contacts"
+        :key="contact.key"
+        :info="contact"
       />
       <UserContactCard
         v-for="contact in contacts"
@@ -13,18 +28,26 @@
         :info="contact"
       />
     </div>
-    <h6 v-if="contacts.length < 1" class="illustrationTitle">
-      There is nothing here
-    </h6>
-    <illustration v-if="contacts.length < 1" class="illustration" />
-    <div class="chooseContactIllustration" v-else-if="chosenDmId == ''">
+    <div class="noMessageScreen" v-if="contacts.length < 1">
+      <h6 class="illustrationTitle">
+        There is nothing here
+      </h6>
+      <illustration v-if="contacts.length < 1" class="illustration" />
+    </div>
+    <div
+      class="chooseContactIllustration"
+      v-if="chosenDmId == '' && contacts.length > 0"
+    >
       <h6 class="illustrationTitle">
         Choose a contact to see messages
       </h6>
       <illustration class="illustration" />
     </div>
 
-    <div class="direct-messages" v-else-if="chosenDmId != ''">
+    <div
+      class="direct-messages"
+      v-else-if="chosenDmId != '' && contacts.length > 0"
+    >
       <div class="messages">
         <Message
           v-for="message in messages.reverse()"
@@ -33,7 +56,7 @@
         />
       </div>
 
-      <div class="input">
+      <div v-if="contacts.length > 0" class="input">
         <input
           v-model="messageText"
           class="public-chat-input"
@@ -53,6 +76,7 @@ import UserContactCard from "../components/UserContactCard.vue";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
 import illustration from "../assets/Icons/illustration-empty.svg";
+import UserSearchContactCard from "@/components/UserSearchContactCard.vue";
 
 export default {
   name: "DirectMessages",
@@ -64,6 +88,8 @@ export default {
       LatestDmId: "",
       receiverUID: "",
       chosenDmId: "",
+      users: [],
+      searchText: "",
     };
   },
   components: {
@@ -71,11 +97,12 @@ export default {
     Message,
     UserContactCard,
     illustration,
+    UserSearchContactCard,
   },
   mounted() {
+    this.getUsers();
     this.getLatestContactId();
     this.getContacts();
-    this.getMessages();
   },
   methods: {
     getContacts() {
@@ -204,6 +231,35 @@ export default {
           }
         });
     },
+    getUsers() {
+      db.collection("users")
+        .get()
+        .then((query) => {
+          this.users = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.users.push({
+              Username: data.username,
+              ProfilePic: data.profilePic,
+              UID: data.uid,
+            });
+          });
+        });
+    },
+  },
+  computed: {
+    cUsers() {
+      return this.users.filter((user) =>
+        user.Username.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    },
+    cUsersLength() {
+      if (this.cUsers.length > 0 && this.searchText != "") {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
@@ -217,9 +273,36 @@ export default {
   height: 891px;
 }
 
+.search-container {
+  position: relative;
+  padding: 0px;
+  margin-bottom: 40px;
+}
+
+.searchDropdown {
+  max-width: 350px;
+  max-height: 300px;
+  position: absolute;
+  margin-right: 38px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden !important;
+}
+
 .chooseContactIllustration {
   margin: auto;
   margin-right: 600px;
+}
+
+.noMessageScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 7.9%;
 }
 
 input:focus {
@@ -233,10 +316,17 @@ input.findContactsSearch {
 .findContactsSearch {
   margin-top: 50px;
   width: 350px;
-  height: 40px;
+  height: 45px;
   border-radius: 10px;
+
   border: none;
-  display: none;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  margin-bottom: 0px;
+}
+
+.border-bottom-radius-none {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 .contacts {
