@@ -64,7 +64,9 @@ export default {
   },
   created() {},
   mounted() {
-    this.getPublicChatMessages();
+    db.collection("public-chat").onSnapshot(() => {
+      this.getPublicChatMessages();
+    });
     this.getPosts();
     if (this.store.logged) {
       const user = firebase.auth().currentUser;
@@ -143,7 +145,6 @@ export default {
           Date: Date.now(),
         });
         this.messageText = "";
-        this.getPublicChatMessages();
       } else {
         console.log("Unable to send empty message");
       }
