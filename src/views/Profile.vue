@@ -36,7 +36,11 @@
       </div>
     </div>
     <div class="profile">
-      <div class="username"><avatar class="avatar" />{{ username }}</div>
+      <div class="username">
+        <img :src="profilePic" alt="ProfilePicture" class="PfpImg" />{{
+          username
+        }}
+      </div>
       <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
       <AddGoal />
       <h6 v-if="goals.length < 1" class="illustrationTitle">
@@ -53,7 +57,6 @@
 import AddGoal from "../components/AddGoal.vue";
 import Goal from "../components/Goal.vue";
 import store from "@/store";
-import avatar from "../assets/Icons/avatar.svg";
 import addIcon from "../assets/Icons/add-icon.svg";
 import illustration from "../assets/Icons/illustration-empty.svg";
 import { db } from "@/firebase";
@@ -62,7 +65,6 @@ export default {
   name: "Home",
   components: {
     AddGoal,
-    avatar,
     addIcon,
     illustration,
     Goal,
@@ -75,15 +77,18 @@ export default {
       quoteText: null,
       quoteAuthor: null,
       username: null,
+      profilePic: null,
     };
   },
   created() {},
   mounted() {
-    this.getQuote();
-    this.getGoals();
-    this.$root.$on("Profile.vue", () => {
+    setTimeout(() => {
+      this.getQuote();
       this.getGoals();
-    });
+      this.$root.$on("Profile.vue", () => {
+        this.getGoals();
+      });
+    }, 500);
   },
   methods: {
     getQuote() {
@@ -160,6 +165,13 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #141518;
+}
+
+.PfpImg {
+  width: 62px;
+  height: 62px;
+  border-radius: 100px;
+  margin-right: 10px;
 }
 
 .illustration {

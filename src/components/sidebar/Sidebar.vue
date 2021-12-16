@@ -6,19 +6,19 @@
           class="sidebar-link"
           :class="{ 'slide-left': collapsed }"
           to="/"
-          >Home</router-link
+          ><span @click="toggleSidebar">Home</span></router-link
         >
         <router-link
           class="sidebar-link appear"
           :class="{ 'slide-left': collapsed }"
           to="/public-chat"
-          >Public chat</router-link
+          ><span @click="toggleSidebar">Public chat</span></router-link
         >
         <router-link
           class="sidebar-link"
           :class="{ 'slide-left': collapsed }"
           to="/direct-messages"
-          >Messages</router-link
+          ><span @click="toggleSidebar">Messages</span></router-link
         >
       </div>
 
@@ -42,8 +42,8 @@
           v-if="store.logged"
           class="sidebar-link"
           :class="{ 'slide-left': collapsed }"
-          to="/"
-          >Settings</router-link
+          to="/Settings"
+          ><span @click="toggleSidebar">Settings</span></router-link
         >
         <a
           v-if="store.logged"
@@ -51,7 +51,7 @@
           class="sidebar-link sidebar-sign-out"
           :class="{ 'slide-left': collapsed }"
           to="/"
-          >Sign Out</a
+          ><span @click="toggleSidebar">Sign Out</span></a
         >
       </div>
     </div>

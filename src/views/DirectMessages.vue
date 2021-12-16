@@ -87,6 +87,7 @@ export default {
       users: [],
       searchText: "",
       loadedContacts: [],
+      imageUrl: null,
     };
   },
   components: {
@@ -97,9 +98,11 @@ export default {
     UserSearchContactCard,
   },
   mounted() {
-    this.getUsers();
-    this.getLatestContactId();
-    this.getContacts();
+    setTimeout(() => {
+      this.getUsers();
+      this.getLatestContactId();
+      this.getContacts();
+    }, 200);
   },
   methods: {
     getContacts() {
