@@ -129,10 +129,16 @@ export default {
       this.receiverUID = "";
       this.chosenDmId = messagesID;
       this.receiverUID = UID;
-
-      setTimeout(() => {
-        this.getMessages();
-      }, 100);
+      let temp = "";
+      temp += this.chosenDmId;
+      console.log("Setting up real-time listener");
+      db.collection("direct-messages")
+        .doc(temp)
+        .onSnapshot(() => {
+          setTimeout(() => {
+            this.getMessages();
+          }, 100);
+        });
     },
     createContact(UID) {
       console.log("createContact");
@@ -209,9 +215,9 @@ export default {
           });
         console.log("Database set");
 
-        setTimeout(() => {
+        /*setTimeout(() => {
           this.getMessages();
-        }, 10);
+        }, 10);*/
       } else {
         console.log("Unable to send empty message");
       }
