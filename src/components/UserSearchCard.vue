@@ -1,13 +1,12 @@
 <template>
   <div class="user-search-card-wrapper" @click="visitProfile">
     <div class="user-search-card">
-      <avatar class="user-icon" />{{ test.Username }}
+      <img :src="test.ProfilePic" class="user-icon" />{{ test.Username }}
     </div>
   </div>
 </template>
 
 <script>
-import avatar from "../assets/Icons/avatar.svg";
 import router from "@/router";
 import store from "@/store";
 import firebase from "@/firebase";
@@ -19,9 +18,7 @@ export default {
   },
   props: ["test"],
   name: "UserSearchCard",
-  components: {
-    avatar,
-  },
+  components: {},
   methods: {
     visitProfile() {
       console.log("visitProfile");

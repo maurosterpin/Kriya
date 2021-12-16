@@ -32,14 +32,11 @@
 </template>
 
 <script>
-// import avatar from "../assets/Icons/avatar.svg";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
 export default {
   name: "Settings",
-  components: {
-    // avatar,
-  },
+  components: {},
   data() {
     return {
       usernameInput: null,
@@ -81,6 +78,9 @@ export default {
         .doc(user.uid)
         .update({
           username: this.usernameInput,
+        })
+        .then(() => {
+          alert("Username updated");
         });
     },
     updateProfilePicture() {

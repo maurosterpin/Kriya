@@ -8,7 +8,7 @@
     </div>
     <div class="profile">
       <div class="username">
-        <avatar class="avatar" />{{ username
+        <img :src="profilePic" class="avatar" />{{ username
         }}<router-link
           @click="test"
           class="noDecorationLink"
@@ -32,13 +32,12 @@
 <script>
 import Goal from "../components/Goal.vue";
 import store from "@/store";
-import avatar from "../assets/Icons/avatar.svg";
+
 import illustration from "../assets/Icons/illustration-empty.svg";
 import { db } from "@/firebase";
 export default {
   name: "Home",
   components: {
-    avatar,
     illustration,
     Goal,
   },
@@ -50,6 +49,7 @@ export default {
       quoteText: null,
       quoteAuthor: null,
       username: null,
+      profilePic: null,
     };
   },
   created() {},
@@ -63,9 +63,6 @@ export default {
   methods: {
     getQuote() {
       console.log("getQuote");
-      // Get current user
-      //const user = firebase.auth().currentUser;
-      // Get quote from user firestore collection
       db.collection("users")
         .doc(this.$route.params.profileUid)
         .get()
@@ -73,6 +70,7 @@ export default {
           this.quoteText = doc.data().Quote;
           this.quoteAuthor = doc.data().Author;
           this.username = doc.data().username;
+          this.profilePic = doc.data().profilePic;
         });
     },
     getGoals() {
@@ -121,6 +119,13 @@ export default {
   background-color: #39c75a;
   border-radius: 50px;
   cursor: pointer;
+}
+
+.PfpImg {
+  width: 62px;
+  height: 62px;
+  border-radius: 100px;
+  margin-right: 10px;
 }
 
 .illustration {

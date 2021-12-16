@@ -7,37 +7,27 @@
         <h6>{{ postedFromNow }}</h6>
       </div>
     </div>
-    <div class="container-feed-card-head-msg">
-      <h5>I completed my {{ info.ListType.toLowerCase() }} to-do list!</h5>
-    </div>
-    <div class="container-feed-card-body">
-      <ToDoList :info="info" :listType="info.ListType" />
-      <div class="feed-card-button-container">
-        <button
-          v-if="store.currentUserUid != info.UID"
-          class="feed-card-button"
-        >
-          Congratulations!
-        </button>
+    <div class="quote-container">
+      <div class="container-feed-card-head-msg">
+        <h5>" {{ info.Quote }} "</h5>
+      </div>
+      <div class="container-feed-card-author">
+        <h6>- {{ info.Author }}</h6>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ToDoList from "../components/ToDoList.vue";
-
 import moment from "moment";
 import { db } from "@/firebase";
 import store from "@/store";
 import router from "@/router";
 import firebase from "@/firebase";
 export default {
-  name: "feedCard",
-  props: ["info", "listType", "passedID", "goalName"],
-  components: {
-    ToDoList,
-  },
+  name: "feedCardQuote",
+  props: ["info"],
+  components: {},
   mounted() {
     this.getUserData();
   },
@@ -83,14 +73,33 @@ export default {
 </script>
 
 <style scoped>
+.quote-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
 .container-feed-card {
   width: 100%;
   margin-bottom: 55px;
   padding: 25px;
-  background-color: #141518;
+  background-color: #15161a;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
+}
+
+.container-feed-card-author {
+  color: #fff;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.container-feed-card-author h6 {
+  font-size: 14px;
+  font-weight: 100;
 }
 
 @media screen and (max-width: 380px) {
@@ -141,10 +150,17 @@ export default {
 
 .container-feed-card-head-msg {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   color: #fff;
   margin-top: 15px;
+}
+
+h5 {
+  font-size: 25px;
+  font-weight: 100;
 }
 
 .feed-icon {

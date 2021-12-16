@@ -3,12 +3,14 @@
     <div class="home">
       <div class="feed-wrapper">
         <div class="feed">
-          <FeedCard
-            v-for="card in posts"
-            :key="card.name"
-            :info="card"
-            :listType="card.ListType"
-          />
+          <div v-for="card in posts" :key="card.name">
+            <FeedCard
+              v-if="card.ListType"
+              :info="card"
+              :listType="card.ListType"
+            />
+            <FeedCardQuote v-else-if="card.Quote" :info="card" />
+          </div>
         </div>
       </div>
       <div class="public-chat-relative">
@@ -42,6 +44,7 @@
 <script>
 import store from "@/store";
 import FeedCard from "../components/FeedCard.vue";
+import FeedCardQuote from "../components/FeedCardQuote.vue";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
 import { db } from "@/firebase";
@@ -52,6 +55,7 @@ export default {
     sendIcon,
     Message,
     FeedCard,
+    FeedCardQuote,
   },
   data() {
     return {
@@ -60,42 +64,47 @@ export default {
       chatMessages: [],
       messageText: null,
       publicChat: [],
+      defaultProfilePicture: null,
     };
   },
   created() {},
   mounted() {
-    db.collection("public-chat").onSnapshot(() => {
-      this.getPublicChatMessages();
-    });
-    this.getPosts();
-    if (this.store.logged) {
-      const user = firebase.auth().currentUser;
-      this.store.currentUserUid = user.uid;
-      console.log(this.store.currentUserUid);
-      db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          // Check if user exists
-          if (doc.exists) {
-            store.displayName = doc.data().username;
-            store.profilePic = doc.data().profilePic;
-            // Else create a new user
-          } else {
-            const dataBase = db.collection("users").doc(user.uid);
-            dataBase.set({
-              username: store.displayName,
-              profilePic: store.profilePic,
-              uid: user.uid,
-            });
-            console.log("User added!");
-          }
-        });
-    }
-    if (this.store.quoteText == "") {
-      store.quoteExist = true;
-      this.getQuote();
-    }
+    setTimeout(() => {
+      this.getDefaultProfilePicture();
+      db.collection("public-chat").onSnapshot(() => {
+        this.getPublicChatMessages();
+      });
+
+      this.getPosts();
+      if (this.store.logged) {
+        const user = firebase.auth().currentUser;
+        this.store.currentUserUid = user.uid;
+        console.log(this.store.currentUserUid);
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((doc) => {
+            // Check if user exists
+            if (doc.exists) {
+              store.displayName = doc.data().username;
+              store.profilePic = doc.data().profilePic;
+              // Else create a new user
+            } else {
+              const dataBase = db.collection("users").doc(user.uid);
+              dataBase.set({
+                username: store.displayName,
+                profilePic: this.defaultProfilePicture,
+                uid: user.uid,
+              });
+              console.log("User added!");
+            }
+          });
+      }
+      if (this.store.quoteText == "") {
+        store.quoteExist = true;
+        this.getQuote();
+      }
+    }, 300);
   },
   methods: {
     getQuote() {
@@ -114,7 +123,7 @@ export default {
     },
     getPosts() {
       db.collection("posts")
-        .orderBy("Date", "desc")
+        .orderBy("CompletionDate", "desc")
         .get()
         .then((query) => {
           this.posts = [];
@@ -127,6 +136,9 @@ export default {
               Completed: data.Completed,
               CompletionDate: data.CompletionDate,
               UID: data.UID,
+              Quote: data.Quote,
+              Author: data.Author,
+              Color: "#15161a !important",
             });
           });
         });
@@ -148,6 +160,14 @@ export default {
       } else {
         console.log("Unable to send empty message");
       }
+    },
+    getDefaultProfilePicture() {
+      db.collection("default")
+        .doc("defaultProfilePicture")
+        .get()
+        .then((doc) => {
+          this.defaultProfilePicture = doc.data().profilePic;
+        });
     },
     getPublicChatMessages() {
       console.log("getPublicChatMessages");

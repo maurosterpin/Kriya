@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper feedCardToDO">
+  <div class="wrapper feedCardToDO" :style="{ 'background-color': info.Color }">
     <div class="header">
       <header>{{ listType }} to-do</header>
       <p>

@@ -1,9 +1,10 @@
 <template>
   <div class="app-wrapper">
     <div class="quote-wrapper">
-      <div v-if="quoteComputed != null" class="quote">
+      <div v-if="!addQuote && quoteText.length > 0" class="quote">
         <h2>" {{ quoteComputed }} "</h2>
         <h6>- {{ authorComputed }}</h6>
+        <span class="buttonQuoteEdit" @click="addQuoteMethod">Edit</span>
       </div>
 
       <form autocomplete="off" v-else-if="addQuote" class="quote-form">
@@ -37,7 +38,7 @@
     </div>
     <div class="profile">
       <div class="username">
-        <img :src="profilePic" alt="ProfilePicture" class="PfpImg" />{{
+        <img :src="profilePic" alt="ProfilePicture" class="avatar" />{{
           username
         }}
       </div>
@@ -114,12 +115,24 @@ export default {
         // Get current user
         const user = firebase.auth().currentUser;
         // Add quote to user firestore collection
-        const dataBase = db.collection("users").doc(user.uid);
-        dataBase.update({
-          Quote: this.quoteText,
-          Author: this.quoteAuthor,
-        });
+        let dataBase = db.collection("users").doc(user.uid);
+        dataBase
+          .update({
+            Quote: this.quoteText,
+            Author: this.quoteAuthor,
+          })
+          .then(() => {
+            dataBase = db.collection("posts");
+            dataBase.add({
+              Quote: this.quoteText,
+              Author: this.quoteAuthor,
+              CompletionDate: Date.now(),
+              UID: user.uid,
+            });
+          });
+
         console.log("Quote added!");
+        this.addQuote = !this.addQuote;
       } else {
         alert("Enter quote and author");
       }
@@ -165,6 +178,18 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #141518;
+}
+
+.buttonQuoteEdit {
+  font-size: 13px;
+  cursor: pointer;
+  padding: 7px 15px;
+  border-radius: 25px;
+  margin: auto;
+  margin-top: 20px;
+  color: #fff;
+  background-color: #141518;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .PfpImg {

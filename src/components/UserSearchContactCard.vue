@@ -4,14 +4,12 @@
     @click="$parent.createContact(test.UID)"
   >
     <div class="user-search-contact-card">
-      <avatar class="user-icon" />{{ test.Username }}
+      <img :src="test.ProfilePic" class="user-icon" />{{ test.Username }}
     </div>
   </div>
 </template>
 
 <script>
-import avatar from "../assets/Icons/avatar.svg";
-
 import store from "@/store";
 
 export default {
@@ -22,9 +20,7 @@ export default {
   },
   props: ["test"],
   name: "UserSearchContactCard",
-  components: {
-    avatar,
-  },
+  components: {},
   methods: {},
   mounted() {},
 };

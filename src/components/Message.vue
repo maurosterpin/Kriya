@@ -1,7 +1,9 @@
 <template>
   <div class="public-chat-msg">
     <div class="public-chat-msg-head" @click="visitProfile">
-      <avatar class="user-icon" />{{ username }}
+      <img :src="profilePic" alt="ProfilePicture" class="PfpImg" />{{
+        username
+      }}
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
     </div>
     <div class="public-chat-msg-body">
@@ -11,7 +13,6 @@
 </template>
 
 <script>
-import avatar from "../assets/Icons/avatar.svg";
 import moment from "moment";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
@@ -25,9 +26,7 @@ export default {
   },
   name: "Message",
   props: ["info"],
-  components: {
-    avatar,
-  },
+  components: {},
   computed: {
     postedFromNow() {
       return moment(this.info.Date).fromNow();
@@ -43,6 +42,7 @@ export default {
         .get()
         .then((doc) => {
           this.username = doc.data().username;
+          this.profilePic = doc.data().profilePic;
         });
     },
     visitProfile() {
@@ -83,6 +83,13 @@ export default {
   font-size: 15px;
   cursor: pointer;
   margin-bottom: 5px;
+}
+
+.PfpImg {
+  width: 45px;
+  height: 45px;
+  border-radius: 100px;
+  margin-right: 10px;
 }
 
 .user-icon {
