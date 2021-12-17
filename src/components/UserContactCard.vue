@@ -103,4 +103,10 @@ export default {
   padding: 25px;
   height: 800px;
 }
+
+@media screen and (max-width: 380px) {
+  .contact {
+    max-width: 300px;
+  }
+}
 </style>

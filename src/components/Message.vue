@@ -110,4 +110,28 @@ export default {
   font-size: 15px;
   padding: 10px 20px;
 }
+
+@media screen and (max-width: 450px) {
+  .PfpImg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .public-chat-msg-body {
+    font-size: 15px;
+    padding: 5px 10px;
+  }
+
+  .public-chat-msg {
+    padding: 22px;
+  }
+
+  .public-chat-msg-head {
+    font-size: 13px;
+  }
+
+  .public-chat-msg-head-time {
+    font-size: 12px;
+  }
+}
 </style>

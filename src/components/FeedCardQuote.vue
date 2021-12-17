@@ -105,7 +105,7 @@ export default {
 @media screen and (max-width: 380px) {
   .container-feed-card {
     padding: 10px;
-    max-width: 300px;
+    max-width: 250px;
     margin: auto;
     margin-bottom: 55px;
   }
@@ -126,8 +126,16 @@ export default {
     width: 35px !important;
   }
 
+  .container-feed-card-head-msg {
+    width: 80% !important;
+  }
+
   .container-feed-card-head-msg h5 {
     font-size: 15px !important;
+  }
+
+  .container-feed-card-author h6 {
+    font-size: 12px !important;
   }
 }
 

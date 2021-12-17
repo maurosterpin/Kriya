@@ -187,12 +187,17 @@ export default {
 
 @media screen and (max-width: 380px) {
   .wrapper {
-    max-width: 250px;
+    max-width: 210px;
     padding: 25px !important;
     min-height: 0px;
+    font-size: 11px;
 
     header {
-      font-size: 18px !important;
+      font-size: 13px !important;
+    }
+
+    .header p {
+      margin-top: 2px !important;
     }
   }
   .addIcon {

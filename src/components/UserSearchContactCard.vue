@@ -48,4 +48,10 @@ export default {
   border-radius: 50px;
   margin-right: 10px;
 }
+
+@media screen and (max-width: 380px) {
+  .user-search-contact-card {
+    width: 250px;
+  }
+}
 </style>
