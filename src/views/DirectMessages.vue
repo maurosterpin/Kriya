@@ -23,13 +23,13 @@
           />
         </div>
       </div>
-      <div class="contactCards">
-        <UserContactCard
-          v-for="contact in cLoadedContacts"
-          :key="contact.key"
-          :info="contact"
-        />
-      </div>
+      <!--div class="contactCards"-->
+      <UserContactCard
+        v-for="contact in cLoadedContacts"
+        :key="contact.key"
+        :info="contact"
+      />
+
       <div class="contacts-illustration">
         <h6
           v-if="windowWidth <= 900 && contacts.length > 0"
@@ -469,6 +469,7 @@ export default {
   top: 90px;
   left: -13px;
   display: flex;
+  z-index: 50;
 }
 
 .display-none {
@@ -555,7 +556,7 @@ input.findContactsSearch {
   margin-left: 170px;
   position: relative;
   align-items: center;
-  width: 500px;
+  width: 350px;
   pointer-events: auto;
 }
 
@@ -577,13 +578,25 @@ input.findContactsSearch {
   padding-bottom: 25px !important;
 }
 
+@media screen and (min-width: 1900px) {
+  .contacts {
+    margin-left: 235px !important;
+  }
+}
+
 @media screen and (max-width: 1700px) {
   .contacts {
-    margin-left: 40px;
+    margin-left: 110px;
   }
+
   /* .chooseContactIllustration {
     margin-right: 500px;
   } */
+}
+@media screen and (max-width: 1470px) {
+  .contacts {
+    margin-left: 50px;
+  }
 }
 
 /*@media screen and (max-width: 1570px) {
@@ -598,21 +611,33 @@ input.findContactsSearch {
   }
 }*/
 
-@media screen and (max-width: 1390px) {
+@media screen and (max-width: 1400px) {
+  .messages {
+    width: 900px;
+  }
+}
+
+@media screen and (max-width: 1303px) {
+  .messages {
+    width: 800px;
+  }
+}
+
+@media screen and (max-width: 1203px) {
   .messages {
     width: 700px;
   }
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1103px) {
   .messages {
-    width: 500px;
+    width: 600px;
   }
 }
 
-@media screen and (max-width: 505px) {
+@media screen and (max-width: 1003px) {
   .messages {
-    width: 400px;
+    width: 500px;
   }
 }
 
