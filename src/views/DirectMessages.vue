@@ -105,6 +105,7 @@ import firebase from "@/firebase";
 import illustration from "../assets/Icons/illustration-empty.svg";
 import UserSearchContactCard from "@/components/UserSearchContactCard.vue";
 import singleArrow from "../assets/Icons/single-arrow-left.svg";
+import router from "@/router";
 
 export default {
   name: "DirectMessages",
@@ -133,6 +134,14 @@ export default {
     singleArrow,
   },
   mounted() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        router.push({
+          name: "Login",
+        });
+      }
+    });
+    window.removeEventListener("resize", this.routerPush);
     window.addEventListener("resize", () => {
       this.windowWidth = window.innerWidth;
     });
@@ -389,7 +398,6 @@ export default {
   position: fixed;
   top: 90px;
   left: -13px;
-  z-index: 100;
   display: flex;
 }
 

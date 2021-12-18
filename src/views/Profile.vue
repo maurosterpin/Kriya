@@ -62,6 +62,7 @@ import addIcon from "../assets/Icons/add-icon.svg";
 import illustration from "../assets/Icons/illustration-empty.svg";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
+import router from "@/router";
 export default {
   name: "Home",
   components: {
@@ -83,6 +84,14 @@ export default {
   },
   created() {},
   mounted() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        router.push({
+          name: "Login",
+        });
+      }
+    });
+    window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
       this.getQuote();
       this.getGoals();
@@ -178,6 +187,10 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #141518;
+}
+
+.quote-form {
+  width: 500px !important;
 }
 
 .buttonQuoteEdit {

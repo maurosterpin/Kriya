@@ -14,10 +14,18 @@
       <ToDoList :info="info" :listType="info.ListType" />
       <div class="feed-card-button-container">
         <button
-          v-if="store.currentUserUid != info.UID"
-          class="feed-card-button"
+          v-if="isLiked"
+          class="feed-card-button button-hover"
+          @click="removeLike"
         >
-          Congratulations!
+          <likeIcon class="margin-right" /> {{ isLiked }}
+        </button>
+        <div class="likesHover" v-for="(user, index) in likes" :key="index">
+          {{ likeUsernames.join(", ") }}
+        </div>
+
+        <button v-if="!isLiked" class="feed-card-button" @click="congratulate">
+          Congratulate!
         </button>
       </div>
     </div>
@@ -26,7 +34,7 @@
 
 <script>
 import ToDoList from "../components/ToDoList.vue";
-
+import likeIcon from "../assets/Icons/like-icon.svg";
 import moment from "moment";
 import { db } from "@/firebase";
 import store from "@/store";
@@ -37,11 +45,37 @@ export default {
   props: ["info", "listType", "passedID", "goalName"],
   components: {
     ToDoList,
+    likeIcon,
+  },
+  data() {
+    return {
+      currentUserUsername: "",
+      currentUID: "",
+      username: "",
+      profilePic: "",
+      store,
+      likes: [],
+      likeUIDs: [],
+      likeUsernames: [],
+    };
   },
   mounted() {
+    this.getCurrentUserData();
     this.getUserData();
+    this.getLikes();
   },
   methods: {
+    getCurrentUserData() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          this.currentUID = user.uid;
+          this.currentUserUsername = doc.data().username;
+        });
+    },
     getUserData() {
       db.collection("users")
         .doc(this.info.UID)
@@ -66,18 +100,65 @@ export default {
         });
       }
     },
+    getLikes() {
+      const dataBase = db
+        .collection("posts")
+        .doc(this.info.docID)
+        .collection("likes");
+      dataBase
+        .orderBy("Date", "desc")
+        .get()
+        .then((query) => {
+          this.likes = [];
+          this.likeUIDs = [];
+          this.likeUsernames = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.likes.push({
+              username: data.username,
+              Date: data.Date,
+            });
+            this.likeUIDs.push(doc.id);
+            this.likeUsernames.push(data.username);
+          });
+        });
+    },
+    congratulate() {
+      console.log("congratulate");
+      const dataBase = db
+        .collection("posts")
+        .doc(this.info.docID)
+        .collection("likes")
+        .doc(this.currentUID);
+      dataBase
+        .set({ username: this.currentUserUsername, Date: Date.now() })
+        .then(() => {
+          this.getLikes();
+        });
+    },
+    removeLike() {
+      console.log("removeLike");
+      db.collection("posts")
+        .doc(this.info.docID)
+        .collection("likes")
+        .doc(this.currentUID)
+        .delete()
+        .then(() => {
+          this.getLikes();
+        });
+    },
   },
   computed: {
     postedFromNow() {
       return moment(this.info.CompletionDate).fromNow();
     },
-  },
-  data() {
-    return {
-      username: "",
-      profilePic: "",
-      store,
-    };
+    isLiked() {
+      if (this.likeUIDs.find((element) => element === this.currentUID)) {
+        return this.likes.length;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
@@ -91,6 +172,21 @@ export default {
   border-radius: 25px;
   display: flex;
   flex-direction: column;
+}
+
+.button-hover:hover + .likesHover {
+  display: inline;
+}
+
+.likesHover {
+  position: absolute;
+  color: #fff;
+  padding: 10px;
+  background-color: #141518;
+  border-radius: 100px;
+  margin-top: 44px;
+  display: none;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
 @media screen and (max-width: 380px) {
@@ -136,6 +232,10 @@ export default {
   cursor: pointer;
 }
 
+.margin-right {
+  margin-right: 3px;
+}
+
 .container-feed-card-head-txt {
   width: 100%;
   display: flex;
@@ -164,6 +264,7 @@ export default {
   justify-content: center;
 }
 .feed-card-button {
+  display: flex;
   margin-top: 5px;
   position: absolute;
   padding: 9px 16px;

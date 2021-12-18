@@ -64,6 +64,7 @@ export default {
     };
   },
   mounted() {
+    window.removeEventListener("resize", this.routerPush);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.$router.replace({ name: "Home" });

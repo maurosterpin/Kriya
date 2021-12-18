@@ -45,6 +45,7 @@ export default {
     };
   },
   mounted() {
+    window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
       this.getUserData();
     }, 500);

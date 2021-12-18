@@ -54,6 +54,7 @@ export default {
   },
   created() {},
   mounted() {
+    window.removeEventListener("resize", this.routerPush);
     this.getQuote();
     this.getGoals();
     this.$root.$on("Profile.vue", () => {

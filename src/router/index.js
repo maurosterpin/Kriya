@@ -7,7 +7,7 @@ import Profile from "../views/Profile.vue";
 import VisitedProfile from "../views/VisitedProfile.vue";
 import PublicChat from "../views/PublicChat.vue";
 import DirectMessages from "../views/DirectMessages.vue";
-import DirectMessagesChosen from "../views/DirectMessagesChosen.vue";
+
 import Settings from "../views/Settings.vue";
 
 Vue.use(VueRouter);
@@ -54,11 +54,7 @@ const routes = [
     name: "DirectMessages",
     component: DirectMessages,
   },
-  {
-    path: "/direct-messages/:messagesId",
-    name: "DirectMessagesContact",
-    component: DirectMessagesChosen,
-  },
+
   {
     path: "/settings",
     name: "Settings",

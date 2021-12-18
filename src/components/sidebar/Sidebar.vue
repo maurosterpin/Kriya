@@ -15,6 +15,7 @@
           ><span @click="toggleSidebar">Public chat</span></router-link
         >
         <router-link
+          v-if="store.logged"
           class="sidebar-link"
           :class="{ 'slide-left': collapsed }"
           to="/direct-messages"
@@ -75,7 +76,17 @@ export default {
       MARGIN_LEFT: 185,
       MARGIN_LEFT_COLLAPSED: 0,
       store,
+      logged: false,
     };
+  },
+  created() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        this.logged = true;
+      } else {
+        this.logged = false;
+      }
+    });
   },
   methods: {
     toggleSidebar() {

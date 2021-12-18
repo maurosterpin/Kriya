@@ -94,6 +94,7 @@ export default {
     logo,
   },
   mounted() {
+    window.removeEventListener("resize", this.routerPush);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         router.replace({ name: "Home" });

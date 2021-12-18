@@ -6,10 +6,7 @@
         <router-link class="header" to="/">Kriya</router-link>
       </div>
       <div class="nav-links">
-        <router-link v-if="!searchActivated" class="link-icon" to="#"
-          ><searchIcon @click="changeSearchState"
-        /></router-link>
-        <div v-else-if="searchActivated" class="searchInputContainer">
+        <div v-if="searchActivated" class="searchInputContainer">
           <input v-model="searchText" ref="searchInput" type="text" />
           <div
             v-if="searchActivated && searchText != ''"
@@ -22,10 +19,10 @@
             />
           </div>
         </div>
-        <router-link v-if="store.logged" class="link-icon" to="/profile"
-          ><profileIcon
+        <router-link class="link-icon" to="#"
+          ><searchIcon @click="changeSearchState"
         /></router-link>
-        <router-link v-else class="link-icon" to="/login"
+        <router-link v-if="store.logged" class="link-icon" to="/profile"
           ><profileIcon
         /></router-link>
       </div>

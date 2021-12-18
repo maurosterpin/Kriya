@@ -62,13 +62,14 @@ export default {
       store,
       posts: [],
       chatMessages: [],
-      messageText: null,
+      messageText: "",
       publicChat: [],
       defaultProfilePicture: null,
     };
   },
   created() {},
   mounted() {
+    window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
       this.getDefaultProfilePicture();
       db.collection("public-chat").onSnapshot(() => {
@@ -95,6 +96,8 @@ export default {
                 username: store.displayName,
                 profilePic: this.defaultProfilePicture,
                 uid: user.uid,
+                Quote: "Discipline is freedom",
+                Author: "Unknown",
               });
               console.log("User added!");
             }
@@ -104,7 +107,7 @@ export default {
         store.quoteExist = true;
         this.getQuote();
       }
-    }, 300);
+    }, 500);
   },
   methods: {
     getQuote() {
@@ -129,6 +132,7 @@ export default {
           this.posts = [];
           query.forEach((doc) => {
             const data = doc.data();
+            console.log("DOC ID!!!:", doc.id);
             this.posts.push({
               Tasks: data.Tasks,
               ListType: data.ListType,
@@ -139,26 +143,31 @@ export default {
               Quote: data.Quote,
               Author: data.Author,
               Color: "#15161a !important",
+              docID: doc.id,
             });
           });
         });
     },
     sendPublicChatMessage() {
-      console.log("sendPublicChatMessage");
-      if (this.messageText != "") {
-        // Get current user
-        const user = firebase.auth().currentUser;
-        // Add quote to user firestore collection
-        const dataBase = db.collection("public-chat");
+      if (this.store.logged) {
+        console.log("sendPublicChatMessage");
+        if (this.messageText != "") {
+          // Get current user
+          const user = firebase.auth().currentUser;
+          // Add quote to user firestore collection
+          const dataBase = db.collection("public-chat");
 
-        dataBase.add({
-          Message: this.messageText,
-          UID: user.uid,
-          Date: Date.now(),
-        });
-        this.messageText = "";
+          dataBase.add({
+            Message: this.messageText,
+            UID: user.uid,
+            Date: Date.now(),
+          });
+          this.messageText = "";
+        } else {
+          console.log("Unable to send empty message");
+        }
       } else {
-        console.log("Unable to send empty message");
+        alert("You must be logged in to perform this action");
       }
     },
     getDefaultProfilePicture() {
