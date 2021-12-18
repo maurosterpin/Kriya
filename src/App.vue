@@ -36,7 +36,9 @@ export default {
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    console.log("APP MOUNTEEEED");
+  },
   methods: {},
   computed: {
     isLogged() {

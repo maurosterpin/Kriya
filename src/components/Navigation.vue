@@ -31,8 +31,22 @@
             @click="notificationDropdownActivate"
             class="notificationBell"
           />
-          <div v-if="notificationDropdownActive" class="notificationDropdown">
-            <NotificationCard />
+          <span v-if="notificationCount.length > 0" class="notification"></span>
+          <div
+            v-if="notificationDropdownActive && notificationCount.length > 0"
+            class="notificationDropdown"
+          >
+            <NotificationCard
+              v-for="card in notificationCount"
+              :key="card.notificationUID"
+              :info="card"
+            />
+          </div>
+          <div
+            v-else-if="notificationDropdownActive"
+            class="notificationDropdownEmpty"
+          >
+            No notifications
           </div>
         </div>
       </div>
@@ -70,12 +84,18 @@ export default {
       searchText: "",
       users: [],
       notificationDropdownActive: false,
+      notification: false,
+      notificationCount: [],
     };
   },
   created() {
     this.checkScreen();
+    this.getNotifications();
   },
   mounted() {
+    setTimeout(() => {
+      this.getNotifications();
+    }, 500);
     this.getUsers();
   },
   methods: {
@@ -92,6 +112,7 @@ export default {
     notificationDropdownActivate() {
       console.log("TEST");
       this.notificationDropdownActive = !this.notificationDropdownActive;
+      this.getNotifications();
     },
     logout() {
       firebase
@@ -111,6 +132,26 @@ export default {
               ProfilePic: data.profilePic,
               UID: data.uid,
             });
+          });
+        });
+    },
+    getNotifications() {
+      this.notificationCount = [];
+      console.log("Getting notifications");
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(user.uid)
+        .collection("contacts")
+        .get()
+        .then((query) => {
+          query.forEach((doc) => {
+            const data = doc.data();
+            if (data.notification === true) {
+              this.notificationCount.push({
+                notification: data.notification,
+                notificationUID: doc.id,
+              });
+            }
           });
         });
     },
@@ -149,6 +190,16 @@ input {
   position: relative;
 }
 
+.notification {
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 100px;
+  position: absolute;
+  right: 0px;
+  margin-top: 10px;
+}
+
 .searchDropdown {
   max-width: 189px;
   max-height: 300px;
@@ -178,6 +229,18 @@ input {
   position: absolute;
   margin-top: 49px;
   margin-right: 50px;
+}
+
+.notificationDropdownEmpty {
+  background-color: #fff;
+  position: absolute;
+  margin-top: 49px;
+  margin-right: 50px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
 }
 
 input[type="text"],

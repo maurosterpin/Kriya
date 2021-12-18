@@ -62,7 +62,7 @@ export default {
   border-radius: 100px;
   position: absolute;
   right: 0px;
-  margin-top: 45px;
+  margin-top: 50px;
 }
 
 .contact {

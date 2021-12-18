@@ -323,6 +323,7 @@ export default {
       }
     },
     getNotificationCount() {
+      this.notifications = [];
       console.log("Getting notifications");
       const user = firebase.auth().currentUser;
       db.collection("users")

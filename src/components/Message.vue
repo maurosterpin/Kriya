@@ -86,8 +86,8 @@ export default {
 }
 
 .PfpImg {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: 100px;
   margin-right: 10px;
 }
