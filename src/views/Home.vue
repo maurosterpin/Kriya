@@ -107,7 +107,7 @@ export default {
         store.quoteExist = true;
         this.getQuote();
       }
-    }, 500);
+    }, 100);
   },
   methods: {
     getQuote() {

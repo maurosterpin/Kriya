@@ -6,10 +6,11 @@
     <div class="contact-head">
       <avatar class="contact-user-icon" />
       <div class="contact-head-txt">
+        <span v-if="info.notification" class="notification"></span>
+
         <h6>{{ username }}</h6>
         <h6>just now</h6>
       </div>
-      <div class="contact-body"></div>
     </div>
   </div>
 </template>
@@ -54,9 +55,19 @@ export default {
   flex-direction: row;
 }
 
+.notification {
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 100px;
+  position: absolute;
+  right: 0px;
+  margin-top: 45px;
+}
+
 .contact {
   cursor: pointer;
-  max-width: 600px;
+  max-width: 350px !important;
   display: flex;
   flex-direction: column;
   align-items: center;

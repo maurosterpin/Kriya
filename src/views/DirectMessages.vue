@@ -23,11 +23,13 @@
           />
         </div>
       </div>
-      <UserContactCard
-        v-for="contact in loadedContacts"
-        :key="contact.key"
-        :info="contact"
-      />
+      <div class="contactCards">
+        <UserContactCard
+          v-for="contact in cLoadedContacts"
+          :key="contact.key"
+          :info="contact"
+        />
+      </div>
       <div class="contacts-illustration">
         <h6
           v-if="windowWidth <= 900 && contacts.length > 0"
@@ -73,7 +75,11 @@
       v-else-if="chosenDmId != '' && contacts.length > 0"
     >
       <div class="collapse-icon">
-        <singleArrow class="doubleArrow" @click="hideMessages" />
+        <singleArrow
+          v-if="windowWidth < 900"
+          class="doubleArrow"
+          @click="hideMessages"
+        />
       </div>
       <div class="messages">
         <Message
@@ -123,6 +129,7 @@ export default {
       loadedContacts: [],
       imageUrl: null,
       windowWidth: window.innerWidth,
+      notificationCount: [],
     };
   },
   components: {
@@ -149,7 +156,8 @@ export default {
       this.getUsers();
       this.getLatestContactId();
       this.getContacts();
-    }, 400);
+      this.getNotificationCount();
+    }, 450);
   },
   methods: {
     getContacts() {
@@ -167,6 +175,7 @@ export default {
             this.contacts.push({
               messagesID: data.messagesID,
               UID: doc.id,
+              notification: data.notification,
             });
           });
         })
@@ -185,10 +194,25 @@ export default {
       db.collection("direct-messages")
         .doc(temp)
         .onSnapshot(() => {
+          this.removeNotification();
           setTimeout(() => {
             this.getMessages();
-          }, 100);
+          }, 10);
         });
+    },
+    removeNotification() {
+      const user = firebase.auth().currentUser;
+
+      db.collection("users")
+        .doc(user.uid)
+        .collection("contacts")
+        .doc(this.receiverUID)
+        .update({
+          notification: false,
+        })
+
+        .then(this.getNotificationCount())
+        .then(this.getContacts());
     },
     createContact(UID) {
       console.log("createContact");
@@ -204,7 +228,17 @@ export default {
       contactForCurrentUser.get().then((doc) => {
         if (!doc.exists) {
           console.log("Contact being added");
-          contactForCurrentUser.set({ messagesID: this.LatestDmId });
+          contactForCurrentUser
+            .set({
+              messagesID: this.LatestDmId,
+              notifications: false,
+            })
+            .then(
+              setTimeout(() => {
+                this.getContacts();
+              }),
+              100
+            );
         } else {
           console.log("Contact for current user already created");
         }
@@ -253,7 +287,7 @@ export default {
         this.messageText = "";
         let temp = "";
         temp += this.chosenDmId;
-        console.log("MESSGE TEXT", this.messageText);
+        console.log("MESSAGE TEXT", this.messageText);
 
         // Update direct-messages firestore collection
         console.log("Updating direct-messages collection");
@@ -265,12 +299,45 @@ export default {
           });
         console.log("Database set");
 
+        // Send notification to user
+        console.log("Sending notification");
+        db.collection("users")
+          .doc(this.receiverUID)
+          .collection("contacts")
+          .doc(user.uid)
+          .get()
+          .then(() => {
+            db.collection("users")
+              .doc(this.receiverUID)
+              .collection("contacts")
+              .doc(user.uid)
+              .update({
+                notification: true,
+              });
+          });
         /*setTimeout(() => {
           this.getMessages();
         }, 10);*/
       } else {
         console.log("Unable to send empty message");
       }
+    },
+    getNotificationCount() {
+      console.log("Getting notifications");
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(user.uid)
+        .collection("notifications")
+        .get()
+        .then((query) => {
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.notificationCount.push({
+              notification: data.notification,
+              notificationUID: doc.id,
+            });
+          });
+        });
     },
     getMessages() {
       let temp = "";
@@ -363,6 +430,9 @@ export default {
     },
     cMessages() {
       return this.messages;
+    },
+    cLoadedContacts() {
+      return this.loadedContacts;
     },
   },
 };
@@ -467,6 +537,16 @@ input.findContactsSearch {
 .border-bottom-radius-none {
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
+}
+
+.contactCards {
+  overflow-y: auto !important;
+  padding: 10px 55px;
+  width: 450px;
+}
+
+.contactCards::-webkit-scrollbar {
+  width: 0px;
 }
 
 .contacts {

@@ -25,6 +25,16 @@
         <router-link v-if="store.logged" class="link-icon" to="/profile"
           ><profileIcon
         /></router-link>
+        <div class="notifications">
+          <notificationBell
+            v-if="store.logged"
+            @click="notificationDropdownActivate"
+            class="notificationBell"
+          />
+          <div v-if="notificationDropdownActive" class="notificationDropdown">
+            <NotificationCard />
+          </div>
+        </div>
       </div>
     </nav>
   </header>
@@ -34,7 +44,9 @@
 import logo from "../assets/Icons/logo.svg";
 import profileIcon from "../assets/Icons/user-icon.svg";
 import searchIcon from "../assets/Icons/search-icon.svg";
+import notificationBell from "../assets/Icons/notification-bell.svg";
 import UserSearchCard from "./UserSearchCard.vue";
+import NotificationCard from "./NotificationCard.vue";
 import store from "@/store";
 import firebase from "@/firebase";
 import { db } from "@/firebase";
@@ -45,6 +57,8 @@ export default {
     searchIcon,
     UserSearchCard,
     logo,
+    notificationBell,
+    NotificationCard,
   },
   data() {
     return {
@@ -55,6 +69,7 @@ export default {
       searchActivated: false,
       searchText: "",
       users: [],
+      notificationDropdownActive: false,
     };
   },
   created() {
@@ -73,6 +88,10 @@ export default {
       this.mobile = false;
       this.mobileNav = false;
       return;
+    },
+    notificationDropdownActivate() {
+      console.log("TEST");
+      this.notificationDropdownActive = !this.notificationDropdownActive;
     },
     logout() {
       firebase
@@ -138,6 +157,27 @@ input {
   display: flex;
   flex-direction: column;
   overflow-x: hidden !important;
+}
+
+.notifications {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.notificationBell {
+  width: 20px;
+  fill: #fff;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.notificationDropdown {
+  background-color: #fff;
+  position: absolute;
+  margin-top: 49px;
+  margin-right: 50px;
 }
 
 input[type="text"],

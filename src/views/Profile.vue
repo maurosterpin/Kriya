@@ -98,7 +98,7 @@ export default {
       this.$root.$on("Profile.vue", () => {
         this.getGoals();
       });
-    }, 500);
+    }, 300);
   },
   methods: {
     getQuote() {
