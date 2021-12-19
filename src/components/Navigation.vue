@@ -35,6 +35,7 @@
           <div
             v-if="notificationDropdownActive && notificationCount.length > 0"
             class="notificationDropdown"
+            @click="removeNotification"
           >
             <NotificationCard
               v-for="card in notificationCount"
@@ -99,6 +100,10 @@ export default {
     this.getUsers();
   },
   methods: {
+    removeNotification() {
+      console.log("remove notification");
+      this.notificationDropdownActive = !this.notificationDropdownActive;
+    },
     checkScreen() {
       this.windowWidth = window.innerWidth;
       if (this.window <= 750) {

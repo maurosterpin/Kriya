@@ -200,17 +200,28 @@ export default {
 }
 
 @media screen and (max-width: 960px) {
-  .public-chat {
-    max-width: 800px;
+  .public-chat-relative {
+    width: 1000px;
+    position: relative;
   }
-}
 
-@media screen and (max-width: 860px) {
   .public-chat {
-    max-width: 700px;
+    margin: auto;
+    position: fixed;
+    background-color: #39c75a;
+    max-width: 770px;
+    width: 100%;
+    left: 25px;
+    padding: 30px 0px;
+    border-radius: 50px;
+    color: #fff;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 }
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 830px) {
   .public-chat {
     max-width: 600px;
   }
@@ -232,6 +243,67 @@ export default {
 
   .messages::-webkit-scrollbar {
     width: 0px;
+  }
+}
+@media screen and (max-width: 355px) {
+  .public-chat {
+    max-width: 250px;
+  }
+}
+
+@media screen and (max-width: 297px) {
+  .public-chat {
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 287px) {
+  .public-chat {
+    left: 15px;
+  }
+}
+
+@media screen and (max-width: 280px) {
+  .public-chat {
+    left: 5px;
+  }
+  .public-chat-input {
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #141518;
+    border-radius: 25px;
+    padding: 12px 20px !important;
+    width: 80%;
+    margin: auto;
+    margin-top: 10px;
+  }
+  .public-chat-input::placeholder {
+    font-size: 13px !important;
+  }
+
+  .public-chat-h5 {
+    padding: 10px 20px;
+    background-color: #141518;
+    border-radius: 25px;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  .send-icon {
+    fill: #fff;
+    width: 13px;
+    cursor: pointer;
+    position: absolute;
+    margin-top: 18px;
+    margin-right: 47px;
+  }
+}
+
+@media screen and (max-width: 256px) {
+  .public-chat {
+    left: 0px;
   }
 }
 </style>

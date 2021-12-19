@@ -9,7 +9,7 @@
           @click="startDailyToDo"
           class="addNewToDoListBtn"
         >
-          <addIcon class="addIconBtn" />
+          <addIcon v-if="!info.completed" class="addIconBtn" />
         </div>
         <div v-if="DailyToDoStarted">
           <StartedToDoList info="Daily" :goalName="info.goalTitle" />
@@ -28,7 +28,7 @@
         <StartedToDoList info="Daily" :goalName="info.goalTitle" />
       </div>
       <div
-        v-else-if="$router.currentRoute.path == '/profile'"
+        v-else-if="$router.currentRoute.path == '/profile' && !info.completed"
         class="addToDo"
         @click="startDailyToDo"
       >
@@ -42,7 +42,7 @@
           @click="startWeeklyToDo"
           class="addNewToDoListBtn"
         >
-          <addIcon class="addIconBtn" />
+          <addIcon v-if="!info.completed" class="addIconBtn" />
         </div>
         <div v-if="WeeklyToDoStarted">
           <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
@@ -61,7 +61,7 @@
         <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
       </div>
       <div
-        v-else-if="$router.currentRoute.path == '/profile'"
+        v-else-if="$router.currentRoute.path == '/profile' && !info.completed"
         class="addToDo"
         @click="startWeeklyToDo"
       >
@@ -75,7 +75,7 @@
           @click="startMonthlyToDo"
           class="addNewToDoListBtn"
         >
-          <addIcon class="addIconBtn" />
+          <addIcon v-if="!info.completed" class="addIconBtn" />
         </div>
         <div v-if="MonthlyToDoStarted">
           <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
@@ -94,12 +94,18 @@
         <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
       </div>
       <div
-        v-else-if="$router.currentRoute.path == '/profile'"
+        v-else-if="$router.currentRoute.path == '/profile' && !info.completed"
         class="addToDo"
         @click="startMonthlyToDo"
       >
         <h6>Add Monthly To-Do</h6>
         <addIcon class="addIcon" />
+      </div>
+      <div v-if="!info.completed" class="goalFinished" @click="GoalComplete">
+        <checkMarkIcon class="goalFinishedIcon" />
+      </div>
+      <div class="completed-wrapper">
+        <div class="completed">Completed</div>
       </div>
     </div>
   </div>
@@ -111,6 +117,7 @@ import ToDoList from "./ToDoList.vue";
 import StartedToDoList from "./StartedToDoList.vue";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
+import checkMarkIcon from "../assets/Icons/check-mark.svg";
 export default {
   data() {
     return {
@@ -455,12 +462,36 @@ export default {
           });
       }
     },
+    GoalComplete() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      console.log("Goal complete");
+
+      // Update goal completed state
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalID)
+        .update({ completed: true })
+        .then(() => {
+          this.postCompletedGoal();
+        });
+    },
+    postCompletedGoal() {
+      const user = firebase.auth().currentUser;
+      db.collection("posts").add({
+        UID: user.uid,
+        GoalName: this.info.goalTitle,
+        CompletionDate: Date.now(),
+      });
+    },
   },
   computed: {},
   components: {
     addIcon,
     ToDoList,
     StartedToDoList,
+    checkMarkIcon,
   },
 };
 </script>
@@ -483,6 +514,45 @@ export default {
   display: flex;
   margin-bottom: 45px;
   flex-direction: column;
+  position: relative;
+}
+
+.goalFinished {
+  padding: 25px;
+  background: #141518;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  /* margin-left: 385px; */
+  border-radius: 100px;
+  /* margin-top: 655px; */
+  right: 15px;
+  bottom: 15px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+.goalFinishedIcon {
+  position: absolute;
+  left: 15px;
+  top: 16px;
+}
+
+.completed-wrapper {
+  right: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+
+.completed {
+  padding: 12px 20px;
+  position: absolute;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+  border-radius: 100px;
+  margin-top: 675px;
+  background-color: #39c75a;
 }
 
 .new-width {

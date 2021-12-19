@@ -117,6 +117,21 @@ export default {
     height: 35px;
   }
 
+  @media screen and (max-width: 280px) {
+    .PfpImg {
+      width: 30px;
+      height: 30px;
+    }
+
+    .public-chat-msg-head-time {
+      font-size: 10px !important;
+    }
+
+    .public-chat-msg-body {
+      font-size: 12px !important;
+    }
+  }
+
   .public-chat-msg-body {
     font-size: 15px;
     padding: 5px 10px;

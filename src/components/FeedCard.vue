@@ -14,7 +14,9 @@
       <ToDoList :info="info" :listType="info.ListType" />
       <div class="feed-card-button-container">
         <button
-          v-if="isLiked"
+          v-if="
+            isLiked || (info.UID == store.currentUserUid && likes.length > 0)
+          "
           class="feed-card-button button-hover"
           @click="removeLike"
         >
@@ -24,7 +26,11 @@
           {{ likeUsernames.join(", ") }}
         </div>
 
-        <button v-if="!isLiked" class="feed-card-button" @click="congratulate">
+        <button
+          v-if="!isLiked && info.UID != store.currentUserUid"
+          class="feed-card-button"
+          @click="congratulate"
+        >
           Congratulate!
         </button>
       </div>

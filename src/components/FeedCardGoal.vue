@@ -7,38 +7,36 @@
         <h6>{{ postedFromNow }}</h6>
       </div>
     </div>
-    <div class="quote-container">
-      <div class="container-feed-card-head-msg">
-        <h5>" {{ info.Quote }} "</h5>
-      </div>
-      <div class="container-feed-card-author">
-        <h6>- {{ info.Author }}</h6>
-      </div>
+    <div class="container-feed-card-head-msg">
+      <h5>I completed my goal!</h5>
     </div>
-    <div class="feed-card-button-container">
-      <button
-        v-if="likes.length == 0"
-        class="feed-card-button button-hover"
-        @click="congratulate"
-      >
-        <likeIcon class="margin-right" />
-      </button>
-      <button
-        v-else-if="isLiked"
-        class="feed-card-button button-hover"
-        @click="removeLike"
-      >
-        <likeIcon class="margin-right" /> {{ isLiked }}
-      </button>
-      <button
-        v-else-if="!isLiked"
-        class="feed-card-button button-hover"
-        @click="congratulate"
-      >
-        <likeIcon class="margin-right" /> {{ isLiked }}
-      </button>
-      <div class="likesHover" v-for="(user, index) in likes" :key="index">
-        {{ likeUsernames.join(", ") }}
+    <div class="goal-name">
+      <h5>{{ info.GoalName }}</h5>
+    </div>
+
+    <div class="container-feed-card-body">
+      <ToDoList :info="info" :listType="info.ListType" />
+      <div class="feed-card-button-container">
+        <button
+          v-if="
+            isLiked || (info.UID == store.currentUserUid && likes.length > 0)
+          "
+          class="feed-card-button button-hover"
+          @click="removeLike"
+        >
+          <likeIcon class="margin-right" />
+          {{ isLiked }}
+        </button>
+        <div class="likesHover" v-for="(user, index) in likes" :key="index">
+          {{ likeUsernames.join(", ") }}
+        </div>
+        <button
+          v-if="!isLiked && info.UID != store.currentUserUid"
+          class="feed-card-button"
+          @click="congratulate"
+        >
+          Congratulate!
+        </button>
       </div>
     </div>
   </div>
@@ -52,15 +50,27 @@ import store from "@/store";
 import router from "@/router";
 import firebase from "@/firebase";
 export default {
-  name: "feedCardQuote",
-  props: ["info"],
+  name: "feedCard",
+  props: ["info", "listType", "passedID", "goalName"],
   components: {
     likeIcon,
   },
+  data() {
+    return {
+      currentUserUsername: "",
+      currentUID: "",
+      username: "",
+      profilePic: "",
+      store,
+      likes: [],
+      likeUIDs: [],
+      likeUsernames: [],
+    };
+  },
   mounted() {
+    this.getCurrentUserData();
     this.getUserData();
     this.getLikes();
-    this.getCurrentUserData();
   },
   methods: {
     getCurrentUserData() {
@@ -128,9 +138,11 @@ export default {
         .doc(this.info.docID)
         .collection("likes")
         .doc(this.currentUID);
-      dataBase.set({ username: this.username, Date: Date.now() }).then(() => {
-        this.getLikes();
-      });
+      dataBase
+        .set({ username: this.currentUserUsername, Date: Date.now() })
+        .then(() => {
+          this.getLikes();
+        });
     },
     removeLike() {
       console.log("removeLike");
@@ -156,53 +168,39 @@ export default {
       }
     },
   },
-  data() {
-    return {
-      username: "",
-      profilePic: "",
-      store,
-      likes: [],
-      likeUIDs: [],
-      likeUsernames: [],
-      currentUID: null,
-      currentUserUsername: "",
-    };
-  },
 };
 </script>
 
 <style scoped>
-.quote-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 15px;
+.goal-name {
+  margin: auto;
+  margin-top: 10px;
+  color: #fff;
+  background-color: #39c75a;
+  padding: 10px 10px;
+  border-radius: 100px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+  margin-bottom: 12px;
 }
 
-.margin-right {
-  margin-right: 3px;
+.goal-name h5 {
+  padding: 7px 5px 0px 5px;
+  font-size: 16px;
 }
 
 .container-feed-card {
   width: 100%;
   margin-bottom: 55px;
   padding: 25px;
-  background-color: #15161a;
+  background-color: #141518;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
 }
 
-.container-feed-card-author {
+.goal h5 {
+  margin-top: 15px;
   color: #fff;
-  margin-top: 25px;
-  margin-bottom: 10px;
-}
-
-.container-feed-card-author h6 {
-  font-size: 14px;
-  font-weight: 100;
 }
 
 .button-hover:hover + .likesHover {
@@ -218,24 +216,6 @@ export default {
   margin-top: 44px;
   display: none;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
-}
-
-.feed-card-button-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-.feed-card-button {
-  display: flex;
-  margin-top: 5px;
-  position: absolute;
-  padding: 9px 16px;
-  border-radius: 50px;
-  border: none;
-  background-color: #39c75a;
-  color: #fff;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
-  cursor: pointer;
 }
 
 @media screen and (max-width: 380px) {
@@ -262,15 +242,13 @@ export default {
     width: 35px !important;
   }
 
-  .container-feed-card-head-msg {
-    width: 80% !important;
-  }
-
   .container-feed-card-head-msg h5 {
-    font-size: 15px !important;
+    font-size: 12px !important;
   }
 
-  .container-feed-card-author h6 {
+  .feed-card-button {
+    margin-top: -5px !important;
+    padding: 7px 12px !important;
     font-size: 12px !important;
   }
 }
@@ -281,6 +259,10 @@ export default {
   align-items: center;
   color: #fff;
   cursor: pointer;
+}
+
+.margin-right {
+  margin-right: 3px;
 }
 
 .container-feed-card-head-txt {
@@ -294,17 +276,10 @@ export default {
 
 .container-feed-card-head-msg {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
   color: #fff;
   margin-top: 15px;
-}
-
-h5 {
-  font-size: 25px;
-  font-weight: 100;
 }
 
 .feed-icon {
@@ -318,6 +293,7 @@ h5 {
   justify-content: center;
 }
 .feed-card-button {
+  display: flex;
   margin-top: 5px;
   position: absolute;
   padding: 9px 16px;

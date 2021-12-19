@@ -180,6 +180,7 @@ export default {
           });
         })
         .then(() => {
+          this.loadedContacts = [];
           this.loadedContacts = this.contacts;
         });
     },
@@ -237,7 +238,7 @@ export default {
               setTimeout(() => {
                 this.getContacts();
               }),
-              100
+              300
             );
         } else {
           console.log("Contact for current user already created");

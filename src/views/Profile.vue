@@ -98,7 +98,7 @@ export default {
       this.$root.$on("Profile.vue", () => {
         this.getGoals();
       });
-    }, 300);
+    }, 400);
   },
   methods: {
     getQuote() {
@@ -162,6 +162,8 @@ export default {
             this.goals.push({
               goalTitle: doc.data().name,
               goalMessage: doc.data().Msg,
+              goalID: doc.id,
+              completed: doc.data().completed,
             });
           });
         });

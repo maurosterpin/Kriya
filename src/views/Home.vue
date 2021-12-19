@@ -10,6 +10,7 @@
               :listType="card.ListType"
             />
             <FeedCardQuote v-else-if="card.Quote" :info="card" />
+            <FeedCardGoal v-else-if="card.GoalName" :info="card" />
           </div>
         </div>
       </div>
@@ -45,6 +46,7 @@
 import store from "@/store";
 import FeedCard from "../components/FeedCard.vue";
 import FeedCardQuote from "../components/FeedCardQuote.vue";
+import FeedCardGoal from "../components/FeedCardGoal.vue";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
 import { db } from "@/firebase";
@@ -56,6 +58,7 @@ export default {
     Message,
     FeedCard,
     FeedCardQuote,
+    FeedCardGoal,
   },
   data() {
     return {
@@ -107,7 +110,7 @@ export default {
         store.quoteExist = true;
         this.getQuote();
       }
-    }, 100);
+    }, 300);
   },
   methods: {
     getQuote() {
@@ -132,7 +135,6 @@ export default {
           this.posts = [];
           query.forEach((doc) => {
             const data = doc.data();
-            console.log("DOC ID!!!:", doc.id);
             this.posts.push({
               Tasks: data.Tasks,
               ListType: data.ListType,
@@ -144,6 +146,7 @@ export default {
               Author: data.Author,
               Color: "#15161a !important",
               docID: doc.id,
+              GoalName: data.GoalName,
             });
           });
         });

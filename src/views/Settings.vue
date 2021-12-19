@@ -173,4 +173,39 @@ input.change-username-input:focus {
   border-radius: 50px;
   cursor: pointer;
 }
+
+@media screen and (max-width: 400px) {
+  .settings-wrapper {
+    justify-content: flex-start;
+    font-size: 15px;
+  }
+
+  .change-username {
+    margin-top: 55px;
+    padding: 27px 22px;
+  }
+
+  .ProfilePictureImg {
+    width: 65px;
+    height: 65px;
+    border-radius: 100px;
+  }
+
+  .h6-settings {
+    background-color: #39c75a;
+    padding: 8px 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  input.change-username-input {
+    width: 170px !important;
+    font-size: 16px !important;
+  }
+
+  .change-profile-picture {
+    padding: 20px 60px;
+  }
+}
 </style>
