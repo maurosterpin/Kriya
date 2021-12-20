@@ -104,7 +104,7 @@
       <div v-if="!info.completed" class="goalFinished" @click="GoalComplete">
         <checkMarkIcon class="goalFinishedIcon" />
       </div>
-      <div class="completed-wrapper">
+      <div v-else class="completed-wrapper">
         <div class="completed">Completed</div>
       </div>
     </div>

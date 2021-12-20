@@ -177,14 +177,16 @@ export default {
   margin-top: 10px;
   color: #fff;
   background-color: #39c75a;
-  padding: 10px 10px;
+  padding: 4px 4px;
   border-radius: 100px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
   margin-bottom: 12px;
+  min-width: 100px;
+  text-align: center;
 }
 
 .goal-name h5 {
-  padding: 7px 5px 0px 5px;
+  padding: 9px 12px 0px 12px;
   font-size: 16px;
 }
 
@@ -213,7 +215,7 @@ export default {
   padding: 10px;
   background-color: #141518;
   border-radius: 100px;
-  margin-top: 44px;
+  margin-top: -36px;
   display: none;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }

@@ -215,7 +215,7 @@ export default {
   padding: 10px;
   background-color: #141518;
   border-radius: 100px;
-  margin-top: 44px;
+  margin-top: -36px;
   display: none;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
