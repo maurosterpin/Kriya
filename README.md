@@ -1,7 +1,6 @@
 # Kriya
 Goal sharing social networking app that supports and encourages productivity and self development
 
-- Naziv aplikacije: Kriya
 - Sastav tima: Mauro Šterpin
 - [Fakultet informatike u Puli](https://fipu.unipu.hr/fipu)
 - [Kolegij: Programsko inženjerstvo](https://www.notion.so/fiputreca/Programsko-in-enjerstvo-e353945331df468e8382cdad1e91c4b8)
