@@ -164,6 +164,7 @@ export default {
               goalMessage: doc.data().Msg,
               goalID: doc.id,
               completed: doc.data().completed,
+              goalUID: user.uid,
             });
           });
         });

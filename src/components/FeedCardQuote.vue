@@ -17,25 +17,31 @@
     </div>
     <div class="feed-card-button-container">
       <button
-        v-if="likes.length == 0"
+        v-if="likes.length == 0 && info.UID != store.currentUserUid"
         class="feed-card-button button-hover"
         @click="congratulate"
       >
         <likeIcon class="margin-right" />
       </button>
       <button
-        v-else-if="isLiked"
+        v-else-if="isLiked && info.UID != store.currentUserUid"
         class="feed-card-button button-hover"
         @click="removeLike"
       >
         <likeIcon class="margin-right" /> {{ isLiked }}
       </button>
       <button
-        v-else-if="!isLiked"
+        v-else-if="!isLiked && info.UID != store.currentUserUid"
         class="feed-card-button button-hover"
         @click="congratulate"
       >
-        <likeIcon class="margin-right" /> {{ isLiked }}
+        <likeIcon class="margin-right" />
+      </button>
+      <button
+        v-else-if="likes.length > 0 && info.UID === store.currentUserUid"
+        class="feed-card-button button-hover"
+      >
+        <likeIcon class="margin-right" />{{ likes.length }}
       </button>
       <div class="likesHover" v-for="(user, index) in likes" :key="index">
         {{ likeUsernames.join(", ") }}
@@ -128,9 +134,12 @@ export default {
         .doc(this.info.docID)
         .collection("likes")
         .doc(this.currentUID);
-      dataBase.set({ username: this.username, Date: Date.now() }).then(() => {
-        this.getLikes();
-      });
+      dataBase
+        .set({ username: this.currentUserUsername, Date: Date.now() })
+        .then(() => {
+          this.getLikes();
+          this.sendNotification();
+        });
     },
     removeLike() {
       console.log("removeLike");
@@ -141,6 +150,17 @@ export default {
         .delete()
         .then(() => {
           this.getLikes();
+        });
+    },
+    sendNotification() {
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(this.info.UID)
+        .collection("like-notifications")
+        .doc(user.uid)
+        .set({
+          notificationType: "quote",
+          UID: this.currentUID,
         });
     },
   },

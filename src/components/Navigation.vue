@@ -31,15 +31,36 @@
             @click="notificationDropdownActivate"
             class="notificationBell"
           />
-          <span v-if="notificationCount.length > 0" class="notification"></span>
+          <span
+            v-if="
+              notificationCount.length > 0 || likeNotificationCount.length > 0
+            "
+            class="notification"
+          ></span>
           <div
-            v-if="notificationDropdownActive && notificationCount.length > 0"
+            v-if="
+              (notificationDropdownActive && notificationCount.length > 0) ||
+                likeNotificationCount.length > 0
+            "
             class="notificationDropdown"
             @click="removeNotification"
           >
             <NotificationCard
               v-for="card in notificationCount"
-              :key="card.notificationUID"
+              :key="card.index"
+              :info="card"
+            />
+          </div>
+          <div
+            v-if="
+              notificationDropdownActive && likeNotificationCount.length > 0
+            "
+            class="notificationDropdown"
+          >
+            <NotificationCard
+              v-for="card in likeNotificationCount"
+              :key="card.index"
+              :likeInfo="card"
               :info="card"
             />
           </div>
@@ -87,15 +108,17 @@ export default {
       notificationDropdownActive: false,
       notification: false,
       notificationCount: [],
+      likeNotificationCount: [],
     };
   },
   created() {
     this.checkScreen();
-    this.getNotifications();
+    this.getMessageNotifications();
+    this.getLikeNotifications();
   },
   mounted() {
     setTimeout(() => {
-      this.getNotifications();
+      this.getLikeNotifications();
     }, 500);
     this.getUsers();
   },
@@ -103,6 +126,22 @@ export default {
     removeNotification() {
       console.log("remove notification");
       this.notificationDropdownActive = !this.notificationDropdownActive;
+    },
+    removeLikeNotifications() {
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(user.uid)
+        .collection("like-notifications")
+        .get()
+        .then((query) => {
+          query.forEach((doc) => {
+            db.collection("users")
+              .doc(user.uid)
+              .collection("like-notifications")
+              .doc(doc.id)
+              .delete();
+          });
+        });
     },
     checkScreen() {
       this.windowWidth = window.innerWidth;
@@ -115,9 +154,9 @@ export default {
       return;
     },
     notificationDropdownActivate() {
-      console.log("TEST");
       this.notificationDropdownActive = !this.notificationDropdownActive;
-      this.getNotifications();
+      this.getMessageNotifications();
+      this.removeLikeNotifications();
     },
     logout() {
       firebase
@@ -140,7 +179,7 @@ export default {
           });
         });
     },
-    getNotifications() {
+    getMessageNotifications() {
       this.notificationCount = [];
       console.log("Getting notifications");
       const user = firebase.auth().currentUser;
@@ -159,6 +198,25 @@ export default {
             }
           });
         });
+    },
+    getLikeNotifications() {
+      this.notificationCount = [];
+      console.log("Getting notifications");
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(user.uid)
+        .collection("like-notifications")
+        .get()
+        .then((query) => {
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.likeNotificationCount.push({
+              notificationType: data.notificationType,
+              notificationUID: data.UID,
+            });
+          });
+        })
+        .then(console.log("Notification count test", this.notificationCount));
     },
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;

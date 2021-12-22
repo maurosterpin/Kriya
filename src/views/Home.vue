@@ -110,7 +110,7 @@ export default {
         store.quoteExist = true;
         this.getQuote();
       }
-    }, 300);
+    }, 400);
   },
   methods: {
     getQuote() {

@@ -19,7 +19,7 @@
       <div class="feed-card-button-container">
         <button
           v-if="
-            isLiked || (info.UID == store.currentUserUid && likes.length > 0)
+            isLiked || (info.UID != store.currentUserUid && likes.length > 0)
           "
           class="feed-card-button button-hover"
           @click="removeLike"
@@ -37,6 +37,15 @@
         >
           Congratulate!
         </button>
+        <button
+          v-else-if="likes.length > 0 && info.UID === store.currentUserUid"
+          class="feed-card-button button-hover"
+        >
+          <likeIcon class="margin-right" /> {{ likes.length }}
+        </button>
+        <div class="likesHover" v-for="(user, index) in likes" :key="index">
+          {{ likeUsernames.join(", ") }}
+        </div>
       </div>
     </div>
   </div>
@@ -142,6 +151,7 @@ export default {
         .set({ username: this.currentUserUsername, Date: Date.now() })
         .then(() => {
           this.getLikes();
+          this.sendNotification();
         });
     },
     removeLike() {
@@ -153,6 +163,16 @@ export default {
         .delete()
         .then(() => {
           this.getLikes();
+        });
+    },
+    sendNotification() {
+      db.collection("users")
+        .doc(this.info.UID)
+        .collection("like-notifications")
+        .doc()
+        .set({
+          notificationType: "goal",
+          UID: this.currentUID,
         });
     },
   },

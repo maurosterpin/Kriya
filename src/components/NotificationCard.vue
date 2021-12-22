@@ -1,11 +1,25 @@
 <template>
   <div class="notificationCard-wrapper">
-    <router-link to="/direct-messages" class="link"
+    <router-link v-if="!likeInfo" to="/direct-messages" class="link"
       ><div class="notificationCard">
         <img :src="profilePic" class="profilePic" />{{ username }}
         sent you a message
       </div>
     </router-link>
+    <div
+      v-else-if="
+        likeInfo.notificationType === 'goal' ||
+          likeInfo.notificationType === 'to-do list'
+      "
+      class="likeNotificationCard"
+    >
+      <img :src="profilePic" class="profilePic" />{{ username }} congratulates
+      you on a completed {{ likeInfo.notificationType }}!
+    </div>
+    <div v-else class="likeNotificationCard">
+      <img :src="profilePic" class="profilePic" />{{ username }} liked the quote
+      you posted!
+    </div>
   </div>
 </template>
 
@@ -13,7 +27,7 @@
 import { db } from "@/firebase";
 export default {
   name: "NotificationCard",
-  props: ["info"],
+  props: ["info", "likeInfo"],
   data() {
     return {
       username: "",
@@ -21,18 +35,28 @@ export default {
     };
   },
   mounted() {
-    console.log("TEST!!!", this.info.notificationUID);
+    console.log("TEST NOTIFICATION TYPE", this.notificationType);
     this.getUserData();
   },
   methods: {
     getUserData() {
-      db.collection("users")
-        .doc(this.info.notificationUID)
-        .get()
-        .then((doc) => {
-          this.username = doc.data().username;
-          this.profilePic = doc.data().profilePic;
-        });
+      if (this.likeInfo) {
+        db.collection("users")
+          .doc(this.likeInfo.notificationUID)
+          .get()
+          .then((doc) => {
+            this.username = doc.data().username;
+            this.profilePic = doc.data().profilePic;
+          });
+      } else {
+        db.collection("users")
+          .doc(this.info.notificationUID)
+          .get()
+          .then((doc) => {
+            this.username = doc.data().username;
+            this.profilePic = doc.data().profilePic;
+          });
+      }
     },
   },
 };
@@ -40,6 +64,17 @@ export default {
 
 <style scoped>
 .notificationCard {
+  padding: 0px 10px;
+  width: 280px;
+  height: 50px;
+  background: #fff;
+  border-top: 1px solid rgb(216, 216, 216);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.likeNotificationCard {
   padding: 0px 10px;
   width: 280px;
   height: 50px;

@@ -101,12 +101,15 @@
         <h6>Add Monthly To-Do</h6>
         <addIcon class="addIcon" />
       </div>
-      <div v-if="!info.completed" class="goalFinished" @click="GoalComplete">
+      <div
+        v-if="!info.completed && this.currentUserID === info.goalUID"
+        class="goalFinished"
+        @click="GoalComplete"
+      >
         <checkMarkIcon class="goalFinishedIcon" />
       </div>
-      <div v-else class="completed-wrapper">
-        <div class="completed">Completed</div>
-      </div>
+
+      <div v-else class="completed">Completed</div>
     </div>
   </div>
 </template>
@@ -136,9 +139,11 @@ export default {
       LatestDailyDate: null,
       LatestWeeklyDate: null,
       LatestMonthlyDate: null,
+      currentUserID: "",
     };
   },
   mounted() {
+    this.currentUserID = firebase.auth().currentUser.uid;
     this.LoadDailyToDoLists();
     this.LoadWeeklyToDoLists();
     this.LoadMonthlyToDoLists();
@@ -538,21 +543,13 @@ export default {
   top: 16px;
 }
 
-.completed-wrapper {
-  right: 0;
-  left: 0;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-}
-
 .completed {
   padding: 12px 20px;
-  position: absolute;
+  position: relative;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
   border-radius: 100px;
-  margin-top: 675px;
-  background-color: #39c75a;
+  margin: auto;
+  background-color: #141518;
 }
 
 .new-width {
