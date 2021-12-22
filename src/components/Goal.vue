@@ -522,6 +522,12 @@ export default {
   position: relative;
 }
 
+@media screen and (max-width: 400px) {
+  .goal {
+    padding: 15px;
+  }
+}
+
 .goalFinished {
   padding: 25px;
   background: #141518;
@@ -635,6 +641,51 @@ export default {
   margin-left: 15px !important;
   min-width: 370px;
   margin-bottom: 25px !important;
+}
+
+@media screen and (max-width: 380px) {
+  .to-do-item {
+    min-width: 250px;
+  }
+  .goal h5 {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+
+  .goal {
+    padding: 0px 2px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .goalFinishedIcon {
+    position: absolute;
+    left: 9px;
+    top: 6px;
+    width: 13px;
+  }
+  .goalFinished {
+    padding: 15px;
+    width: 12px;
+    height: 12px;
+    right: 10px;
+    bottom: 5px;
+  }
+
+  .to-do-wrapper {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto !important;
+    margin-top: 0px;
+    padding-top: 10px;
+    border-bottom: 15px solid #39c75a;
+    position: relative;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+  }
+
+  /* .to-do-wrapper::-webkit-scrollbar {
+    height: 0px;
+  } */
 }
 
 .goal h5 {

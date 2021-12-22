@@ -18,9 +18,7 @@
       <ToDoList :info="info" :listType="info.ListType" />
       <div class="feed-card-button-container">
         <button
-          v-if="
-            isLiked || (info.UID != store.currentUserUid && likes.length > 0)
-          "
+          v-if="isLiked"
           class="feed-card-button button-hover"
           @click="removeLike"
         >
@@ -241,6 +239,14 @@ export default {
 }
 
 @media screen and (max-width: 380px) {
+  h5 {
+    font-size: 12px !important;
+  }
+
+  .goal-name {
+    margin-bottom: 25px !important;
+  }
+
   .container-feed-card {
     padding: 10px;
     max-width: 250px;

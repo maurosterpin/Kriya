@@ -322,6 +322,7 @@ export default {
   margin-top: 25px;
   font-weight: 100;
 }
+
 .username {
   margin: auto;
   display: flex;
@@ -336,6 +337,82 @@ export default {
   border-radius: 50%;
   width: 55px;
   margin-right: 15px;
+}
+
+@media screen and (max-width: 400px) {
+  .inputField2 {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+    border: none;
+    outline: none;
+    color: #fff !important;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    padding: 10px 20px !important;
+  }
+
+  .quote-form input {
+    width: 90%;
+    height: 100%;
+    padding: 5px 10px;
+    caret-color: #39c75a;
+    color: #fff !important;
+    font-size: 12px !important;
+    font-weight: 900;
+  }
+
+  form.quote-form {
+    width: 250px !important;
+    padding: 5px !important;
+  }
+
+  .buttonQuote {
+    padding: 5px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .buttonQuoteEdit {
+    font-size: 10px;
+    padding: 3px 7px;
+    margin-top: 12px;
+  }
+
+  .wrapper {
+    padding: 15px !important;
+    max-width: 250px !important;
+  }
+
+  .addIcon {
+    width: 8px !important;
+    margin-top: 5px !important;
+  }
+
+  .wrapper header {
+    font-size: 13px !important;
+  }
+
+  .quote-wrapper {
+    min-height: 230px !important;
+  }
+
+  .quote h2 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .quote h6 {
+    font-size: 12px;
+  }
+
+  .username {
+    font-size: 14px !important;
+  }
+
+  .username .avatar {
+    width: 40px !important;
+    margin-right: 10px !important;
+  }
 }
 
 .addIcon {
