@@ -81,7 +81,7 @@
           @click="hideMessages"
         />
       </div>
-      <div class="messages">
+      <div class="messages2">
         <Message
           v-for="message in loadedMessages"
           :key="message.key"
@@ -151,6 +151,7 @@ export default {
     window.removeEventListener("resize", this.routerPush);
     window.addEventListener("resize", () => {
       this.windowWidth = window.innerWidth;
+      this.windowHeight = window.innerHeight;
     });
     setTimeout(() => {
       this.getUsers();
@@ -558,18 +559,26 @@ input.findContactsSearch {
   margin-left: 170px;
   position: relative;
   align-items: center;
-  width: 350px;
+  padding: 0px 20px;
+  width: 410px;
   pointer-events: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
-.messages {
+.contacts::-webkit-scrollbar {
+  width: 0px;
+}
+
+.messages2 {
   display: flex;
   position: relative;
   flex-direction: column-reverse;
   padding: 0px 25px;
   margin-top: 25px;
   width: 1000px;
-  height: 780px;
+  height: 751px;
+  overflow-y: auto;
 }
 
 .illustrationTitle {
@@ -614,42 +623,46 @@ input.findContactsSearch {
 }*/
 
 @media screen and (max-width: 1400px) {
-  .messages {
+  .messages2 {
     width: 900px;
   }
 }
 
 @media screen and (max-width: 1303px) {
-  .messages {
+  .messages2 {
     width: 800px;
   }
 }
 
 @media screen and (max-width: 1203px) {
-  .messages {
+  .messages2 {
     width: 700px;
   }
 }
 
 @media screen and (max-width: 1103px) {
-  .messages {
+  .messages2 {
     width: 600px;
   }
 }
 
 @media screen and (max-width: 1003px) {
-  .messages {
+  .messages2 {
     width: 500px;
   }
 }
 
 @media screen and (max-width: 450px) {
-  .messages {
-    height: 710px;
+  .messages2 {
+    /* max-height: 350px; */
     width: 300px;
   }
 
-  .messages::-webkit-scrollbar {
+  /* .direct-messages-wrapper {
+    height: 86.2vh !important;
+  } */
+
+  .messages2::-webkit-scrollbar {
     width: 0px;
   }
 
@@ -661,10 +674,52 @@ input.findContactsSearch {
 
   @media screen and (max-width: 380px) {
     .contacts {
-      width: 250px;
+      width: 292px;
     }
     .findContactsSearch {
       width: 250px;
+    }
+  }
+
+  @media screen and (max-height: 812px) {
+    .direct-messages-wrapper {
+      height: 734px !important;
+    }
+    .messages2 {
+      height: 600px;
+    }
+  }
+
+  @media screen and (max-height: 736px) {
+    .direct-messages-wrapper {
+      height: 658px !important;
+    }
+    .messages2 {
+      height: 500px;
+    }
+  }
+
+  @media screen and (max-height: 708px) {
+    .direct-messages-wrapper {
+      height: 629px !important;
+    }
+    .messages2 {
+      height: 475px;
+    }
+  }
+
+  @media screen and (max-height: 668px) {
+    .direct-messages-wrapper {
+      height: 589px !important;
+    }
+    .messages2 {
+      height: 450px;
+    }
+  }
+
+  @media screen and (max-height: 568px) {
+    .direct-messages-wrapper {
+      height: 490px;
     }
   }
 }

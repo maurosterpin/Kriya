@@ -1,9 +1,9 @@
 <template>
-  <div class="public-chat-wrapper">
-    <div class="public-chat-relative">
-      <div class="public-chat">
-        <h6 class="public-chat-h5">public chat</h6>
-        <div class="messages">
+  <div class="public-chat-wrapper2">
+    <div class="public-chat-relative2">
+      <div class="public-chat2">
+        <h6 class="public-chat-h6">public chat</h6>
+        <div class="messages3">
           <div class="messages-space">
             <Message
               v-for="message in publicChat"
@@ -12,14 +12,14 @@
             />
           </div>
         </div>
-        <div class="input">
+        <div class="input2">
           <input
             v-model="messageText"
-            class="public-chat-input"
+            class="public-chat-input-2"
             type="text"
             placeholder="Send message..."
           />
-          <sendIcon class="send-icon" @click="sendPublicChatMessage" />
+          <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
         </div>
       </div>
     </div>
@@ -193,117 +193,108 @@ export default {
 </script>
 
 <style scoped>
-.public-chat-wrapper {
+.public-chat-wrapper2 {
   background-color: #39c75a !important;
   height: 891px;
   overflow: hidden;
 }
 
-@media screen and (max-width: 960px) {
-  .public-chat-relative {
-    width: 1000px;
-    position: relative;
-  }
-
-  .public-chat {
-    margin: auto;
-    position: fixed;
-    background-color: #39c75a;
-    max-width: 770px;
-    width: 100%;
-    left: 25px;
-    padding: 30px 0px;
-    border-radius: 50px;
-    color: #fff;
-    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-}
-@media screen and (max-width: 830px) {
-  .public-chat {
-    max-width: 600px;
-  }
-}
-@media screen and (max-width: 660px) {
-  .public-chat {
-    max-width: 500px;
-  }
-}
-@media screen and (max-width: 560px) {
-  .public-chat {
-    max-width: 400px;
-  }
-}
-@media screen and (max-width: 460px) {
-  .public-chat {
-    max-width: 300px;
-  }
-
-  .messages::-webkit-scrollbar {
-    width: 0px;
-  }
-}
-@media screen and (max-width: 355px) {
-  .public-chat {
-    max-width: 250px;
-  }
+.input2 {
+  width: 90vw;
 }
 
-@media screen and (max-width: 297px) {
-  .public-chat {
-    left: 20px;
-  }
+.public-chat2 {
+  margin: auto;
+  position: relative;
+  background-color: #39c75a;
+  width: 100%;
+  padding: 30px 0px;
+  border-radius: 50px;
+  color: #fff;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-@media screen and (max-width: 287px) {
-  .public-chat {
-    left: 15px;
-  }
+.public-chat-input-2 {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #141518;
+  border-radius: 25px;
+  padding: 15px 25px !important;
+  width: 90vw;
 }
 
-@media screen and (max-width: 280px) {
-  .public-chat {
-    left: 5px;
-  }
-  .public-chat-input {
-    outline: none;
-    border: none;
-    border-bottom: 1px solid #141518;
-    border-radius: 25px;
-    padding: 12px 20px !important;
-    width: 80%;
-    margin: auto;
-    margin-top: 10px;
-  }
-  .public-chat-input::placeholder {
-    font-size: 13px !important;
-  }
+.public-chat-h6 {
+  margin-bottom: 12px;
+  padding: 15px 25px;
+  background-color: #141518;
+  border-radius: 25px;
+  width: 90vw;
+}
 
-  .public-chat-h5 {
-    padding: 10px 20px;
-    background-color: #141518;
-    border-radius: 25px;
-    width: 80%;
-    margin: auto;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
+.send-icon2 {
+  fill: #fff;
+  width: 13px;
+  cursor: pointer;
+  position: absolute;
+  right: 57px;
+  margin-top: 20px;
+}
 
-  .send-icon {
-    fill: #fff;
-    width: 13px;
-    cursor: pointer;
-    position: absolute;
-    margin-top: 18px;
-    margin-right: 47px;
+.messages3 {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 93vw;
+  height: 670px;
+  overflow-y: auto;
+}
+
+.input2 {
+  margin-top: 15px;
+}
+
+@media screen and (max-height: 812px) {
+  .public-chat-wrapper2 {
+    height: 734px !important;
+  }
+  .messages3 {
+    height: 500px;
   }
 }
 
-@media screen and (max-width: 256px) {
-  .public-chat {
-    left: 0px;
+@media screen and (max-height: 736px) {
+  .public-chat-wrapper2 {
+    height: 658px !important;
+  }
+  .messages3 {
+    height: 430px;
+  }
+}
+
+@media screen and (max-height: 668px) {
+  .public-chat-wrapper2 {
+    height: 589px !important;
+  }
+  .messages3 {
+    height: 370px !important;
+  }
+}
+
+@media screen and (max-height: 568px) {
+  .public-chat-wrapper2 {
+    height: 490px !important;
+  }
+  .public-chat2 {
+    height: 500px !important;
+  }
+}
+
+@media screen and (max-width: 36  0px) {
+  .messages3::-webkit-scrollbar {
+    width: 0px !important;
   }
 }
 </style>

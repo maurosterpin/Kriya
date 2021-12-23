@@ -66,7 +66,11 @@ export default {
   mounted() {
     this.getUserData();
     this.getLikes();
-    this.getCurrentUserData();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.getCurrentUserData();
+      }
+    });
   },
   methods: {
     getCurrentUserData() {
@@ -91,18 +95,27 @@ export default {
     },
     visitProfile() {
       console.log("visitProfile");
-      // Get current user
-      const user = firebase.auth().currentUser;
-      if (user.uid != this.info.UID) {
-        router.push({
-          name: "VisitedProfile",
-          params: { profileUid: this.info.UID },
-        });
-      } else {
-        router.push({
-          name: "Profile",
-        });
-      }
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // Get current user
+          const user = firebase.auth().currentUser;
+          if (user.uid != this.info.UID) {
+            router.push({
+              name: "VisitedProfile",
+              params: { profileUid: this.info.UID },
+            });
+          } else {
+            router.push({
+              name: "Profile",
+            });
+          }
+        } else {
+          router.push({
+            name: "VisitedProfile",
+            params: { profileUid: this.info.UID },
+          });
+        }
+      });
     },
     getLikes() {
       const dataBase = db

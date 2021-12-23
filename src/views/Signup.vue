@@ -2,7 +2,7 @@
   <div class="about text-center mt-5 pt-5">
     <div class="container">
       <div>
-        <div class="bg-white p-5 mx-auto round" style="width:350px;">
+        <div class="bg-whites mx-auto round width">
           <div class="formHeader">
             <logo class="logo" />
             <h1>Kriya</h1>
@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-white p-4 mx-auto mt-3 round" style="width:350px">
+    <div class="bg-white mx-auto round width margin">
       Have an account?
       <router-link to="/login" class="link2" style="font-weight:600"
         >Log in</router-link
@@ -152,6 +152,21 @@ select:-webkit-autofill {
   font-size: 15px !important;
   color: #fff !important;
   background-color: #141518 !important;
+}
+
+.width {
+  width: 250px;
+}
+
+@media screen and (max-width: 460px) {
+  .width {
+    width: 200px;
+  }
+}
+
+.margin {
+  margin-top: 38px;
+  margin-bottom: 55px;
 }
 
 input {

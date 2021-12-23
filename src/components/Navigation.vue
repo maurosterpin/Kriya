@@ -1,12 +1,13 @@
 <template>
   <header>
     <nav class="container" @click="checkClick">
-      <logo class="logo" />
-      <div class="branding">
+      <logo v-if="!searchActivated || windowWidth > 400" class="logo" />
+      <div v-if="!searchActivated || windowWidth > 400" class="branding">
         <router-link class="header" to="/">Kriya</router-link>
       </div>
       <div class="nav-links">
         <div v-if="searchActivated" class="searchInputContainer">
+          <searchCancelIcon class="cancelIconSearch" />
           <input v-model="searchText" ref="searchInput" type="text" />
           <div
             v-if="searchActivated && searchText != ''"
@@ -38,10 +39,7 @@
             class="notification"
           ></span>
           <div
-            v-if="
-              (notificationDropdownActive && notificationCount.length > 0) ||
-                likeNotificationCount.length > 0
-            "
+            v-if="notificationDropdownActive && notificationCount.length > 0"
             class="notificationDropdown"
             @click="removeNotification"
           >
@@ -57,15 +55,18 @@
             "
             class="notificationDropdown"
           >
-            <NotificationCard
+            <LikeNotificationCard
               v-for="card in likeNotificationCount"
               :key="card.index"
-              :likeInfo="card"
               :info="card"
             />
           </div>
           <div
-            v-else-if="notificationDropdownActive"
+            v-else-if="
+              notificationDropdownActive &&
+                notificationCount.length < 1 &&
+                likeNotificationCount.length < 1
+            "
             class="notificationDropdownEmpty"
           >
             No notifications
@@ -77,12 +78,14 @@
 </template>
 
 <script>
+import searchCancelIcon from "../assets/Icons/search-cancel-Icon.svg";
 import logo from "../assets/Icons/logo.svg";
 import profileIcon from "../assets/Icons/user-icon.svg";
 import searchIcon from "../assets/Icons/search-icon.svg";
 import notificationBell from "../assets/Icons/notification-bell.svg";
 import UserSearchCard from "./UserSearchCard.vue";
 import NotificationCard from "./NotificationCard.vue";
+import LikeNotificationCard from "./LikeNotificationCard.vue";
 import store from "@/store";
 import firebase from "@/firebase";
 import { db } from "@/firebase";
@@ -95,6 +98,8 @@ export default {
     logo,
     notificationBell,
     NotificationCard,
+    searchCancelIcon,
+    LikeNotificationCard,
   },
   data() {
     return {
@@ -117,8 +122,18 @@ export default {
     this.getLikeNotifications();
   },
   mounted() {
+    window.addEventListener("resize", () => {
+      this.windowWidth = window.innerWidth;
+    });
+    this.getLikeNotifications();
     setTimeout(() => {
-      this.getLikeNotifications();
+      const user = firebase.auth().currentUser;
+      db.collection("users")
+        .doc(user.uid)
+        .collection("contacts")
+        .onSnapshot(() => {
+          this.getMessageNotifications();
+        });
     }, 500);
     this.getUsers();
   },
@@ -157,6 +172,7 @@ export default {
       this.notificationDropdownActive = !this.notificationDropdownActive;
       this.getMessageNotifications();
       this.removeLikeNotifications();
+      this.getLikeNotifications();
     },
     logout() {
       firebase
@@ -200,7 +216,7 @@ export default {
         });
     },
     getLikeNotifications() {
-      this.notificationCount = [];
+      this.likeNotificationCount = [];
       console.log("Getting notifications");
       const user = firebase.auth().currentUser;
       db.collection("users")
@@ -249,6 +265,13 @@ input {
   margin: 0px;
 }
 
+.cancelIconSearch {
+  position: absolute;
+  width: 8px;
+  right: 7px;
+  top: 9px;
+}
+
 .searchInputContainer {
   position: relative;
 }
@@ -291,14 +314,14 @@ input {
   background-color: #fff;
   position: absolute;
   margin-top: 49px;
-  margin-right: 50px;
+  margin-right: 230px;
 }
 
 .notificationDropdownEmpty {
   background-color: #fff;
   position: absolute;
   margin-top: 49px;
-  margin-right: 50px;
+  margin-right: 150px;
   width: 200px;
   display: flex;
   justify-content: center;

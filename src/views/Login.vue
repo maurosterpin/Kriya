@@ -2,7 +2,7 @@
   <div class="about text-center mt-5 pt-5">
     <div class="container">
       <div>
-        <div class="bg-white p-5 mx-auto round" style="width:350px">
+        <div class="bg-white mx-auto round width">
           <div class="formHeader">
             <logo class="logo" />
             <h1>Kriya</h1>
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-white p-4 mx-auto mt-3 round" style="width:350px">
+    <div class="bg-white mx-auto round width margin">
       Don't have an account?
       <router-link to="/signup" class="link2" style="font-weight:600"
         >Sign up</router-link

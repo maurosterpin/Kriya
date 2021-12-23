@@ -63,6 +63,7 @@ export default {
   position: absolute;
   right: 0px;
   margin-top: 50px;
+  margin-right: 30px !important;
 }
 
 .contact {
@@ -118,6 +119,9 @@ export default {
 @media screen and (max-width: 380px) {
   .contact {
     max-width: 300px;
+  }
+  .notification {
+    margin-right: 20px !important;
   }
 }
 </style>

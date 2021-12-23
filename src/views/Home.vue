@@ -305,7 +305,7 @@ body::-webkit-scrollbar {
 }
 
 .messages {
-  height: 710px;
+  height: 707px !important;
   display: flex;
   flex-direction: column-reverse;
   overflow-y: auto;
@@ -346,7 +346,7 @@ body::-webkit-scrollbar {
 }
 
 .public-chat-h5 {
-  margin-bottom: 25px;
+  margin-bottom: 12px;
   padding: 15px 25px;
   background-color: #141518;
   border-radius: 25px;
@@ -359,6 +359,9 @@ body::-webkit-scrollbar {
   border-radius: 25px;
   padding: 15px 25px !important;
   width: 100%;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 12px;
 }
 
 .send-icon {
@@ -366,7 +369,7 @@ body::-webkit-scrollbar {
   width: 15px;
   cursor: pointer;
   position: absolute;
-  margin-top: 20px;
-  margin-right: 25px;
+  margin-top: 32px;
+  margin-right: 35px;
 }
 </style>

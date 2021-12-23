@@ -15,7 +15,7 @@
         {{ item.taskName }}
 
         <checkMarkIcon
-          v-if="!item.completed"
+          v-if="!item.completed && goalUID === currentUID"
           v-on:click="checkTask(index)"
           class="checkMarkIcon"
         />
@@ -36,11 +36,17 @@ export default {
       tasks: [],
       submited: false,
       completed: null,
+      currentUID: null,
     };
   },
-  props: ["info", "listType", "passedID", "goalName"],
+  props: ["info", "listType", "passedID", "goalName", "goalUID"],
   name: "ToDoList",
   mounted() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.currentUID = firebase.auth().currentUser.uid;
+      }
+    });
     this.getTasks();
   },
   methods: {

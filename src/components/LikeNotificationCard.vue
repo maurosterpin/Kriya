@@ -1,11 +1,19 @@
 <template>
   <div class="notificationCard-wrapper">
-    <router-link to="/direct-messages" class="link"
-      ><div class="notificationCard">
-        <img :src="profilePic" class="profilePic" />{{ username }}
-        sent you a message
-      </div>
-    </router-link>
+    <div
+      v-if="
+        info.notificationType === 'goal' ||
+          info.notificationType === 'to-do list'
+      "
+      class="likeNotificationCard"
+    >
+      <img :src="profilePic" class="profilePic" />{{ username }} congratulates
+      you on a completed {{ info.notificationType }}!
+    </div>
+    <div v-else class="likeNotificationCard">
+      <img :src="profilePic" class="profilePic" />{{ username }} liked the quote
+      you posted!
+    </div>
   </div>
 </template>
 

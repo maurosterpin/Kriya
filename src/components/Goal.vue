@@ -22,6 +22,7 @@
           listType="Daily"
           :passedID="todo.docID"
           :goalName="info.goalTitle"
+          :goalUID="info.goalUID"
         />
       </div>
       <div v-else-if="DailyToDoStarted">
@@ -55,6 +56,7 @@
           listType="Weekly"
           :passedID="todo.docID"
           :goalName="info.goalTitle"
+          :goalUID="info.goalUID"
         />
       </div>
       <div v-else-if="WeeklyToDoStarted">
@@ -88,6 +90,7 @@
           listType="Monthly"
           :passedID="todo.docID"
           :goalName="info.goalTitle"
+          :goalUID="info.goalUID"
         />
       </div>
       <div v-else-if="MonthlyToDoStarted">
@@ -143,7 +146,12 @@ export default {
     };
   },
   mounted() {
-    this.currentUserID = firebase.auth().currentUser.uid;
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.currentUserID = firebase.auth().currentUser.uid;
+      }
+    });
+
     this.LoadDailyToDoLists();
     this.LoadWeeklyToDoLists();
     this.LoadMonthlyToDoLists();
@@ -644,6 +652,17 @@ export default {
 }
 
 @media screen and (max-width: 380px) {
+  .completed {
+    padding: 7px 13px;
+    position: relative;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+    border-radius: 100px;
+    margin: auto;
+    margin-bottom: 12px;
+    background-color: #141518;
+    font-size: 11px;
+  }
+
   .to-do-item {
     min-width: 250px;
   }
