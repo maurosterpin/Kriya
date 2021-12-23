@@ -1,25 +1,27 @@
 <template>
-  <div class="public-chat-wrapper2">
-    <div class="public-chat-relative2">
-      <div class="public-chat2">
-        <h6 class="public-chat-h6">public chat</h6>
-        <div class="messages3">
-          <div class="messages-space">
-            <Message
-              v-for="message in publicChat"
-              :key="message.Date"
-              :info="message"
-            />
+  <div class="public-chat-home">
+    <div class="public-chat-wrapper2">
+      <div class="public-chat-relative2">
+        <div class="public-chat2">
+          <h6 class="public-chat-h6">public chat</h6>
+          <div class="messages3">
+            <div class="messages-space">
+              <Message
+                v-for="message in publicChat"
+                :key="message.Date"
+                :info="message"
+              />
+            </div>
           </div>
-        </div>
-        <div class="input2">
-          <input
-            v-model="messageText"
-            class="public-chat-input-2"
-            type="text"
-            placeholder="Send message..."
-          />
-          <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
+          <div class="input2">
+            <input
+              v-model="messageText"
+              class="public-chat-input-2"
+              type="text"
+              placeholder="Send message..."
+            />
+            <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
+          </div>
         </div>
       </div>
     </div>
@@ -193,6 +195,11 @@ export default {
 </script>
 
 <style scoped>
+.public-chat-home {
+  height: 92.8vh;
+  background-color: #39c75a !important;
+}
+
 .public-chat-wrapper2 {
   background-color: #39c75a !important;
   height: 891px;

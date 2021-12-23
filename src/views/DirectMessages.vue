@@ -1,102 +1,104 @@
 <template>
-  <div
-    class="direct-messages-wrapper"
-    :class="{ 'justify-content-center': chosenDmMobile }"
-  >
+  <div class="direct-messages-home">
     <div
-      class="contacts"
-      :class="{ 'margin-auto': cWindowWidth, 'display-none': chosenDmMobile }"
+      class="direct-messages-wrapper"
+      :class="{ 'justify-content-center': chosenDmMobile }"
     >
-      <div class="search-container">
-        <input
-          v-model="searchText"
-          class="findContactsSearch"
-          :class="{ 'border-bottom-radius-none': cUsersLength }"
-          type="text"
-          placeholder="Find new users"
-        />
-        <div v-if="searchText != ''" class="searchDropdown">
-          <UserSearchContactCard
-            v-for="card in cUsers"
-            :key="card.Username"
-            :test="card"
+      <div
+        class="contacts"
+        :class="{ 'margin-auto': cWindowWidth, 'display-none': chosenDmMobile }"
+      >
+        <div class="search-container">
+          <input
+            v-model="searchText"
+            class="findContactsSearch"
+            :class="{ 'border-bottom-radius-none': cUsersLength }"
+            type="text"
+            placeholder="Find new users"
           />
+          <div v-if="searchText != ''" class="searchDropdown">
+            <UserSearchContactCard
+              v-for="card in cUsers"
+              :key="card.Username"
+              :test="card"
+            />
+          </div>
+        </div>
+        <!--div class="contactCards"-->
+        <UserContactCard
+          v-for="contact in cLoadedContacts"
+          :key="contact.key"
+          :info="contact"
+        />
+
+        <div class="contacts-illustration">
+          <h6
+            v-if="windowWidth <= 900 && contacts.length > 0"
+            class="illustrationTitle"
+          >
+            Choose a contact to see messages
+          </h6>
+          <h6
+            v-else-if="windowWidth <= 900 && contacts.length < 1"
+            class="illustrationTitle"
+          >
+            There is nothing here
+          </h6>
+          <illustration v-if="windowWidth <= 900" class="illustration" />
         </div>
       </div>
-      <!--div class="contactCards"-->
-      <UserContactCard
-        v-for="contact in cLoadedContacts"
-        :key="contact.key"
-        :info="contact"
-      />
-
-      <div class="contacts-illustration">
-        <h6
-          v-if="windowWidth <= 900 && contacts.length > 0"
-          class="illustrationTitle"
-        >
-          Choose a contact to see messages
-        </h6>
-        <h6
-          v-else-if="windowWidth <= 900 && contacts.length < 1"
-          class="illustrationTitle"
-        >
+      <div
+        class="noMessageScreen"
+        v-if="contacts.length < 1 && windowWidth > 900"
+      >
+        <h6 class="illustrationTitle">
           There is nothing here
         </h6>
-        <illustration v-if="windowWidth <= 900" class="illustration" />
-      </div>
-    </div>
-    <div
-      class="noMessageScreen"
-      v-if="contacts.length < 1 && windowWidth > 900"
-    >
-      <h6 class="illustrationTitle">
-        There is nothing here
-      </h6>
-      <illustration
-        v-if="contacts.length < 1 && windowWidth > 900"
-        class="illustration"
-      />
-    </div>
-    <div
-      class="chooseContactIllustration"
-      v-if="chosenDmId == '' && contacts.length > 0 && windowWidth > 900"
-    >
-      <div class="margin-right-illustration">
-        <h6 class="illustrationTitle">
-          Choose a contact to see messages
-        </h6>
-        <illustration class="illustration" />
-      </div>
-    </div>
-
-    <div
-      class="direct-messages"
-      v-else-if="chosenDmId != '' && contacts.length > 0"
-    >
-      <div class="collapse-icon">
-        <singleArrow
-          v-if="windowWidth < 900"
-          class="doubleArrow"
-          @click="hideMessages"
+        <illustration
+          v-if="contacts.length < 1 && windowWidth > 900"
+          class="illustration"
         />
       </div>
-      <div class="messages2">
-        <Message
-          v-for="message in loadedMessages"
-          :key="message.key"
-          :info="message"
-        />
+      <div
+        class="chooseContactIllustration"
+        v-if="chosenDmId == '' && contacts.length > 0 && windowWidth > 900"
+      >
+        <div class="margin-right-illustration">
+          <h6 class="illustrationTitle">
+            Choose a contact to see messages
+          </h6>
+          <illustration class="illustration" />
+        </div>
       </div>
 
-      <div v-if="contacts.length > 0" class="input">
-        <input
-          v-model="messageText"
-          class="public-chat-input"
-          type="text"
-          placeholder="Send message..."
-        />
-        <sendIcon class="send-icon" @click="sendMessage" />
+      <div
+        class="direct-messages"
+        v-else-if="chosenDmId != '' && contacts.length > 0"
+      >
+        <div class="collapse-icon">
+          <singleArrow
+            v-if="windowWidth < 900"
+            class="doubleArrow"
+            @click="hideMessages"
+          />
+        </div>
+        <div class="messages2">
+          <Message
+            v-for="message in loadedMessages"
+            :key="message.key"
+            :info="message"
+          />
+        </div>
+
+        <div v-if="contacts.length > 0" class="input">
+          <input
+            v-model="messageText"
+            class="public-chat-input"
+            type="text"
+            placeholder="Send message..."
+          />
+          <sendIcon class="send-icon" @click="sendMessage" />
+        </div>
       </div>
     </div>
   </div>
@@ -442,6 +444,11 @@ export default {
 </script>
 
 <style scoped>
+.direct-messages-home {
+  height: 92.8vh;
+  background-color: #39c75a !important;
+}
+
 .direct-messages-wrapper {
   background-color: #39c75a !important;
   display: flex;
