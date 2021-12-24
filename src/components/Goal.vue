@@ -23,6 +23,7 @@
           :passedID="todo.docID"
           :goalName="info.goalTitle"
           :goalUID="info.goalUID"
+          :goalCompleted="info.completed"
         />
       </div>
       <div v-else-if="DailyToDoStarted">
@@ -57,6 +58,7 @@
           :passedID="todo.docID"
           :goalName="info.goalTitle"
           :goalUID="info.goalUID"
+          :goalCompleted="info.completed"
         />
       </div>
       <div v-else-if="WeeklyToDoStarted">
@@ -91,6 +93,7 @@
           :passedID="todo.docID"
           :goalName="info.goalTitle"
           :goalUID="info.goalUID"
+          :goalCompleted="info.completed"
         />
       </div>
       <div v-else-if="MonthlyToDoStarted">
@@ -105,14 +108,23 @@
         <addIcon class="addIcon" />
       </div>
       <div
-        v-if="!info.completed && this.currentUserID === info.goalUID"
+        v-if="
+          !info.completed &&
+            this.currentUserID === info.goalUID &&
+            (daily.length > 0 || weekly.length > 0 || monthly.length > 0)
+        "
         class="goalFinished"
         @click="GoalComplete"
       >
         <checkMarkIcon class="goalFinishedIcon" />
       </div>
 
-      <div v-else class="completed">Completed</div>
+      <div
+        v-else-if="daily.length > 0 || weekly.length > 0 || monthly.length > 0"
+        class="completed"
+      >
+        Completed
+      </div>
     </div>
   </div>
 </template>
@@ -171,37 +183,37 @@ export default {
       }
     },
     startDailyToDo() {
-      if (
-        this.LatestDailyDate <= Date.now() - 60 * 60 * 24 * 1000 ||
-        this.LatestDailyDate == undefined
-      ) {
-        this.DailyToDoStarted = !this.DailyToDoStarted;
-        console.log("Started Daily");
-      } else {
-        alert("You can start only one daily To-Do every 24 hours");
-      }
+      // if (
+      //   this.LatestDailyDate <= Date.now() - 60 * 60 * 24 * 1000 ||
+      //   this.LatestDailyDate == undefined
+      // ) {
+      this.DailyToDoStarted = !this.DailyToDoStarted;
+      console.log("Started Daily");
+      // } else {
+      //   alert("You can start only one daily To-Do every 24 hours");
+      // }
     },
     startWeeklyToDo() {
-      if (
-        this.LatestWeeklyDate <= Date.now() - 60 * 60 * 24 * 1000 * 7 ||
-        this.LatestWeeklyDate == undefined
-      ) {
-        this.WeeklyToDoStarted = !this.WeeklyToDoStarted;
-        console.log("Started Weekly");
-      } else {
-        alert("You can start only one weekly To-Do every 7 days");
-      }
+      // if (
+      //   this.LatestWeeklyDate <= Date.now() - 60 * 60 * 24 * 1000 * 7 ||
+      //   this.LatestWeeklyDate == undefined
+      // ) {
+      this.WeeklyToDoStarted = !this.WeeklyToDoStarted;
+      console.log("Started Weekly");
+      // } else {
+      //   alert("You can start only one weekly To-Do every 7 days");
+      // }
     },
     startMonthlyToDo() {
-      if (
-        this.LatestMonthlyDate <= Date.now() - 60 * 60 * 24 * 1000 * 30 ||
-        this.LatestMonthlyDate == undefined
-      ) {
-        this.MonthlyToDoStarted = !this.MonthlyToDoStarted;
-        console.log("Started Monthly");
-      } else {
-        alert("You can start only one monthly To-Do every 30 days");
-      }
+      // if (
+      //   this.LatestMonthlyDate <= Date.now() - 60 * 60 * 24 * 1000 * 30 ||
+      //   this.LatestMonthlyDate == undefined
+      // ) {
+      this.MonthlyToDoStarted = !this.MonthlyToDoStarted;
+      console.log("Started Monthly");
+      // } else {
+      //   alert("You can start only one monthly To-Do every 30 days");
+      // }
     },
     LoadDailyToDoLists() {
       this.getLatestDailyToDoDate();
@@ -488,6 +500,9 @@ export default {
         .update({ completed: true })
         .then(() => {
           this.postCompletedGoal();
+        })
+        .then(() => {
+          this.$parent.getGoals();
         });
     },
     postCompletedGoal() {
@@ -530,9 +545,39 @@ export default {
   position: relative;
 }
 
-@media screen and (max-width: 400px) {
+.new-width {
+  width: 450px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media screen and (max-width: 1000px) {
   .goal {
     padding: 15px;
+  }
+
+  .new-width {
+    width: 250px !important;
+  }
+  .addToDo {
+    width: 200px !important;
+    background-color: #141518;
+    border-radius: 50px;
+    padding: 15px !important;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 35px !important;
+    justify-content: inherit;
+    align-items: center;
+    margin: auto;
+  }
+
+  .addToDo h6 {
+    font-size: 13px !important;
+  }
+
+  .addIcon {
+    width: 7px !important;
   }
 }
 
@@ -564,10 +609,6 @@ export default {
   border-radius: 100px;
   margin: auto;
   background-color: #141518;
-}
-
-.new-width {
-  width: 450px !important;
 }
 
 .goal h5 {
@@ -651,7 +692,7 @@ export default {
   margin-bottom: 25px !important;
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 1000px) {
   .completed {
     padding: 7px 13px;
     position: relative;
@@ -673,8 +714,8 @@ export default {
 
   .goal {
     padding: 0px 2px;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 15px;
+    margin-left: 15px;
   }
   .goalFinishedIcon {
     position: absolute;

@@ -23,6 +23,7 @@
                 v-for="message in publicChat"
                 :key="message.Date"
                 :info="message"
+                :isPublic="true"
               />
             </div>
           </div>
@@ -194,6 +195,7 @@ export default {
               Message: data.Message,
               Date: data.Date,
               UID: data.UID,
+              docID: doc.id,
             });
           });
         });

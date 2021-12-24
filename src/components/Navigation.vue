@@ -9,10 +9,7 @@
         <div v-if="searchActivated" class="searchInputContainer">
           <searchCancelIcon class="cancelIconSearch" />
           <input v-model="searchText" ref="searchInput" type="text" />
-          <div
-            v-if="searchActivated && searchText != ''"
-            class="searchDropdown"
-          >
+          <div v-if="searchText.length > 0" class="searchDropdown">
             <UserSearchCard
               v-for="card in cUsers"
               :key="card.Username"
@@ -270,6 +267,7 @@ input {
   width: 8px;
   right: 7px;
   top: 9px;
+  cursor: pointer;
 }
 
 .searchInputContainer {

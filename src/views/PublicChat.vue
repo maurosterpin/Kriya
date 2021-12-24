@@ -185,6 +185,7 @@ export default {
               Message: data.Message,
               Date: data.Date,
               UID: data.UID,
+              docID: doc.id,
             });
           });
         });

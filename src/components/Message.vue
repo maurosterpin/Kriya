@@ -1,10 +1,18 @@
 <template>
   <div class="public-chat-msg">
-    <div class="public-chat-msg-head" @click="visitProfile">
-      <img :src="profilePic" alt="ProfilePicture" class="PfpImg" />{{
-        username
-      }}
+    <div class="public-chat-msg-head">
+      <img
+        @click="visitProfile"
+        :src="profilePic"
+        alt="ProfilePicture"
+        class="PfpImg"
+      />{{ username }}
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
+      <cancelIcon
+        v-if="info.UID === currentUID && isPublic"
+        class="cancelIconStyle"
+        @click="removePost"
+      />
     </div>
     <div class="public-chat-msg-body">
       {{ info.Message }}
@@ -13,6 +21,7 @@
 </template>
 
 <script>
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import moment from "moment";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
@@ -22,11 +31,14 @@ export default {
     return {
       username: "",
       profilePic: null,
+      currentUID: null,
     };
   },
   name: "Message",
-  props: ["info"],
-  components: {},
+  props: ["info", "isPublic", "messagesID"],
+  components: {
+    cancelIcon,
+  },
   computed: {
     postedFromNow() {
       return moment(this.info.Date).fromNow();
@@ -36,7 +48,19 @@ export default {
     this.getUserData();
   },
   methods: {
+    removePost() {
+      if (this.isPublic) {
+        db.collection("public-chat")
+          .doc(this.info.docID)
+          .delete()
+          .then(() => {
+            this.$parent.getPublicChatMessages();
+          });
+      }
+    },
     getUserData() {
+      const user = firebase.auth().currentUser;
+      this.currentUID = user.uid;
       db.collection("users")
         .doc(this.info.UID)
         .get()
@@ -118,6 +142,12 @@ export default {
   align-items: center;
   font-size: 15px;
   padding: 10px 20px;
+}
+
+.cancelIconStyle {
+  width: 7px !important;
+  cursor: pointer;
+  margin-bottom: 25px !important;
 }
 
 @media screen and (max-width: 450px) {

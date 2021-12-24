@@ -1,24 +1,29 @@
 <template>
   <div class="container-feed-card">
-    <div class="container-feed-card-head" @click="visitProfile">
-      <img :src="profilePic" class="feed-icon" />
+    <div class="container-feed-card-head">
+      <img :src="profilePic" class="feed-icon" @click="visitProfile" />
       <div class="container-feed-card-head-txt">
-        <h6>{{ username }}</h6>
-        <h6>{{ postedFromNow }}</h6>
+        <h6 @click="visitProfile">{{ username }}</h6>
+        <h6 @click="visitProfile">{{ postedFromNow }}</h6>
+        <cancelIcon
+          v-if="info.UID === store.currentUserUid"
+          class="cancelIconStyle"
+          @click="removePost"
+        />
       </div>
     </div>
     <div class="container-feed-card-head-msg">
       <h5>I completed my {{ info.ListType.toLowerCase() }} to-do list!</h5>
     </div>
     <div class="container-feed-card-body">
-      <ToDoList :info="info" :listType="info.ListType" />
+      <ToDoList :info="info" :listType="info.ListType" :onFeed="true" />
       <div class="feed-card-button-container">
         <button
           v-if="isLiked && info.UID != store.currentUserUid"
           class="feed-card-button button-hover"
           @click="removeLike"
         >
-          <likeIcon class="margin-right" /> {{ isLiked }}
+          <likeIcon class="margin-right likeIcon" /> {{ isLiked }}
         </button>
         <div class="likesHover" v-for="(user, index) in likes" :key="index">
           {{ likeUsernames.join(", ") }}
@@ -35,7 +40,7 @@
           v-else-if="info.UID === store.currentUserUid && likes.length > 0"
           class="feed-card-button button-hover"
         >
-          <likeIcon class="margin-right" /> {{ likes.length }}
+          <likeIcon class="margin-right likeIcon" /> {{ likes.length }}
         </button>
         <div class="likesHover" v-for="(user, index) in likes" :key="index">
           {{ likeUsernames.join(", ") }}
@@ -46,6 +51,7 @@
 </template>
 
 <script>
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import ToDoList from "../components/ToDoList.vue";
 import likeIcon from "../assets/Icons/like-icon.svg";
 import moment from "moment";
@@ -59,6 +65,7 @@ export default {
   components: {
     ToDoList,
     likeIcon,
+    cancelIcon,
   },
   data() {
     return {
@@ -82,6 +89,14 @@ export default {
     this.getLikes();
   },
   methods: {
+    removePost() {
+      db.collection("posts")
+        .doc(this.info.docID)
+        .delete()
+        .then(() => {
+          this.$parent.getPosts();
+        });
+    },
     getCurrentUserData() {
       // Get current user
       const user = firebase.auth().currentUser;
@@ -243,7 +258,7 @@ export default {
   }
 
   .container-feed-card-head-txt h6 {
-    font-size: 14px;
+    font-size: 11px;
   }
 
   .feed-icon {
@@ -258,6 +273,22 @@ export default {
     margin-top: -5px !important;
     padding: 7px 12px !important;
     font-size: 12px !important;
+  }
+
+  .likeIcon {
+    width: 15px !important;
+  }
+
+  .feed-card-button {
+    margin-top: -3px !important;
+    position: absolute;
+    padding: 4px 11px !important;
+    border-radius: 50px;
+    border: none;
+    background-color: #39c75a;
+    color: #fff;
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
   }
 }
 
@@ -315,5 +346,11 @@ export default {
 
 *:focus {
   outline: none;
+}
+
+.cancelIconStyle {
+  width: 7px !important;
+  cursor: pointer;
+  margin-bottom: 25px !important;
 }
 </style>

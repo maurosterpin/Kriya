@@ -5,6 +5,11 @@
       <p>
         {{ postedFromNow }}
       </p>
+      <cancelIcon
+        v-if="!goalCompleted && !onFeed"
+        class="cancelIconStyle"
+        @click="cancel"
+      />
     </div>
     <ul class="todoList">
       <li
@@ -26,6 +31,7 @@
 
 <script>
 import checkMarkIcon from "../assets/Icons/check-mark.svg";
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import moment from "moment";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
@@ -39,7 +45,15 @@ export default {
       currentUID: null,
     };
   },
-  props: ["info", "listType", "passedID", "goalName", "goalUID"],
+  props: [
+    "info",
+    "listType",
+    "passedID",
+    "goalName",
+    "goalUID",
+    "goalCompleted",
+    "onFeed",
+  ],
   name: "ToDoList",
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -50,6 +64,24 @@ export default {
     this.getTasks();
   },
   methods: {
+    cancel() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      console.log("cancel");
+      // Delete to-do list
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.goalName)
+        .collection(`${this.listType}ToDos`)
+        .doc(this.info.docID)
+        .delete()
+        .then(() => {
+          this.$parent.LoadDailyToDoLists();
+          this.$parent.LoadWeeklyToDoLists();
+          this.$parent.LoadMonthlyToDoLists();
+        });
+    },
     addTask() {
       if (this.task != null) {
         this.tasks.push({ taskName: this.task, completed: false });
@@ -169,6 +201,7 @@ export default {
   },
   components: {
     checkMarkIcon,
+    cancelIcon,
   },
 };
 </script>
@@ -178,6 +211,14 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.cancelIconStyle {
+  width: 6px !important;
+  right: 0px;
+  margin-bottom: 25px;
+  margin-right: 4px;
+  cursor: pointer;
 }
 
 .wrapper {
@@ -191,7 +232,7 @@ export default {
   box-shadow: 4px 4px 35px 0px black;
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 1000px) {
   .wrapper {
     max-width: 210px;
     padding: 25px !important;
@@ -217,6 +258,20 @@ export default {
 
   .inputField input {
     width: 85% !important;
+  }
+
+  .checkMarkIcon {
+    width: 13px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .todoList li:before {
+    content: "·";
+    font-size: 40px !important;
+    line-height: 5px;
+    float: left;
+    margin-right: 10px;
+    margin-top: 4px;
   }
 }
 

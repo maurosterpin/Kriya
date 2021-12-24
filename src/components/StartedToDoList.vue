@@ -2,6 +2,7 @@
   <div v-if="!submited" class="wrapper feedCardToDO">
     <div class="header">
       <header>{{ info }} to-do</header>
+      <cancelIcon class="cancelIconStyle" @click="cancel" />
     </div>
     <div class="inputField">
       <input v-model="task" type="text" placeholder="Task name..." />
@@ -13,7 +14,7 @@
         <cancelIcon v-on:click="removeTask(index)" class="cancelIcon" />
       </li>
     </ul>
-    <div class="footer">
+    <div v-if="tasks.length > 0" class="footer">
       <span v-on:click="submitToDoList" class="button">Submit</span>
     </div>
   </div>
@@ -37,7 +38,7 @@ export default {
   name: "ToDoList",
   methods: {
     addTask() {
-      if (this.task != null) {
+      if (this.task.length > 0) {
         this.tasks.push({ taskName: this.task, completed: false });
         console.log(this.tasks);
         this.task = null;
@@ -51,7 +52,18 @@ export default {
     },
     submitTasks() {
       console.log("submitTasks");
-      this.submited = true;
+      this.submited = !this.submited;
+    },
+    cancel() {
+      console.log("cancel");
+      this.submited = false;
+      if (this.info == "Daily") {
+        this.$parent.startDailyToDo();
+      } else if (this.info == "Weekly") {
+        this.$parent.startWeeklyToDo();
+      } else if (this.info == "Monthly") {
+        this.$parent.startMonthlyToDo();
+      }
     },
     checkTask(index) {
       console.log("checkTask", index);
@@ -162,20 +174,57 @@ export default {
   box-shadow: 4px 4px 35px 0px black;
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 600px) {
   .wrapper {
-    max-width: 250px;
+    min-width: 250px !important;
     padding: 25px !important;
     min-height: 0px;
 
     header {
-      font-size: 18px !important;
+      font-size: 13px !important;
     }
   }
+  .todoList {
+    font-size: 12px;
+  }
+
+  .inputField input {
+    font-size: 10px !important;
+  }
+
+  .todoList li {
+    margin-top: 20px !important;
+    list-style: none;
+  }
+
+  .todoList li:before {
+    content: "·";
+    font-size: 40px !important;
+    vertical-align: left;
+    line-height: 5px;
+    float: left;
+    margin-right: 10px;
+    margin-top: 7px !important;
+  }
+
+  .cancelIcon {
+    width: 6px !important;
+    margin-bottom: 1px;
+  }
+
+  ::placeholder {
+    font-size: 11px !important;
+  }
+
+  .button {
+    padding: 4px 9px !important;
+    font-size: 11px !important;
+  }
+
   .addIcon {
     margin-top: 10px !important;
-    margin-right: 0px !important;
-    width: 8px !important;
+    margin-right: 4px !important;
+    width: 7px !important;
     cursor: pointer;
     fill: #fff;
     background-color: #141518;
@@ -285,6 +334,14 @@ export default {
 .checkMarkIcon {
   float: right;
   margin-right: 6px;
+  cursor: pointer;
+}
+
+.cancelIconStyle {
+  width: 6px !important;
+  right: 0px;
+  margin-bottom: 25px;
+  margin-right: 4px;
   cursor: pointer;
 }
 </style>

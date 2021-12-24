@@ -339,7 +339,7 @@ export default {
   margin-right: 15px;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 600px) {
   .inputField2 {
     display: flex;
     width: 100%;

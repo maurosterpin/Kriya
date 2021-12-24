@@ -199,9 +199,7 @@ export default {
         .doc(temp)
         .onSnapshot(() => {
           this.removeNotification();
-          setTimeout(() => {
-            this.getMessages();
-          }, 10);
+          this.getMessages();
         });
     },
     removeNotification() {
