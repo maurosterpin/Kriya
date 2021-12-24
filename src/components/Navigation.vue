@@ -119,6 +119,7 @@ export default {
     this.getLikeNotifications();
   },
   mounted() {
+    this.getUsers();
     window.addEventListener("resize", () => {
       this.windowWidth = window.innerWidth;
     });
@@ -132,7 +133,6 @@ export default {
           this.getMessageNotifications();
         });
     }, 500);
-    this.getUsers();
   },
   methods: {
     removeNotification() {
