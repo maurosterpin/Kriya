@@ -3,24 +3,29 @@
     <div class="public-chat-wrapper2">
       <div class="public-chat-relative2">
         <div class="public-chat2">
-          <h6 class="public-chat-h6">public chat</h6>
+          <transition name="list" appear>
+            <h6 class="public-chat-h6">public chat</h6>
+          </transition>
           <div class="messages3">
-            <div class="messages-space">
+            <transition-group tag="div" name="list" appear>
               <Message
                 v-for="message in publicChat"
                 :key="message.Date"
                 :info="message"
+                :isPublic="true"
               />
-            </div>
+            </transition-group>
           </div>
-          <div class="input2">
-            <input
-              v-model="messageText"
-              class="public-chat-input-2"
-              type="text"
-              placeholder="Send message..."
-            />
-            <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
+          <div class="input2" @keyup.enter="sendPublicChatMessage">
+            <transition name="list" appear>
+              <input
+                v-model="messageText"
+                class="public-chat-input-2"
+                type="text"
+                placeholder="Send message..."
+              />
+              <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
+            </transition>
           </div>
         </div>
       </div>
@@ -304,5 +309,35 @@ export default {
   .messages3::-webkit-scrollbar {
     width: 0px !important;
   }
+}
+
+/* message transitions */
+.list-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-move {
+  transition: all 0.3s ease;
 }
 </style>

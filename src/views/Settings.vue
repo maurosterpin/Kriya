@@ -1,33 +1,37 @@
 <template>
   <div class="settings-wrapper">
-    <div class="change-username">
-      <label for="username-input">Username </label><br />
-      <input
-        v-model="usernameInput"
-        class="change-username-input"
-        type="text"
-        id="username-input"
-        name="username-input"
-      />
-      <h6 @click="updateUsername" class="h6-settings">Update</h6>
-    </div>
-    <div class="change-profile-picture">
-      Profile picture<br /><br /><input
-        type="file"
-        id="img"
-        style="display:none;"
-        @change="onFileSelected"
-        accept="image/*"
-      />
-      <label for="img"
-        ><img
-          :src="imageUrl"
-          alt="ProfilePicture"
-          class="ProfilePictureImg"/></label
-      ><br />
+    <transition name="list2" appear>
+      <div class="change-username">
+        <label for="username-input">Username </label><br />
+        <input
+          v-model="usernameInput"
+          class="change-username-input"
+          type="text"
+          id="username-input"
+          name="username-input"
+        />
+        <h6 @click="updateUsername" class="h6-settings">Update</h6>
+      </div>
+    </transition>
+    <transition name="list2" appear>
+      <div class="change-profile-picture">
+        Profile picture<br /><br /><input
+          type="file"
+          id="img"
+          style="display:none;"
+          @change="onFileSelected"
+          accept="image/*"
+        />
+        <label for="img"
+          ><img
+            :src="imageUrl"
+            alt="ProfilePicture"
+            class="ProfilePictureImg"/></label
+        ><br />
 
-      <h6 @click="updateProfilePicture" class="h6-settings">Update</h6>
-    </div>
+        <h6 @click="updateProfilePicture" class="h6-settings">Update</h6>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -207,5 +211,35 @@ input.change-username-input:focus {
   .change-profile-picture {
     padding: 20px 60px;
   }
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-move {
+  transition: all 0.3s ease;
 }
 </style>

@@ -18,30 +18,33 @@
     <div class="container-feed-card-body">
       <ToDoList :info="info" :listType="info.ListType" :onFeed="true" />
       <div class="feed-card-button-container">
-        <button
-          v-if="isLiked && info.UID != store.currentUserUid"
-          class="feed-card-button button-hover"
-          @click="removeLike"
-        >
-          <likeIcon class="margin-right likeIcon" /> {{ isLiked }}
-        </button>
-        <div class="likesHover" v-for="(user, index) in likes" :key="index">
-          {{ likeUsernames.join(", ") }}
-        </div>
-
-        <button
-          v-if="!isLiked && info.UID != store.currentUserUid"
-          class="feed-card-button"
-          @click="congratulate"
-        >
-          Congratulate!
-        </button>
-        <button
-          v-else-if="info.UID === store.currentUserUid && likes.length > 0"
-          class="feed-card-button button-hover"
-        >
-          <likeIcon class="margin-right likeIcon" /> {{ likes.length }}
-        </button>
+        <transition name="list2" appear>
+          <button
+            v-if="isLiked && info.UID != store.currentUserUid"
+            class="feed-card-button button-hover"
+            @click="removeLike"
+          >
+            <likeIcon class="margin-right likeIcon" /> {{ isLiked }}
+          </button>
+          <div class="likesHover" v-for="(user, index) in likes" :key="index">
+            {{ likeUsernames.join(", ") }}
+          </div>
+        </transition>
+        <transition name="list2" appear>
+          <button
+            v-if="!isLiked && info.UID != store.currentUserUid"
+            class="feed-card-button"
+            @click="congratulate"
+          >
+            Congratulate!
+          </button>
+          <button
+            v-else-if="info.UID === store.currentUserUid && likes.length > 0"
+            class="feed-card-button button-hover"
+          >
+            <likeIcon class="margin-right likeIcon" /> {{ likes.length }}
+          </button>
+        </transition>
         <div class="likesHover" v-for="(user, index) in likes" :key="index">
           {{ likeUsernames.join(", ") }}
         </div>
@@ -352,5 +355,35 @@ export default {
   width: 7px !important;
   cursor: pointer;
   margin-bottom: 25px !important;
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list2-move {
+  transition: all 0.3s ease;
 }
 </style>

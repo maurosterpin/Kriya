@@ -3,7 +3,10 @@
     <div class="app">
       <Navigation v-if="isLogged" />
       <Sidebar v-if="isLogged" />
-      <router-view />
+
+      <transition name="route">
+        <router-view />
+      </transition>
     </div>
   </div>
 </template>
@@ -81,5 +84,22 @@ export default {
 
 .link-light {
   color: #fff;
+}
+
+/* route transitions */
+
+.route-leave-to {
+  opacity: 0;
+}
+.route-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.route-enter {
+  opacity: 0;
+}
+
+.route-enter-active {
+  transition: all 0.3s ease-out;
 }
 </style>

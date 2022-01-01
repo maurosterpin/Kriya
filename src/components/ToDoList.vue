@@ -6,7 +6,7 @@
         {{ postedFromNow }}
       </p>
       <cancelIcon
-        v-if="!goalCompleted && !onFeed"
+        v-if="!goalCompleted && !onFeed && goalUID === currentUID"
         class="cancelIconStyle"
         @click="cancel"
       />
@@ -77,9 +77,9 @@ export default {
         .doc(this.info.docID)
         .delete()
         .then(() => {
-          this.$parent.LoadDailyToDoLists();
-          this.$parent.LoadWeeklyToDoLists();
-          this.$parent.LoadMonthlyToDoLists();
+          this.$parent.$parent.LoadDailyToDoLists();
+          this.$parent.$parent.LoadWeeklyToDoLists();
+          this.$parent.$parent.LoadMonthlyToDoLists();
         });
     },
     addTask() {
@@ -155,11 +155,11 @@ export default {
         .then(() => {
           this.getTasks();
           if (this.listType == "Daily") {
-            this.$parent.LoadDailyToDoLists();
+            this.$parent.$parent.LoadDailyToDoLists();
           } else if (this.listType == "Weekly") {
-            this.$parent.LoadWeeklyToDoLists();
+            this.$parent.$parent.LoadWeeklyToDoLists();
           } else if (this.listType == "Monthly") {
-            this.$parent.LoadMonthlyToDoLists();
+            this.$parent.$parent.LoadMonthlyToDoLists();
           }
         });
     },
@@ -383,5 +383,35 @@ export default {
   float: right;
   margin-right: 6px;
   cursor: pointer;
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list2-move {
+  transition: all 0.3s ease;
 }
 </style>

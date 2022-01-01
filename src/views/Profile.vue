@@ -2,33 +2,46 @@
   <div class="app-wrapper">
     <div class="quote-wrapper">
       <div v-if="!addQuote && quoteText.length > 0" class="quote">
-        <h2>" {{ quoteComputed }} "</h2>
-        <h6>- {{ authorComputed }}</h6>
-        <span class="buttonQuoteEdit" @click="addQuoteMethod">Edit</span>
+        <transition name="list2" appear>
+          <h2>" {{ quoteComputed }} "</h2>
+        </transition>
+        <transition name="list2" appear>
+          <h6>- {{ authorComputed }}</h6>
+        </transition>
+        <transition name="list2" appear>
+          <span class="buttonQuoteEdit" @click="addQuoteMethod">Edit</span>
+        </transition>
       </div>
 
       <form autocomplete="off" v-else-if="addQuote" class="quote-form">
-        <input
-          v-model="quoteText"
-          class="inputField2"
-          type="text"
-          id="goalDescription"
-          name="content"
-          placeholder="Quote..."
-        />
-
-        <input
-          v-model="quoteAuthor"
-          class="inputField2"
-          type="text"
-          id="goalReason"
-          name="description"
-          placeholder="Author..."
-        />
-
-        <span v-on:click="submitQuote" class="buttonQuote"
-          ><strong>Submit</strong></span
-        >
+        <transition name="list2" appear>
+          <cancelIcon class="cancelIconStyle2" @click="addQuoteMethod" />
+        </transition>
+        <transition name="list2" appear>
+          <input
+            v-model="quoteText"
+            class="inputField2"
+            type="text"
+            id="goalDescription"
+            name="content"
+            placeholder="Quote..."
+          />
+        </transition>
+        <transition name="list2" appear>
+          <input
+            v-model="quoteAuthor"
+            class="inputField2"
+            type="text"
+            id="goalReason"
+            name="description"
+            placeholder="Author..."
+          />
+        </transition>
+        <transition name="list2" appear>
+          <span v-on:click="submitQuote" class="buttonQuote"
+            ><strong>Submit</strong></span
+          >
+        </transition>
       </form>
 
       <div v-else v-on:click="addQuoteMethod" class="quoteAdd">
@@ -37,13 +50,19 @@
       </div>
     </div>
     <div class="profile">
-      <div class="username">
-        <img :src="profilePic" alt="ProfilePicture" class="avatar" />{{
-          username
-        }}
-      </div>
-      <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
-      <AddGoal />
+      <transition name="list2" appear>
+        <div class="username">
+          <img :src="profilePic" alt="ProfilePicture" class="avatar" />{{
+            username
+          }}
+        </div>
+      </transition>
+      <transition-group tag="div" name="list2" appear>
+        <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
+      </transition-group>
+      <transition name="list2" appear>
+        <AddGoal />
+      </transition>
       <h6 v-if="goals.length < 1" class="illustrationTitle">
         There is nothing here
       </h6>
@@ -56,6 +75,7 @@
 
 <script>
 import AddGoal from "../components/AddGoal.vue";
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import Goal from "../components/Goal.vue";
 import store from "@/store";
 import addIcon from "../assets/Icons/add-icon.svg";
@@ -70,6 +90,7 @@ export default {
     addIcon,
     illustration,
     Goal,
+    cancelIcon,
   },
   data() {
     return {
@@ -421,5 +442,43 @@ export default {
   width: 10px;
   margin-left: 10px;
   margin-bottom: 6px;
+}
+
+/* message transitions */
+.list2-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-move {
+  transition: all 0.3s ease;
+}
+
+.cancelIconStyle2 {
+  width: 6px !important;
+  right: 0px;
+  margin-bottom: 25px;
+  margin-left: auto;
+  cursor: pointer;
 }
 </style>

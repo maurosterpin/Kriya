@@ -2,34 +2,43 @@
   <div>
     <div v-if="goalSetup" class="goal-form">
       <form autocomplete="off">
+        <transition name="list2" appear>
+          <cancelIcon class="cancelIconStyle2" v-on:click="addGoal" />
+        </transition>
         <div class="form-group">
-          <input
-            type="text"
-            v-model="goalTitle"
-            class="form-control bg"
-            id="inputGoalName"
-            aria-describedby="GoalName"
-            placeholder="Goal title..."
-          />
+          <transition name="list2" appear>
+            <input
+              type="text"
+              v-model="goalTitle"
+              class="form-control bg"
+              id="inputGoalName"
+              aria-describedby="GoalName"
+              placeholder="Goal title..."
+            />
+          </transition>
         </div>
         <div class="form-group">
-          <input
-            type="text"
-            v-model="goalMessage"
-            class="form-control bg"
-            id="inputGoalMessage"
-            aria-describedby="GoalMessage"
-            placeholder="Why are you working towards this goal..."
-          />
+          <transition name="list2" appear>
+            <input
+              type="text"
+              v-model="goalMessage"
+              class="form-control bg"
+              id="inputGoalMessage"
+              aria-describedby="GoalMessage"
+              placeholder="Why are you working towards this goal..."
+            />
+          </transition>
         </div>
-        <button
-          type="button"
-          @click="newGoal"
-          class="btn"
-          style="font-size: 13px; font-weight:600; width:250px;"
-        >
-          Submit
-        </button>
+        <transition name="list2" appear>
+          <button
+            type="button"
+            @click="newGoal"
+            class="btn"
+            style="font-size: 13px; font-weight:600; width:250px;"
+          >
+            Submit
+          </button>
+        </transition>
       </form>
     </div>
     <div class="wrapper">
@@ -44,6 +53,7 @@
 import addIcon from "../assets/Icons/add-icon.svg";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 export default {
   data() {
     return {
@@ -59,7 +69,7 @@ export default {
   name: "Goal",
   methods: {
     addGoal() {
-      this.goalSetup = true;
+      this.goalSetup = !this.goalSetup;
     },
     submitGoal() {
       this.submited = !this.submited;
@@ -89,6 +99,7 @@ export default {
   computed: {},
   components: {
     addIcon,
+    cancelIcon,
   },
 };
 </script>
@@ -244,6 +255,14 @@ input {
 .cancelIcon {
   float: right;
   margin-right: 8px;
+  cursor: pointer;
+}
+
+.cancelIconStyle2 {
+  width: 6px !important;
+  right: 0px;
+  margin-bottom: 25px;
+  margin-left: auto;
   cursor: pointer;
 }
 </style>

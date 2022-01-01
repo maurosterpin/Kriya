@@ -12,22 +12,28 @@
           <addIcon v-if="!info.completed" class="addIconBtn" />
         </div>
         <div v-if="DailyToDoStarted">
-          <StartedToDoList info="Daily" :goalName="info.goalTitle" />
+          <transition name="list2" mode="out-in" appear>
+            <StartedToDoList info="Daily" :goalName="info.goalTitle" />
+          </transition>
         </div>
-        <ToDoList
-          class="to-do-item"
-          v-for="todo in daily"
-          :key="todo.name"
-          :info="todo"
-          listType="Daily"
-          :passedID="todo.docID"
-          :goalName="info.goalTitle"
-          :goalUID="info.goalUID"
-          :goalCompleted="info.completed"
-        />
+        <transition-group tag="div" name="list2" appear class="displayFlex">
+          <ToDoList
+            class="to-do-item"
+            v-for="todo in daily"
+            :key="todo.docID"
+            :info="todo"
+            listType="Daily"
+            :passedID="todo.docID"
+            :goalName="info.goalTitle"
+            :goalUID="info.goalUID"
+            :goalCompleted="info.completed"
+          />
+        </transition-group>
       </div>
       <div v-else-if="DailyToDoStarted">
-        <StartedToDoList info="Daily" :goalName="info.goalTitle" />
+        <transition name="list2" appear>
+          <StartedToDoList info="Daily" :goalName="info.goalTitle" />
+        </transition>
       </div>
       <div
         v-else-if="$router.currentRoute.path == '/profile' && !info.completed"
@@ -49,17 +55,19 @@
         <div v-if="WeeklyToDoStarted">
           <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
         </div>
-        <ToDoList
-          class="to-do-item"
-          v-for="todo in weekly"
-          :key="todo.name"
-          :info="todo"
-          listType="Weekly"
-          :passedID="todo.docID"
-          :goalName="info.goalTitle"
-          :goalUID="info.goalUID"
-          :goalCompleted="info.completed"
-        />
+        <transition-group tag="div" name="list2" appear class="displayFlex">
+          <ToDoList
+            class="to-do-item"
+            v-for="todo in weekly"
+            :key="todo.docID"
+            :info="todo"
+            listType="Weekly"
+            :passedID="todo.docID"
+            :goalName="info.goalTitle"
+            :goalUID="info.goalUID"
+            :goalCompleted="info.completed"
+          />
+        </transition-group>
       </div>
       <div v-else-if="WeeklyToDoStarted">
         <StartedToDoList info="Weekly" :goalName="info.goalTitle" />
@@ -84,17 +92,19 @@
         <div v-if="MonthlyToDoStarted">
           <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
         </div>
-        <ToDoList
-          class="to-do-item"
-          v-for="todo in monthly"
-          :key="todo.name"
-          :info="todo"
-          listType="Monthly"
-          :passedID="todo.docID"
-          :goalName="info.goalTitle"
-          :goalUID="info.goalUID"
-          :goalCompleted="info.completed"
-        />
+        <transition-group tag="div" name="list2" appear class="displayFlex">
+          <ToDoList
+            class="to-do-item"
+            v-for="todo in monthly"
+            :key="todo.docID"
+            :info="todo"
+            listType="Monthly"
+            :passedID="todo.docID"
+            :goalName="info.goalTitle"
+            :goalUID="info.goalUID"
+            :goalCompleted="info.completed"
+          />
+        </transition-group>
       </div>
       <div v-else-if="MonthlyToDoStarted">
         <StartedToDoList info="Monthly" :goalName="info.goalTitle" />
@@ -531,6 +541,11 @@ export default {
   box-sizing: border-box;
 }
 
+.displayFlex {
+  display: flex;
+  flex-direction: row;
+}
+
 .goal {
   min-height: 100px;
   background-color: #39c75a;
@@ -677,6 +692,7 @@ export default {
   background-color: #39c75a;
   cursor: pointer;
   margin-left: 10px;
+  z-index: 2;
 }
 
 .addIconBtn:hover {
@@ -838,5 +854,35 @@ input {
   float: right;
   margin-right: 8px;
   cursor: pointer;
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list2-move {
+  transition: all 0.3s ease;
 }
 </style>

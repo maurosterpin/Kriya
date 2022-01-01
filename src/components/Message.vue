@@ -9,7 +9,7 @@
       />{{ username }}
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
       <cancelIcon
-        v-if="info.UID === currentUID && isPublic"
+        v-if="info.UID === currentUID"
         class="cancelIconStyle"
         @click="removePost"
       />
@@ -52,10 +52,13 @@ export default {
       if (this.isPublic) {
         db.collection("public-chat")
           .doc(this.info.docID)
-          .delete()
-          .then(() => {
-            this.$parent.getPublicChatMessages();
-          });
+          .delete();
+      } else {
+        db.collection("direct-messages")
+          .doc(this.info.parentDocID)
+          .collection("messages")
+          .doc(this.info.docID)
+          .delete();
       }
     },
     getUserData() {

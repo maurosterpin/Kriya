@@ -4,37 +4,52 @@
       <div class="feed-wrapper">
         <div class="feed">
           <div v-for="card in posts" :key="card.name">
-            <FeedCard
-              v-if="card.ListType"
-              :info="card"
-              :listType="card.ListType"
-            />
-            <FeedCardQuote v-else-if="card.Quote" :info="card" />
-            <FeedCardGoal v-else-if="card.GoalName" :info="card" />
+            <transition name="list" appear>
+              <FeedCard
+                v-if="card.ListType"
+                :info="card"
+                :listType="card.ListType"
+              />
+            </transition>
+            <transition name="list" appear>
+              <FeedCardQuote v-if="card.Quote" :info="card" />
+            </transition>
+            <transition name="list" appear>
+              <FeedCardGoal v-if="card.GoalName" :info="card" />
+            </transition>
           </div>
         </div>
       </div>
       <div class="public-chat-relative">
         <div class="public-chat">
-          <h6 class="public-chat-h5">public chat</h6>
+          <transition name="list" appear>
+            <h6 class="public-chat-h5">public chat</h6>
+          </transition>
           <div class="messages">
-            <div class="messages-space">
+            <transition-group
+              tag="div"
+              name="list"
+              class="messages-space"
+              appear
+            >
               <Message
                 v-for="message in publicChat"
                 :key="message.Date"
                 :info="message"
                 :isPublic="true"
               />
-            </div>
+            </transition-group>
           </div>
-          <div class="input">
-            <input
-              v-model="messageText"
-              class="public-chat-input"
-              type="text"
-              placeholder="Send message..."
-            />
-            <sendIcon class="send-icon" @click="sendPublicChatMessage" />
+          <div class="input" @keyup.enter="sendPublicChatMessage">
+            <transition name="list" appear>
+              <input
+                v-model="messageText"
+                class="public-chat-input"
+                type="text"
+                placeholder="Send message..."
+              />
+              <sendIcon class="send-icon" @click="sendPublicChatMessage" />
+            </transition>
           </div>
         </div>
       </div>
@@ -218,7 +233,8 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  overflow: hidden !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
 }
 
 .feed-wrapper {
@@ -373,5 +389,35 @@ body::-webkit-scrollbar {
   position: absolute;
   margin-top: 32px;
   margin-right: 35px;
+}
+
+/* message transitions */
+.list-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-move {
+  transition: all 0.3s ease;
 }
 </style>

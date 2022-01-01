@@ -6,17 +6,21 @@
         <router-link class="header" to="/">Kriya</router-link>
       </div>
       <div class="nav-links">
-        <div v-if="searchActivated" class="searchInputContainer">
-          <searchCancelIcon class="cancelIconSearch" />
-          <input v-model="searchText" ref="searchInput" type="text" />
-          <div v-if="searchText.length > 0" class="searchDropdown">
-            <UserSearchCard
-              v-for="card in cUsers"
-              :key="card.Username"
-              :test="card"
-            />
+        <transition name="list2" appear>
+          <div v-if="searchActivated" class="searchInputContainer">
+            <searchCancelIcon class="cancelIconSearch" />
+            <input v-model="searchText" ref="searchInput" type="text" />
+            <transition name="list2" appear>
+              <div v-if="searchText.length > 0" class="searchDropdown">
+                <UserSearchCard
+                  v-for="card in cUsers"
+                  :key="card.Username"
+                  :test="card"
+                />
+              </div>
+            </transition>
           </div>
-        </div>
+        </transition>
         <router-link class="link-icon" to="#"
           ><searchIcon @click="changeSearchState"
         /></router-link>
@@ -35,39 +39,42 @@
             "
             class="notification"
           ></span>
-          <div
-            v-if="notificationDropdownActive && notificationCount.length > 0"
-            class="notificationDropdown"
-            @click="removeNotification"
-          >
-            <NotificationCard
-              v-for="card in notificationCount"
-              :key="card.index"
-              :info="card"
-            />
-          </div>
-          <div
-            v-if="
-              notificationDropdownActive && likeNotificationCount.length > 0
-            "
-            class="notificationDropdown"
-          >
-            <LikeNotificationCard
-              v-for="card in likeNotificationCount"
-              :key="card.index"
-              :info="card"
-            />
-          </div>
-          <div
-            v-else-if="
-              notificationDropdownActive &&
-                notificationCount.length < 1 &&
-                likeNotificationCount.length < 1
-            "
-            class="notificationDropdownEmpty"
-          >
-            No notifications
-          </div>
+          <transition name="list2" appear>
+            <div
+              v-if="notificationDropdownActive && notificationCount.length > 0"
+              class="notificationDropdown"
+              @click="removeNotification"
+            >
+              <NotificationCard
+                v-for="card in notificationCount"
+                :key="card.index"
+                :info="card"
+              />
+            </div>
+            <div
+              v-if="
+                notificationDropdownActive && likeNotificationCount.length > 0
+              "
+              class="notificationDropdown"
+            >
+              <LikeNotificationCard
+                v-for="card in likeNotificationCount"
+                :key="card.index"
+                :info="card"
+              />
+            </div>
+
+            <div
+              v-else-if="
+                notificationDropdownActive &&
+                  notificationCount.length < 1 &&
+                  likeNotificationCount.length < 1
+              "
+              class="notificationDropdownEmpty"
+            >
+              No notifications
+            </div>
+          </transition>
         </div>
       </div>
     </nav>
@@ -391,5 +398,34 @@ header {
       }
     }
   }
+}
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list2-move {
+  transition: all 0.3s ease;
 }
 </style>

@@ -17,8 +17,9 @@
           <span class="message-user">Message</span></router-link
         >
       </div>
-
-      <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
+      <transition-group tag="div" name="list2" appear>
+        <Goal v-for="goal in goals" :key="goal.goalTitle" :info="goal" />
+      </transition-group>
       <h6 v-if="goals.length < 1" class="illustrationTitle">
         There is nothing here
       </h6>
@@ -268,5 +269,35 @@ export default {
   width: 10px;
   margin-left: 10px;
   margin-bottom: 6px;
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-move {
+  transition: all 0.3s ease;
 }
 </style>

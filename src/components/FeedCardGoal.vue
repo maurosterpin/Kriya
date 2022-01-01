@@ -22,30 +22,34 @@
     <div class="container-feed-card-body">
       <ToDoList :info="info" :listType="info.ListType" />
       <div class="feed-card-button-container">
-        <button
-          v-if="isLiked"
-          class="feed-card-button button-hover"
-          @click="removeLike"
-        >
-          <likeIcon class="margin-right likeIcon" />
-          {{ isLiked }}
-        </button>
-        <div class="likesHover" v-for="(user, index) in likes" :key="index">
-          {{ likeUsernames.join(", ") }}
-        </div>
-        <button
-          v-if="!isLiked && info.UID != store.currentUserUid"
-          class="feed-card-button"
-          @click="congratulate"
-        >
-          Congratulate!
-        </button>
-        <button
-          v-else-if="likes.length > 0 && info.UID === store.currentUserUid"
-          class="feed-card-button button-hover"
-        >
-          <likeIcon class="margin-right likeIcon" /> {{ likes.length }}
-        </button>
+        <transition name="list2" appear>
+          <button
+            v-if="isLiked"
+            class="feed-card-button button-hover"
+            @click="removeLike"
+          >
+            <likeIcon class="margin-right likeIcon" />
+            {{ isLiked }}
+          </button>
+          <div class="likesHover" v-for="(user, index) in likes" :key="index">
+            {{ likeUsernames.join(", ") }}
+          </div>
+        </transition>
+        <transition name="list2" appear>
+          <button
+            v-if="!isLiked && info.UID != store.currentUserUid"
+            class="feed-card-button"
+            @click="congratulate"
+          >
+            Congratulate!
+          </button>
+          <button
+            v-else-if="likes.length > 0 && info.UID === store.currentUserUid"
+            class="feed-card-button button-hover"
+          >
+            <likeIcon class="margin-right likeIcon" /> {{ likes.length }}
+          </button>
+        </transition>
         <div class="likesHover" v-for="(user, index) in likes" :key="index">
           {{ likeUsernames.join(", ") }}
         </div>

@@ -1,7 +1,7 @@
 <template>
   <div
     class="contact"
-    @click="$parent.chooseContact(info.UID, info.messagesID)"
+    @click="$parent.$parent.chooseContact(info.UID, info.messagesID)"
   >
     <div class="contact-head">
       <avatar class="contact-user-icon" />

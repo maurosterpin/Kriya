@@ -4,16 +4,16 @@
       <header>{{ info }} to-do</header>
       <cancelIcon class="cancelIconStyle" @click="cancel" />
     </div>
-    <div class="inputField">
+    <div class="inputField" v-on:keyup.enter="addTask">
       <input v-model="task" type="text" placeholder="Task name..." />
       <addIcon v-on:click="addTask" class="addIcon" />
     </div>
-    <ul class="todoList">
-      <li v-for="(item, index) in cTasks" :key="index">
+    <transition-group tag="ul" name="list2" appear class="todoList">
+      <li v-for="(item, index) in cTasks" :key="item.taskName">
         {{ item.taskName }}
         <cancelIcon v-on:click="removeTask(index)" class="cancelIcon" />
       </li>
-    </ul>
+    </transition-group>
     <div v-if="tasks.length > 0" class="footer">
       <span v-on:click="submitToDoList" class="button">Submit</span>
     </div>
@@ -343,5 +343,35 @@ export default {
   margin-bottom: 25px;
   margin-right: 4px;
   cursor: pointer;
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list2-move {
+  transition: all 0.3s ease;
 }
 </style>

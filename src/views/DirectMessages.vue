@@ -9,28 +9,36 @@
         :class="{ 'margin-auto': cWindowWidth, 'display-none': chosenDmMobile }"
       >
         <div class="search-container">
-          <input
-            v-model="searchText"
-            class="findContactsSearch"
-            :class="{ 'border-bottom-radius-none': cUsersLength }"
-            type="text"
-            placeholder="Find new users"
-          />
-          <div v-if="searchText != ''" class="searchDropdown">
+          <transition name="list2" appear>
+            <input
+              v-model="searchText"
+              class="findContactsSearch"
+              :class="{ 'border-bottom-radius-none': cUsersLength }"
+              type="text"
+              placeholder="Find new users"
+            />
+          </transition>
+          <transition-group
+            name="list2"
+            appear
+            v-if="searchText != ''"
+            class="searchDropdown"
+          >
             <UserSearchContactCard
               v-for="card in cUsers"
               :key="card.Username"
               :test="card"
             />
-          </div>
+          </transition-group>
         </div>
         <!--div class="contactCards"-->
-        <UserContactCard
-          v-for="contact in cLoadedContacts"
-          :key="contact.key"
-          :info="contact"
-        />
-
+        <transition-group tag="div" class="innerDiv" name="list2" appear>
+          <UserContactCard
+            v-for="contact in cLoadedContacts"
+            :key="contact.messagesID"
+            :info="contact"
+          />
+        </transition-group>
         <div class="contacts-illustration">
           <h6
             v-if="windowWidth <= 900 && contacts.length > 0"
@@ -64,10 +72,14 @@
         v-if="chosenDmId == '' && contacts.length > 0 && windowWidth > 900"
       >
         <div class="margin-right-illustration">
-          <h6 class="illustrationTitle">
-            Choose a contact to see messages
-          </h6>
-          <illustration class="illustration" />
+          <transition name="list2" appear>
+            <h6 class="illustrationTitle">
+              Choose a contact to see messages
+            </h6>
+          </transition>
+          <transition name="list2" appear>
+            <illustration class="illustration" />
+          </transition>
         </div>
       </div>
 
@@ -82,15 +94,19 @@
             @click="hideMessages"
           />
         </div>
-        <div class="messages2">
+        <transition-group tag="div" name="list2" appear class="messages2">
           <Message
-            v-for="message in loadedMessages"
-            :key="message.key"
+            v-for="message in messages"
+            :key="message.Date"
             :info="message"
           />
-        </div>
+        </transition-group>
 
-        <div v-if="contacts.length > 0" class="input">
+        <div
+          v-if="contacts.length > 0"
+          class="input"
+          @keyup.enter="sendMessage"
+        >
           <input
             v-model="messageText"
             class="public-chat-input"
@@ -155,12 +171,11 @@ export default {
       this.windowWidth = window.innerWidth;
       this.windowHeight = window.innerHeight;
     });
-    setTimeout(() => {
-      this.getUsers();
-      this.getLatestContactId();
-      this.getContacts();
-      this.getNotificationCount();
-    }, 450);
+    this.getNotificationCount();
+    this.getUsers();
+    this.getLatestContactId();
+    this.getContacts();
+    this.getNotificationCount();
   },
   methods: {
     getContacts() {
@@ -197,6 +212,7 @@ export default {
       console.log("Setting up real-time listener");
       db.collection("direct-messages")
         .doc(temp)
+        .collection("messages")
         .onSnapshot(() => {
           this.removeNotification();
           this.getMessages();
@@ -279,14 +295,6 @@ export default {
         console.log("Sending message");
         // Get current user
         const user = firebase.auth().currentUser;
-        // Prepare messages for firestore update
-        console.log("Pushing messages");
-        this.messages.push({
-          UID: user.uid,
-          Message: this.messageText,
-          Date: Date.now(),
-        });
-        this.messageText = "";
         let temp = "";
         temp += this.chosenDmId;
         console.log("MESSAGE TEXT", this.messageText);
@@ -295,11 +303,14 @@ export default {
         console.log("Updating direct-messages collection");
         db.collection("direct-messages")
           .doc(temp)
-          .set({
-            Messages: this.messages,
+          .collection("messages")
+          .add({
+            Message: this.messageText,
             Date: Date.now(),
+            UID: user.uid,
           });
         console.log("Database set");
+        this.messageText = "";
 
         // Send notification to user
         console.log("Sending notification");
@@ -315,6 +326,7 @@ export default {
               .doc(user.uid)
               .update({
                 notification: true,
+                Date: Date.now(),
               });
           });
         /*setTimeout(() => {
@@ -348,25 +360,39 @@ export default {
       console.log("Getting messages");
       db.collection("direct-messages")
         .doc(temp)
+        .collection("messages")
+        .orderBy("Date", "desc")
         .get()
-        .then((doc) => {
-          if (doc.exists) {
-            this.messages = [];
-
-            this.messages = doc.data().Messages;
-          } else {
-            this.messages = [];
-          }
-        })
-        .then(() => {
-          this.messages.sort((a, b) =>
-            a.Date > b.Date ? 1 : b.Date > a.Date ? -1 : 0
-          );
-          this.loadedMessages = [];
-        })
-        .then(() => {
-          this.loadedMessages = this.messages.reverse();
+        .then((query) => {
+          this.messages = [];
+          query.forEach((doc) => {
+            const data = doc.data();
+            this.messages.push({
+              Message: data.Message,
+              Date: data.Date,
+              UID: data.UID,
+              docID: doc.id,
+              parentDocID: temp,
+            });
+          });
         });
+      //   if (doc.exists) {
+      //     this.messages = [];
+
+      //     this.messages = doc.data().Messages;
+      //   } else {
+      //     this.messages = [];
+      //   }
+      // })
+      // .then(() => {
+      //   this.messages.sort((a, b) =>
+      //     a.Date > b.Date ? 1 : b.Date > a.Date ? -1 : 0
+      //   );
+      //   this.loadedMessages = [];
+      // })
+      // .then(() => {
+      //   this.loadedMessages = this.messages.reverse();
+      // });
     },
     getLatestContactId() {
       console.log("gettingLatestContactId");
@@ -546,6 +572,7 @@ input.findContactsSearch {
 .border-bottom-radius-none {
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
+  transition: all 1s ease;
 }
 
 .contactCards {
@@ -571,6 +598,11 @@ input.findContactsSearch {
   overflow-x: hidden !important;
 }
 
+.innerDiv {
+  width: 95%;
+  margin-left: 2px;
+}
+
 .contacts::-webkit-scrollbar {
   width: 0px;
 }
@@ -584,6 +616,7 @@ input.findContactsSearch {
   width: 1000px;
   height: 751px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .illustrationTitle {
@@ -727,5 +760,35 @@ input.findContactsSearch {
       height: 490px;
     }
   }
+}
+
+/* message transitions */
+.list2-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list2-enter {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list2-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list2-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-move {
+  transition: all 0.3s ease;
 }
 </style>
