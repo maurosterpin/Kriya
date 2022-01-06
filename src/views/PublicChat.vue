@@ -17,6 +17,7 @@
             </transition-group>
           </div>
           <div class="input2" @keyup.enter="sendPublicChatMessage">
+            <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
             <transition name="list" appear>
               <input
                 v-model="messageText"
@@ -24,7 +25,6 @@
                 type="text"
                 placeholder="Send message..."
               />
-              <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
             </transition>
           </div>
         </div>
@@ -213,7 +213,10 @@ export default {
 }
 
 .input2 {
-  width: 90vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  max-width: 100%;
 }
 
 .public-chat2 {
@@ -253,8 +256,8 @@ export default {
   width: 13px;
   cursor: pointer;
   position: absolute;
-  right: 57px;
   margin-top: 20px;
+  margin-right: 22px;
 }
 
 .messages3 {

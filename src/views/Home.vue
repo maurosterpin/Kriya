@@ -41,6 +41,7 @@
             </transition-group>
           </div>
           <div class="input" @keyup.enter="sendPublicChatMessage">
+            <sendIcon class="send-icon" />
             <transition name="list" appear>
               <input
                 v-model="messageText"
@@ -48,7 +49,6 @@
                 type="text"
                 placeholder="Send message..."
               />
-              <sendIcon class="send-icon" @click="sendPublicChatMessage" />
             </transition>
           </div>
         </div>
@@ -88,9 +88,9 @@ export default {
   },
   created() {},
   mounted() {
+    this.getDefaultProfilePicture();
     window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
-      this.getDefaultProfilePicture();
       db.collection("public-chat").onSnapshot(() => {
         this.getPublicChatMessages();
       });

@@ -171,11 +171,13 @@ export default {
       this.windowWidth = window.innerWidth;
       this.windowHeight = window.innerHeight;
     });
-    this.getNotificationCount();
-    this.getUsers();
-    this.getLatestContactId();
-    this.getContacts();
-    this.getNotificationCount();
+    setTimeout(() => {
+      this.getNotificationCount();
+      this.getUsers();
+      this.getLatestContactId();
+      this.getContacts();
+      this.getNotificationCount();
+    }, 500);
   },
   methods: {
     getContacts() {
@@ -185,6 +187,7 @@ export default {
       db.collection("users")
         .doc(user.uid)
         .collection("contacts")
+        .orderBy("Date", "desc")
         .get()
         .then((query) => {
           this.contacts = [];
@@ -194,6 +197,7 @@ export default {
               messagesID: data.messagesID,
               UID: doc.id,
               notification: data.notification,
+              Date: data.Date,
             });
           });
         })
@@ -250,6 +254,7 @@ export default {
             .set({
               messagesID: this.LatestDmId,
               notifications: false,
+              Date: Date.now(),
             })
             .then(
               setTimeout(() => {
@@ -274,7 +279,10 @@ export default {
         .then((doc) => {
           if (!doc.exists) {
             console.log("Contact being added");
-            contactForOtherUser.set({ messagesID: this.LatestDmId });
+            contactForOtherUser.set({
+              messagesID: this.LatestDmId,
+              Date: Date.now(),
+            });
             let tempLatestId = parseInt(this.LatestDmId);
             tempLatestId += 1;
             db.collection("direct-messages")
@@ -308,9 +316,10 @@ export default {
             Message: this.messageText,
             Date: Date.now(),
             UID: user.uid,
+          })
+          .then(() => {
+            this.messageText = "";
           });
-        console.log("Database set");
-        this.messageText = "";
 
         // Send notification to user
         console.log("Sending notification");
@@ -469,7 +478,7 @@ export default {
 
 <style scoped>
 .direct-messages-home {
-  height: 92.8vh;
+  height: 92.5vh;
   background-color: #39c75a !important;
 }
 

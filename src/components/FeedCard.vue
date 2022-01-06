@@ -32,7 +32,11 @@
         </transition>
         <transition name="list2" appear>
           <button
-            v-if="!isLiked && info.UID != store.currentUserUid"
+            v-if="
+              !isLiked &&
+                info.UID != store.currentUserUid &&
+                store.currentUserUid
+            "
             class="feed-card-button"
             @click="congratulate"
           >

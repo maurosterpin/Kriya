@@ -1,7 +1,7 @@
 <template>
   <div
     class="user-search-card-wrapper"
-    @click="$parent.createContact(test.UID)"
+    @click="$parent.$parent.createContact(test.UID)"
   >
     <div class="user-search-contact-card">
       <img :src="test.ProfilePic" class="user-icon" />{{ test.Username }}

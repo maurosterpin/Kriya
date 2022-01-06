@@ -234,7 +234,7 @@ export default {
 
 @media screen and (max-width: 1000px) {
   .wrapper {
-    max-width: 210px;
+    /* max-width: 210px; */
     padding: 25px !important;
     min-height: 0px;
     font-size: 11px;

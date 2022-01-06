@@ -130,7 +130,10 @@
       </div>
 
       <div
-        v-else-if="daily.length > 0 || weekly.length > 0 || monthly.length > 0"
+        v-else-if="
+          (daily.length > 0 || weekly.length > 0 || monthly.length > 0) &&
+            info.completed
+        "
         class="completed"
       >
         Completed

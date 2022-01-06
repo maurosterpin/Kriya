@@ -4,30 +4,29 @@
     @click="$parent.$parent.chooseContact(info.UID, info.messagesID)"
   >
     <div class="contact-head">
-      <avatar class="contact-user-icon" />
+      <img :src="profilePic" alt="ProfilePicture" class="PfpImg" />
       <div class="contact-head-txt">
         <span v-if="info.notification" class="notification"></span>
 
-        <h6>{{ username }}</h6>
-        <h6>just now</h6>
+        <h6 class="contacth6">{{ username }}</h6>
+        <h6 class="contacth6">{{ postedFromNow }}</h6>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import avatar from "../assets/Icons/avatar.svg";
 import { db } from "@/firebase";
+import moment from "moment";
 
 export default {
   data() {
     return {
       username: "",
+      profilePic: "",
     };
   },
-  components: {
-    avatar,
-  },
+  components: {},
   props: ["info"],
   name: "UserContactCard",
   mounted() {
@@ -40,7 +39,13 @@ export default {
         .get()
         .then((doc) => {
           this.username = doc.data().username;
+          this.profilePic = doc.data().profilePic;
         });
+    },
+  },
+  computed: {
+    postedFromNow() {
+      return moment(this.info.Date).fromNow();
     },
   },
 };
@@ -53,6 +58,13 @@ export default {
   display: flex;
   position: relative;
   flex-direction: row;
+}
+
+.PfpImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  margin-right: 10px;
 }
 
 .notification {
@@ -122,6 +134,9 @@ export default {
   }
   .notification {
     margin-right: 20px !important;
+  }
+  .contacth6 {
+    font-size: 12px !important;
   }
 }
 </style>

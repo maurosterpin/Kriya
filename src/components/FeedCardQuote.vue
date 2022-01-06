@@ -36,7 +36,9 @@
         <likeIcon class="margin-right likeIcon" /> {{ isLiked }}
       </button>
       <button
-        v-else-if="!isLiked && info.UID != store.currentUserUid"
+        v-else-if="
+          !isLiked && info.UID != store.currentUserUid && store.currentUserUid
+        "
         class="feed-card-button button-hover"
         @click="congratulate"
       >

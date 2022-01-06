@@ -62,15 +62,27 @@ export default {
       }
     },
     getUserData() {
-      const user = firebase.auth().currentUser;
-      this.currentUID = user.uid;
-      db.collection("users")
-        .doc(this.info.UID)
-        .get()
-        .then((doc) => {
-          this.username = doc.data().username;
-          this.profilePic = doc.data().profilePic;
-        });
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          const user = firebase.auth().currentUser;
+          this.currentUID = user.uid;
+          db.collection("users")
+            .doc(this.info.UID)
+            .get()
+            .then((doc) => {
+              this.username = doc.data().username;
+              this.profilePic = doc.data().profilePic;
+            });
+        } else {
+          db.collection("users")
+            .doc(this.info.UID)
+            .get()
+            .then((doc) => {
+              this.username = doc.data().username;
+              this.profilePic = doc.data().profilePic;
+            });
+        }
+      });
     },
     visitProfile() {
       console.log("visitProfile");
