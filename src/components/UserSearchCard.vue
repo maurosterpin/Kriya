@@ -34,6 +34,7 @@ export default {
           name: "Profile",
         });
       }
+      window.location.reload();
     },
   },
   mounted() {},
