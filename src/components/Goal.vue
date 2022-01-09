@@ -1,6 +1,11 @@
 <template>
   <div>
     <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
+      <div class="modalWrapper">
+        <transition name="list2" appear>
+          <GoalModal v-if="goalCompletePressed" />
+        </transition>
+      </div>
       <h5>{{ info.goalTitle }}</h5>
 
       <div v-if="this.daily.length > 0" class="to-do-wrapper">
@@ -124,7 +129,7 @@
             (daily.length > 0 || weekly.length > 0 || monthly.length > 0)
         "
         class="goalFinished"
-        @click="GoalComplete"
+        @click="GoalCompletePressed"
       >
         <checkMarkIcon class="goalFinishedIcon" />
       </div>
@@ -149,6 +154,7 @@ import StartedToDoList from "./StartedToDoList.vue";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
 import checkMarkIcon from "../assets/Icons/check-mark.svg";
+import GoalModal from "./GoalModal.vue";
 export default {
   data() {
     return {
@@ -168,6 +174,7 @@ export default {
       LatestWeeklyDate: null,
       LatestMonthlyDate: null,
       currentUserID: "",
+      goalCompletePressed: false,
     };
   },
   mounted() {
@@ -500,7 +507,11 @@ export default {
           });
       }
     },
+    GoalCompletePressed() {
+      this.goalCompletePressed = !this.goalCompletePressed;
+    },
     GoalComplete() {
+      this.goalCompletePressed = !this.goalCompletePressed;
       // Get current user
       const user = firebase.auth().currentUser;
       console.log("Goal complete");
@@ -515,7 +526,7 @@ export default {
           this.postCompletedGoal();
         })
         .then(() => {
-          this.$parent.getGoals();
+          window.location.reload();
         });
     },
     postCompletedGoal() {
@@ -533,6 +544,7 @@ export default {
     ToDoList,
     StartedToDoList,
     checkMarkIcon,
+    GoalModal,
   },
 };
 </script>
@@ -813,6 +825,12 @@ input {
   font-size: 15px;
   font-weight: 900;
   border-bottom: 1px solid #39c75a !important;
+}
+
+.modalWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 *:focus {
