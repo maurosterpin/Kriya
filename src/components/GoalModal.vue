@@ -7,7 +7,7 @@
       />
       <h5>Are you sure?</h5>
       <p>
-        You won't be able to use to-do lists for this goal anymore if you
+        You won't be able to create to-do lists for this goal anymore if you
         declare it as completed!
       </p>
       <div class="modalYes" @click="$parent.GoalComplete">Yes!</div>

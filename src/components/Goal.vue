@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
+      <cancelIcon class="cancelIconStyle" @click="removeGoal" />
       <div class="modalWrapper">
         <transition name="list2" appear>
           <GoalModal v-if="goalCompletePressed" />
@@ -148,6 +149,7 @@
 </template>
 
 <script>
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import addIcon from "../assets/Icons/add-icon.svg";
 import ToDoList from "./ToDoList.vue";
 import StartedToDoList from "./StartedToDoList.vue";
@@ -193,6 +195,20 @@ export default {
   props: ["info"],
   name: "Goal",
   methods: {
+    removeGoal() {
+      // Get current user
+      const user = firebase.auth().currentUser;
+      console.log("cancel");
+      // Delete goal
+      db.collection("users")
+        .doc(user.uid)
+        .collection("goals")
+        .doc(this.info.goalTitle)
+        .delete()
+        .then(() => {
+          this.$parent.$parent.getGoals();
+        });
+    },
     checkGoalCount() {
       if (
         this.daily.length > 1 ||
@@ -545,6 +561,7 @@ export default {
     StartedToDoList,
     checkMarkIcon,
     GoalModal,
+    cancelIcon,
   },
 };
 </script>
@@ -573,6 +590,13 @@ export default {
   margin-bottom: 45px;
   flex-direction: column;
   position: relative;
+}
+
+.cancelIconStyle {
+  width: 6px !important;
+  right: 25px;
+  cursor: pointer;
+  position: absolute;
 }
 
 .new-width {
