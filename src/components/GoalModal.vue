@@ -54,7 +54,7 @@ export default {
   text-align: center;
   align-items: center;
   z-index: 200;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
 }
 
 .modalYes {
@@ -66,8 +66,13 @@ export default {
   position: absolute;
   margin-top: 94px;
   z-index: 205;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modalYes:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
 .cancelIconStyle {

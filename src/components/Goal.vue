@@ -650,8 +650,14 @@ export default {
   /* margin-top: 655px; */
   right: 15px;
   bottom: 15px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.goalFinished:hover {
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 1);
+  transition: all 0.3s ease;
 }
 
 .goalFinishedIcon {
@@ -729,18 +735,18 @@ export default {
 .addIconBtn {
   position: absolute;
   width: 30px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
   padding: 10px;
   border-radius: 50px;
   background-color: #39c75a;
   cursor: pointer;
   margin-left: 10px;
   z-index: 2;
+  transition: all 0.2s ease;
 }
 
 .addIconBtn:hover {
-  width: 31px;
-  transition: 0.2s;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
 .to-do-item {

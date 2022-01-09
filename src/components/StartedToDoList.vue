@@ -172,6 +172,11 @@ export default {
   padding: 35px !important;
   border-radius: 35px;
   box-shadow: 4px 4px 35px 0px black;
+  transition: all 0.3s ease;
+}
+
+.wrapper:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
 @media screen and (max-width: 600px) {

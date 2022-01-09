@@ -246,6 +246,16 @@ export default {
   border-radius: 25px;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.feed-card-button:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
+  transition: all 0.3s ease;
+}
+
+.container-feed-card:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
 }
 
 .container-feed-card-author {
@@ -397,6 +407,7 @@ h5 {
   color: #fff;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 *:focus {

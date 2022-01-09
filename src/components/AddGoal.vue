@@ -41,10 +41,8 @@
         </transition>
       </form>
     </div>
-    <div class="wrapper">
-      <header>
-        Add new goal<addIcon v-on:click="addGoal" class="addIcon" />
-      </header>
+    <div class="wrapper" v-on:click="addGoal">
+      <header>Add new goal<addIcon class="addIcon" /></header>
     </div>
   </div>
 </template>
@@ -184,6 +182,13 @@ input {
   padding: 20px;
   border-radius: 35px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.wrapper:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
+  max-width: 302px;
 }
 
 .wrapper header {

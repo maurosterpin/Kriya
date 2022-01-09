@@ -111,13 +111,15 @@ export default {
               // Else create a new user
             } else {
               const dataBase = db.collection("users").doc(user.uid);
-              dataBase.set({
-                username: store.displayName,
-                profilePic: this.defaultProfilePicture,
-                uid: user.uid,
-                Quote: "Discipline is freedom",
-                Author: "Unknown",
-              });
+              setTimeout(() => {
+                dataBase.set({
+                  username: store.displayName,
+                  profilePic: this.defaultProfilePicture,
+                  uid: user.uid,
+                  Quote: "Discipline is freedom",
+                  Author: "Unknown",
+                });
+              }, 50);
               console.log("User added!");
             }
           });

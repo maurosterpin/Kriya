@@ -122,6 +122,11 @@ export default {
   background-color: #141518;
   margin-bottom: 20px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.public-chat-msg:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
 .public-chat-msg-head {

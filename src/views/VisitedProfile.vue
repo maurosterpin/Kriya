@@ -121,6 +121,11 @@ export default {
   background-color: #39c75a;
   border-radius: 50px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.message-user:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
 .PfpImg {
