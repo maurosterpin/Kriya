@@ -21,20 +21,28 @@ export default {
   components: {},
   methods: {
     visitProfile() {
-      console.log("visitProfile");
-      // Get current user
-      const user = firebase.auth().currentUser;
-      if (user.uid != this.test.UID) {
+      if (store.currentUserUid) {
+        console.log("visitProfile");
+        // Get current user
+        const user = firebase.auth().currentUser;
+        if (user.uid != this.test.UID) {
+          router.push({
+            name: "VisitedProfile",
+            params: { profileUid: this.test.UID },
+          });
+        } else {
+          router.push({
+            name: "Profile",
+          });
+        }
+        window.location.reload();
+      } else {
         router.push({
           name: "VisitedProfile",
           params: { profileUid: this.test.UID },
         });
-      } else {
-        router.push({
-          name: "Profile",
-        });
+        window.location.reload();
       }
-      window.location.reload();
     },
   },
   mounted() {},
