@@ -22,7 +22,11 @@
     </div>
     <div class="feed-card-button-container">
       <button
-        v-if="likes.length === 0 && info.UID != store.currentUserUid"
+        v-if="
+          likes.length === 0 &&
+            info.UID != store.currentUserUid &&
+            store.currentUserUid
+        "
         class="feed-card-button button-hover"
         @click="congratulate"
       >

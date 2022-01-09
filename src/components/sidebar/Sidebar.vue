@@ -52,7 +52,7 @@
           class="sidebar-link sidebar-sign-out"
           :class="{ 'slide-left': collapsed }"
           to="/"
-          ><span @click="toggleSidebar">Sign Out</span></a
+          ><span @click="reloadPage">Sign Out</span></a
         >
       </div>
     </div>
@@ -89,6 +89,10 @@ export default {
     });
   },
   methods: {
+    reloadPage() {
+      this.toggleSidebar();
+      window.location.reload();
+    },
     toggleSidebar() {
       this.collapsed = !this.collapsed;
     },
