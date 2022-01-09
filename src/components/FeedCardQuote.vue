@@ -46,7 +46,7 @@
         class="feed-card-button button-hover"
         @click="congratulate"
       >
-        <likeIcon class="margin-right likeIcon" />
+        <likeIcon class="margin-right likeIcon" />{{ likes.length }}
       </button>
       <button
         v-else-if="likes.length > 0 && info.UID === store.currentUserUid"

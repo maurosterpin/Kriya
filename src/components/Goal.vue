@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="goal" :class="{ 'new-width': !goalCountOver1 }">
-      <cancelIcon class="cancelIconStyle" @click="removeGoal" />
+      <cancelIcon
+        v-if="$router.currentRoute.path == '/profile'"
+        class="cancelIconStyle"
+        @click="removeGoal"
+      />
       <div class="modalWrapper">
         <transition name="list2" appear>
           <GoalModal v-if="goalCompletePressed" />
