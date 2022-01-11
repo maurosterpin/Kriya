@@ -81,4 +81,10 @@ export default {
   cursor: pointer;
   position: absolute;
 }
+
+@media screen and (max-width: 1000px) {
+  .modalYes {
+    margin-top: 115px;
+  }
+}
 </style>
