@@ -139,6 +139,11 @@ export default {
   align-items: center;
   background-color: #141518;
   border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.change-username:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
 }
 
 .change-profile-picture {
@@ -151,12 +156,23 @@ export default {
   align-items: center;
   background-color: #141518;
   border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.change-profile-picture:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
 }
 
 .ProfilePictureImg {
   width: 100px;
   height: 100px;
   border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ProfilePictureImg:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
 }
 
 input.change-username-input {
@@ -184,6 +200,11 @@ input.change-username-input:focus {
   padding: 12px 15px;
   border-radius: 50px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.h6-settings:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
 }
 
 @media screen and (max-width: 400px) {
@@ -201,14 +222,6 @@ input.change-username-input:focus {
     width: 65px;
     height: 65px;
     border-radius: 100px;
-  }
-
-  .h6-settings {
-    background-color: #39c75a;
-    padding: 8px 12px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 12px;
   }
 
   input.change-username-input {
