@@ -614,6 +614,11 @@ export default {
     padding: 15px;
   }
 
+  .cancelIconStyle {
+    top: 15px;
+    right: 15px;
+  }
+
   .new-width {
     width: 250px !important;
   }
