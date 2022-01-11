@@ -38,6 +38,7 @@
 <script>
 import { db } from "@/firebase";
 import firebase from "@/firebase";
+import router from "@/router";
 export default {
   name: "Settings",
   components: {},
@@ -53,6 +54,13 @@ export default {
     setTimeout(() => {
       this.getUserData();
     }, 500);
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        router.push({
+          name: "Login",
+        });
+      }
+    });
   },
   methods: {
     onFileSelected(event) {
