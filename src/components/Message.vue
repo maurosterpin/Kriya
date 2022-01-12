@@ -13,6 +13,7 @@
         class="cancelIconStyle"
         @click="removePost"
       />
+      <optionsIcon class="optionsIcon" @click="moreOptions = !moreOptions" />
     </div>
     <div class="public-chat-msg-body">
       {{ info.Message }}
@@ -22,6 +23,7 @@
 
 <script>
 import cancelIcon from "../assets/Icons/cancel-Icon.svg";
+import optionsIcon from "../assets/Icons/more-options.svg";
 import moment from "moment";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
@@ -32,12 +34,14 @@ export default {
       username: "",
       profilePic: null,
       currentUID: null,
+      moreOptions: false,
     };
   },
   name: "Message",
   props: ["info", "isPublic", "messagesID"],
   components: {
     cancelIcon,
+    optionsIcon,
   },
   computed: {
     postedFromNow() {
@@ -129,6 +133,19 @@ export default {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
+.optionsIcon {
+  width: 35px;
+  position: absolute;
+  right: -10px;
+  top: -20px;
+  transition: all 0.3s ease;
+  border-radius: 50px;
+}
+
+.optionsIcon:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .public-chat-msg-head {
   display: flex;
   flex-direction: row;
@@ -136,6 +153,7 @@ export default {
   font-size: 15px;
   cursor: pointer;
   margin-bottom: 5px;
+  position: relative;
 }
 
 .PfpImg {

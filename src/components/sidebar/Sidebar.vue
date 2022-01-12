@@ -152,6 +152,7 @@ export default {
   z-index: 100;
   display: flex;
   transition: 0.4s ease;
+  cursor: pointer;
 }
 
 .rotate-180 {
