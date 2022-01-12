@@ -74,14 +74,13 @@ export default {
       fileReader.readAsDataURL(event.target.files[0]);
       this.selectedFile = event.target.files[0];
       var img = new Image();
-      img.onload = function() {
-        this.onload(img.width, img.height);
-      };
-      img.src = this.imageUrl;
-      console.log("TEST", img.width, img.height);
+      setTimeout(() => {
+        img.src = this.imageUrl;
+        console.log("TEST", img.width, img.height);
 
-      this.width = img.width;
-      this.height = img.height;
+        this.width = img.width;
+        this.height = img.height;
+      }, 100);
     },
     onUpload() {},
     getUserData() {
