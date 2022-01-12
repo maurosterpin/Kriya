@@ -1,5 +1,5 @@
 <template>
-  <div class="public-chat-msg">
+  <div :id="info.docID" class="public-chat-msg">
     <div class="public-chat-msg-head">
       <img
         @click="visitProfile"
@@ -17,7 +17,9 @@
           >
             Edit
           </li>
-          <li @click="moreOptions = !moreOptions">Respond</li>
+          <li @click="respond">
+            Respond
+          </li>
           <li v-if="info.UID === currentUID" @click="removePost">Delete</li>
         </ul>
       </div>
@@ -57,6 +59,18 @@ export default {
     this.getUserData();
   },
   methods: {
+    respond() {
+      console.log("DOCID:", this.info.docID);
+      var el = document.getElementById("Ev0wYQOVu1Qoz3VZgwPr");
+      el.scrollIntoView(true);
+      const myInterval = setInterval(() => {
+        el.style.opacity = el.style.opacity == "0.5" ? "" : "0.5";
+      }, 150);
+      setTimeout(() => {
+        clearInterval(myInterval);
+      }, 600);
+      this.moreOptions = !this.moreOptions;
+    },
     removePost() {
       if (this.isPublic) {
         db.collection("public-chat")
