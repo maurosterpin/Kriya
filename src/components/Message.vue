@@ -8,12 +8,19 @@
         class="PfpImg"
       />{{ username }}
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
-      <cancelIcon
-        v-if="info.UID === currentUID"
-        class="cancelIconStyle"
-        @click="removePost"
-      />
       <optionsIcon class="optionsIcon" @click="moreOptions = !moreOptions" />
+      <div class="moreOptionsDropdown" v-if="moreOptions">
+        <ul>
+          <li
+            v-if="info.UID === currentUID"
+            @click="moreOptions = !moreOptions"
+          >
+            Edit
+          </li>
+          <li @click="moreOptions = !moreOptions">Respond</li>
+          <li v-if="info.UID === currentUID" @click="removePost">Delete</li>
+        </ul>
+      </div>
     </div>
     <div class="public-chat-msg-body">
       {{ info.Message }}
@@ -22,7 +29,6 @@
 </template>
 
 <script>
-import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import optionsIcon from "../assets/Icons/more-options.svg";
 import moment from "moment";
 import { db } from "@/firebase";
@@ -40,7 +46,6 @@ export default {
   name: "Message",
   props: ["info", "isPublic", "messagesID"],
   components: {
-    cancelIcon,
     optionsIcon,
   },
   computed: {
@@ -144,6 +149,41 @@ export default {
 
 .optionsIcon:hover {
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.moreOptionsDropdown {
+  position: absolute;
+  background-color: #141518;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
+  padding: 10px 0px 0px 0px;
+  border-radius: 15px;
+  font-size: 15px;
+  width: 150px;
+  right: -10px;
+  top: 10px;
+}
+
+ul {
+  margin-top: 5px;
+  list-style-type: none;
+}
+
+li {
+  transition: all 0.3s ease;
+  padding: 5px 15px 5px 15px;
+  border-radius: 5px;
+}
+
+li:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+li:last-child:hover {
+  background-color: rgba(209, 13, 13, 0.795);
+}
+
+li:first-child:hover {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .public-chat-msg-head {
