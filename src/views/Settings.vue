@@ -15,7 +15,8 @@
     </transition>
     <transition name="list2" appear>
       <div class="change-profile-picture">
-        Profile picture<br /><br /><input
+        Profile picture<br /><br />
+        <input
           type="file"
           id="img"
           style="display:none;"
@@ -47,6 +48,8 @@ export default {
       usernameInput: null,
       selectedFile: null,
       imageUrl: null,
+      width: null,
+      height: null,
     };
   },
   mounted() {
@@ -70,6 +73,15 @@ export default {
       });
       fileReader.readAsDataURL(event.target.files[0]);
       this.selectedFile = event.target.files[0];
+      var img = new Image();
+      img.onload = function() {
+        this.onload(img.width, img.height);
+      };
+      img.src = this.imageUrl;
+      console.log("TEST", img.width, img.height);
+
+      this.width = img.width;
+      this.height = img.height;
     },
     onUpload() {},
     getUserData() {
@@ -97,16 +109,20 @@ export default {
         });
     },
     updateProfilePicture() {
-      console.log("Update profile picture");
-      const user = firebase.auth().currentUser;
-      db.collection("users")
-        .doc(user.uid)
-        .update({
-          profilePic: this.imageUrl,
-        })
-        .then(() => {
-          alert("Image updated");
-        });
+      if (this.width === this.height) {
+        console.log("Update profile picture");
+        const user = firebase.auth().currentUser;
+        db.collection("users")
+          .doc(user.uid)
+          .update({
+            profilePic: this.imageUrl,
+          })
+          .then(() => {
+            alert("Image updated");
+          });
+      } else {
+        alert("Image must have equal width & height");
+      }
     },
   },
 };
