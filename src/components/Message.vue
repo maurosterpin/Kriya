@@ -15,10 +15,7 @@
       <transition name="list" appear>
         <div class="moreOptionsDropdown" v-if="moreOptions">
           <ul>
-            <li
-              v-if="info.UID === currentUID"
-              @click="moreOptions = !moreOptions"
-            >
+            <li v-if="info.UID === currentUID" @click="editMsg">
               Edit
             </li>
             <li @click="respond">
@@ -29,8 +26,15 @@
         </div>
       </transition>
     </div>
-    <div class="public-chat-msg-body">
+    <div v-if="!edit" class="public-chat-msg-body">
       {{ info.Message }}
+    </div>
+    <div v-else class="public-chat-msg-body">
+      Editing
+      <div class="editBtns">
+        <div class="editUpdateBtn">Update</div>
+        <div class="editCancelBtn" @click="cancelEdit">Cancel</div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +52,7 @@ export default {
       profilePic: null,
       currentUID: null,
       moreOptions: false,
+      edit: false,
     };
   },
   name: "Message",
@@ -67,6 +72,13 @@ export default {
     respond() {
       this.$emit("respond", this.info.docID);
       this.moreOptions = false;
+    },
+    editMsg() {
+      this.edit = !this.edit;
+      this.moreOptions = !this.moreOptions;
+    },
+    cancelEdit() {
+      this.edit = !this.edit;
     },
     responseView() {
       this.moreOptions = false;
@@ -162,6 +174,45 @@ export default {
 
 .public-chat-msg:hover {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
+}
+
+.editBtns {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.editUpdateBtn {
+  padding: 5px 10px;
+  background-color: #39c75a;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+  cursor: pointer;
+  margin-right: 10px;
+  position: absolute;
+  right: 0;
+  top: 28px;
+  transition: all 0.3s ease;
+}
+
+.editUpdateBtn:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.editCancelBtn {
+  padding: 5px 10px;
+  background-color: #d42c2c;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 28px;
+  transition: all 0.3s ease;
+}
+.editCancelBtn:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
 }
 
 .reply {
@@ -264,6 +315,7 @@ li:first-child:hover {
   align-items: center;
   font-size: 15px;
   padding: 10px 20px;
+  position: relative;
 }
 
 .cancelIconStyle {
