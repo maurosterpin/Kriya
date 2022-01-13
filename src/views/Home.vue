@@ -23,7 +23,19 @@
       <div class="public-chat-relative">
         <div class="public-chat">
           <transition name="list" appear>
-            <h6 class="public-chat-h5">public chat</h6>
+            <h6 class="public-chat-h5">
+              public chat
+            </h6>
+          </transition>
+          <transition name="list" appear>
+            <singleArrow
+              class="singleArrow"
+              :class="{ 'rotate-90': roomSelect }"
+              @click="enableRoomSelect"
+            />
+          </transition>
+          <transition name="list" appear>
+            <div v-if="roomSelect" class="roomSelect"></div>
           </transition>
           <div class="messages">
             <transition-group
@@ -68,6 +80,7 @@
 
 <script>
 import cancelIcon from "../assets/Icons/cancel-Icon.svg";
+import singleArrow from "../assets/Icons/single-arrow-left.svg";
 import store from "@/store";
 import FeedCard from "../components/FeedCard.vue";
 import FeedCardQuote from "../components/FeedCardQuote.vue";
@@ -85,6 +98,7 @@ export default {
     FeedCardQuote,
     FeedCardGoal,
     cancelIcon,
+    singleArrow,
   },
   data() {
     return {
@@ -97,6 +111,7 @@ export default {
       responding: false,
       replyUID: "",
       responseUsername: "",
+      roomSelect: false,
     };
   },
   created() {},
@@ -157,6 +172,9 @@ export default {
           store.quoteAuthor = doc.data().Author;
           store.currentUserUid = user.uid;
         });
+    },
+    enableRoomSelect() {
+      this.roomSelect = !this.roomSelect;
     },
     cancelReply() {
       this.responding = false;
@@ -271,6 +289,20 @@ body::-webkit-scrollbar {
   justify-content: center;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
+}
+
+.singleArrow {
+  width: 10px;
+  fill: #fff;
+  position: absolute;
+  left: 115px;
+  margin-top: 19px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
 }
 
 .respondingWindow {
