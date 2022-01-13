@@ -315,8 +315,14 @@ export default {
         });
     },
     createRoom() {
-      this.createNewRoom = !this.createNewRoom;
-      this.roomSelect = !this.roomSelect;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          this.createNewRoom = !this.createNewRoom;
+          this.roomSelect = !this.roomSelect;
+        } else {
+          alert("You must be logged in to create rooms");
+        }
+      });
     },
     getRooms() {
       db.collection("roomList")

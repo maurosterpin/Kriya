@@ -72,8 +72,14 @@ export default {
   },
   methods: {
     respond() {
-      this.$emit("respond", this.info.docID);
-      this.moreOptions = false;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          this.$emit("respond", this.info.docID);
+          this.moreOptions = false;
+        } else {
+          alert("You must be logged in to perform this action");
+        }
+      });
     },
     editMsg() {
       this.edit = !this.edit;
