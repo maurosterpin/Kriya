@@ -12,20 +12,22 @@
       />{{ username }}
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
       <optionsIcon class="optionsIcon" @click="moreOptions = !moreOptions" />
-      <div class="moreOptionsDropdown" v-if="moreOptions">
-        <ul>
-          <li
-            v-if="info.UID === currentUID"
-            @click="moreOptions = !moreOptions"
-          >
-            Edit
-          </li>
-          <li @click="respond">
-            Respond
-          </li>
-          <li v-if="info.UID === currentUID" @click="removePost">Delete</li>
-        </ul>
-      </div>
+      <transition name="list" appear>
+        <div class="moreOptionsDropdown" v-if="moreOptions">
+          <ul>
+            <li
+              v-if="info.UID === currentUID"
+              @click="moreOptions = !moreOptions"
+            >
+              Edit
+            </li>
+            <li @click="respond">
+              Respond
+            </li>
+            <li v-if="info.UID === currentUID" @click="removePost">Delete</li>
+          </ul>
+        </div>
+      </transition>
     </div>
     <div class="public-chat-msg-body">
       {{ info.Message }}

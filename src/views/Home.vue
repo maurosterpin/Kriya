@@ -41,10 +41,12 @@
               />
             </transition-group>
           </div>
-          <div v-if="responding" class="respondingWindow">
-            Replying...
-            <cancelIcon class="cancelReply" @click="cancelReply" />
-          </div>
+          <transition name="list" appear>
+            <div v-if="responding" class="respondingWindow">
+              Replying...
+              <cancelIcon class="cancelReply" @click="cancelReply" />
+            </div>
+          </transition>
           <div class="input" @keyup.enter="sendPublicChatMessage">
             <sendIcon class="send-icon" />
             <transition name="list" appear>

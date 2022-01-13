@@ -130,7 +130,7 @@ export default {
 
   float: left;
   position: fixed;
-  z-index: 99;
+  z-index: 500;
   top: 0;
   left: 0;
   bottom: 0;
@@ -149,7 +149,7 @@ export default {
   margin-left: 20px !important;
   position: fixed;
   bottom: 0;
-  z-index: 100;
+  z-index: 550;
   display: flex;
   transition: 0.4s ease;
   cursor: pointer;
