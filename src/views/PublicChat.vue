@@ -13,18 +13,17 @@
                 placeholder="Type room name..."
                 v-model="roomName"
                 type="text"
-                class="newRoomInput"
-                id="roomInput"
+                class="newRoomInput2"
               />
             </div>
           </transition>
-          <div v-if="createNewRoom" class="buttons">
+          <div v-if="createNewRoom" class="buttons2">
             <transition name="list" appear>
-              <div class="addRoomBtn" @click="addNewRoom">Add room</div>
+              <div class="addRoomBtn2" @click="addNewRoom">Add room</div>
             </transition>
             <transition name="list" appear>
               <div
-                class="cancelAddRoomBtn"
+                class="cancelAddRoomBtn2"
                 @click="createNewRoom = !createNewRoom"
               >
                 Cancel
@@ -210,6 +209,21 @@ export default {
         });
       }
     },
+    addNewRoom() {
+      if (this.roomName.length < 1) {
+        alert("Room must have a name");
+      } else if (this.room.find((element) => element === this.roomName)) {
+        alert("Room already exists");
+      } else {
+        db.collection("roomList")
+          .doc(this.roomName)
+          .set({
+            name: this.roomName,
+          });
+        alert("Room created");
+        this.createNewRoom = !this.createNewRoom;
+      }
+    },
     chooseRoom(room) {
       this.$forceUpdate();
       this.$emit("emitter");
@@ -353,6 +367,50 @@ export default {
   padding-left: 35px;
 }
 
+.buttons2 {
+  display: flex;
+  position: absolute;
+  margin-top: 45px;
+  z-index: 150;
+  top: 30px;
+  left: 30px;
+}
+
+.addRoomBtn2 {
+  padding: 5px 10px;
+  background-color: #39c75a;
+  border-radius: 100px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  margin-left: 15px;
+  transition: all 0.3s ease;
+}
+
+.addRoomBtn2:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.cancelAddRoomBtn2 {
+  padding: 5px 10px;
+  background-color: #d31e1e;
+  border-radius: 100px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.newRoomInput2 {
+  border: none !important;
+  border-radius: 100px;
+  padding: 13px 20px !important;
+  width: 100%;
+}
+
+.cancelAddRoomBtn2:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+}
+
 .public-chat2 {
   margin: auto;
   position: relative;
@@ -390,7 +448,7 @@ export default {
   fill: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 500;
+  z-index: 200;
   position: absolute;
   bottom: 32px;
   left: 34px;
