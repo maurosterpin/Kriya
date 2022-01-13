@@ -191,6 +191,9 @@ export default {
               Date: data.Date,
               UID: data.UID,
               docID: doc.id,
+              Reply: data.Reply,
+              ReplyUID: data.ReplyUID,
+              Edited: data.Edited,
             });
           });
         });
