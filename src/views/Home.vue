@@ -160,14 +160,6 @@ export default {
     this.getDefaultProfilePicture();
     window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
-      db.collection("public-chat")
-        .doc("rooms")
-        .collection(this.selectedRoom)
-        .onSnapshot(() => {
-          this.getPublicChatMessages();
-        });
-
-      this.getPosts();
       if (this.store.logged) {
         const user = firebase.auth().currentUser;
         this.store.currentUserUid = user.uid;
@@ -190,6 +182,7 @@ export default {
                   uid: user.uid,
                   Quote: "Discipline is freedom",
                   Author: "Unknown",
+                  selectedRoom: "general",
                 });
               }, 50);
               console.log("User added!");
@@ -201,6 +194,15 @@ export default {
               .get()
               .then((doc) => {
                 this.selectedRoom = doc.data().selectedRoom;
+              });
+          })
+          .then(() => {
+            this.getPosts();
+            db.collection("public-chat")
+              .doc("rooms")
+              .collection(this.selectedRoom)
+              .onSnapshot(() => {
+                this.getPublicChatMessages();
               });
           });
       }
@@ -359,27 +361,29 @@ export default {
         });
     },
     getPublicChatMessages() {
-      console.log("getPublicChatMessages");
-      db.collection("public-chat")
-        .doc("rooms")
-        .collection(this.selectedRoom)
-        .orderBy("Date", "asc")
-        .get()
-        .then((query) => {
-          this.publicChat = [];
-          query.forEach((doc) => {
-            const data = doc.data();
-            this.publicChat.push({
-              Message: data.Message,
-              Date: data.Date,
-              UID: data.UID,
-              docID: doc.id,
-              Reply: data.Reply,
-              ReplyUID: data.ReplyUID,
-              Edited: data.Edited,
+      setTimeout(() => {
+        console.log("getPublicChatMessages");
+        db.collection("public-chat")
+          .doc("rooms")
+          .collection(this.selectedRoom)
+          .orderBy("Date", "asc")
+          .get()
+          .then((query) => {
+            this.publicChat = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.publicChat.push({
+                Message: data.Message,
+                Date: data.Date,
+                UID: data.UID,
+                docID: doc.id,
+                Reply: data.Reply,
+                ReplyUID: data.ReplyUID,
+                Edited: data.Edited,
+              });
             });
           });
-        });
+      }, 500);
     },
   },
   watch: {},

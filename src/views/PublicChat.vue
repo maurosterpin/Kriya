@@ -135,9 +135,6 @@ export default {
     }
     setTimeout(() => {
       this.getDefaultProfilePicture();
-      db.collection("public-chat").onSnapshot(() => {
-        this.getPublicChatMessages();
-      });
 
       this.getPosts();
       if (this.store.logged) {
@@ -162,6 +159,21 @@ export default {
               });
               console.log("User added!");
             }
+          })
+          .then(() => {
+            db.collection("users")
+              .doc(user.uid)
+              .get()
+              .then((doc) => {
+                this.selectedRoom = doc.data().selectedRoom;
+              });
+          })
+          .then(() => {
+            db.collection("public-chat")
+              .doc(this.selectedRoom)
+              .onSnapshot(() => {
+                this.getPublicChatMessages();
+              });
           });
       }
       if (this.store.quoteText == "") {
@@ -227,9 +239,17 @@ export default {
       }
     },
     chooseRoom(room) {
-      this.$forceUpdate();
-      this.$emit("emitter");
       this.selectedRoom = room;
+      const userUID = firebase.auth().currentUser.uid;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          db.collection("users")
+            .doc(userUID)
+            .update({
+              selectedRoom: room,
+            });
+        }
+      });
       this.enableRoomSelect();
       db.collection("public-chat")
         .doc("rooms")
@@ -309,27 +329,29 @@ export default {
         });
     },
     getPublicChatMessages() {
-      console.log("getPublicChatMessages");
-      db.collection("public-chat")
-        .doc("rooms")
-        .collection(this.selectedRoom)
-        .orderBy("Date", "asc")
-        .get()
-        .then((query) => {
-          this.publicChat = [];
-          query.forEach((doc) => {
-            const data = doc.data();
-            this.publicChat.push({
-              Message: data.Message,
-              Date: data.Date,
-              UID: data.UID,
-              docID: doc.id,
-              Reply: data.Reply,
-              ReplyUID: data.ReplyUID,
-              Edited: data.Edited,
+      setTimeout(() => {
+        console.log("getPublicChatMessages");
+        db.collection("public-chat")
+          .doc("rooms")
+          .collection(this.selectedRoom)
+          .orderBy("Date", "asc")
+          .get()
+          .then((query) => {
+            this.publicChat = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              this.publicChat.push({
+                Message: data.Message,
+                Date: data.Date,
+                UID: data.UID,
+                docID: doc.id,
+                Reply: data.Reply,
+                ReplyUID: data.ReplyUID,
+                Edited: data.Edited,
+              });
             });
           });
-        });
+      }, 500);
     },
   },
   watch: {},
