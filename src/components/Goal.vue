@@ -282,6 +282,7 @@ export default {
                 Date: data.Date,
                 Completed: data.Completed,
                 docID: doc.id,
+                selectedRoom: this.info.selectedRoom,
               });
             });
             this.checkGoalCount();
@@ -307,6 +308,7 @@ export default {
                 Date: data.Date,
                 Completed: data.Completed,
                 docID: doc.id,
+                selectedRoom: this.info.selectedRoom,
               });
             });
             this.checkGoalCount();
@@ -340,6 +342,7 @@ export default {
                 Date: data.Date,
                 Completed: data.Completed,
                 docID: doc.id,
+                selectedRoom: this.info.selectedRoom,
               });
             });
             this.checkGoalCount();
@@ -365,6 +368,7 @@ export default {
                 Date: data.Date,
                 Completed: data.Completed,
                 docID: doc.id,
+                selectedRoom: this.info.selectedRoom,
               });
             });
             this.checkGoalCount();
@@ -398,6 +402,7 @@ export default {
                 Date: data.Date,
                 Completed: data.Completed,
                 docID: doc.id,
+                selectedRoom: this.info.selectedRoom,
               });
             });
             this.checkGoalCount();
@@ -423,6 +428,7 @@ export default {
                 Date: data.Date,
                 Completed: data.Completed,
                 docID: doc.id,
+                selectedRoom: this.info.selectedRoom,
               });
             });
             this.checkGoalCount();

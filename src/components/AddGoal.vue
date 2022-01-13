@@ -34,21 +34,23 @@
             {{ selectedRoom }}
             <singleArrow
               class="dropdownBtn"
-              @click="roomSelect = true"
+              @click="roomSelect = !roomSelect"
               :class="{ 'rotate-90': roomSelect }"
             />
           </div>
-          <div v-if="roomSelect" class="roomSelect">
-            <ul>
-              <li
-                v-for="(item, index) in room"
-                :key="item"
-                @click="chooseRoom(room[index])"
-              >
-                {{ item }}
-              </li>
-            </ul>
-          </div>
+          <transition name="list2" appear>
+            <div v-if="roomSelect" class="roomSelect">
+              <ul>
+                <li
+                  v-for="(item, index) in room"
+                  :key="item"
+                  @click="chooseRoom(room[index])"
+                >
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+          </transition>
         </div>
 
         <button
@@ -82,7 +84,7 @@ export default {
       goalSetup: false,
       goalTitle: "",
       goalMessage: "",
-      selectedRoom: "general",
+      selectedRoom: "select room",
       room: [],
       roomSelect: false,
     };
@@ -117,25 +119,30 @@ export default {
       this.goalSetup = !this.goalSetup;
     },
     newGoal() {
-      this.goalSetup = !this.goalSetup;
-      const user = firebase.auth().currentUser;
-      const dataBase = db
-        .collection("users")
-        .doc(user.uid)
-        .collection("goals")
-        .doc(this.goalTitle);
-      dataBase
-        .set({
-          name: this.goalTitle,
-          goalMsg: this.goalMessage,
-          completed: false,
-          date: Date.now(),
-          room: this.selectedRoom,
-        })
-        .then(() => {
-          console.log("GET GOALS!");
-          this.$root.$emit("Profile.vue");
-        });
+      if (this.selectedRoom != "select room") {
+        this.goalSetup = !this.goalSetup;
+        const user = firebase.auth().currentUser;
+        const dataBase = db
+          .collection("users")
+          .doc(user.uid)
+          .collection("goals")
+          .doc(this.goalTitle);
+        dataBase
+          .set({
+            name: this.goalTitle,
+            goalMsg: this.goalMessage,
+            completed: false,
+            date: Date.now(),
+            room: this.selectedRoom,
+          })
+          .then(() => {
+            console.log("GET GOALS!");
+            this.$root.$emit("Profile.vue");
+            this.selectedRoom = "select room";
+          });
+      } else {
+        alert("You must select a room");
+      }
     },
   },
   computed: {},
@@ -201,7 +208,7 @@ export default {
   flex-direction: row;
   font-size: 16px;
   padding: 5px 15px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
   border-radius: 100px;
 }
 
@@ -218,6 +225,7 @@ export default {
   fill: #fff;
   cursor: pointer;
   margin-left: 10px;
+  transition: all 0.3s ease;
 }
 
 .btn {

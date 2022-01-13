@@ -179,6 +179,7 @@ export default {
       // Get current user
       const user = firebase.auth().currentUser;
       console.log("postCompletedToDo");
+      // general posts
       db.collection("posts")
         .doc()
         .set({
@@ -188,6 +189,8 @@ export default {
           Date: this.date,
           CompletionDate: Date.now(),
           UID: user.uid,
+          room: this.info.selectedRoom,
+          test: "test",
         });
     },
   },

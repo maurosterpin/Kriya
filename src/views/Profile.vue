@@ -192,6 +192,7 @@ export default {
               goalID: doc.id,
               completed: doc.data().completed,
               goalUID: user.uid,
+              selectedRoom: doc.data().room,
             });
           });
         });
