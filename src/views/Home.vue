@@ -306,33 +306,35 @@ export default {
       el.focus();
     },
     getPosts() {
-      db.collection("posts")
-        .orderBy("CompletionDate", "desc")
-        .get()
-        .then((query) => {
-          this.posts = [];
-          query.forEach((doc) => {
-            const data = doc.data();
-            if (
-              this.selectedRoom === "general" ||
-              doc.data().room === this.selectedRoom ||
-              data.Quote
-            )
-              this.posts.push({
-                Tasks: data.Tasks,
-                ListType: data.ListType,
-                Date: data.Date,
-                Completed: data.Completed,
-                CompletionDate: data.CompletionDate,
-                UID: data.UID,
-                Quote: data.Quote,
-                Author: data.Author,
-                Color: "#15161a !important",
-                docID: doc.id,
-                GoalName: data.GoalName,
-              });
+      setTimeout(() => {
+        db.collection("posts")
+          .orderBy("CompletionDate", "desc")
+          .get()
+          .then((query) => {
+            this.posts = [];
+            query.forEach((doc) => {
+              const data = doc.data();
+              if (
+                this.selectedRoom === "general" ||
+                doc.data().room === this.selectedRoom ||
+                data.Quote
+              )
+                this.posts.push({
+                  Tasks: data.Tasks,
+                  ListType: data.ListType,
+                  Date: data.Date,
+                  Completed: data.Completed,
+                  CompletionDate: data.CompletionDate,
+                  UID: data.UID,
+                  Quote: data.Quote,
+                  Author: data.Author,
+                  Color: "#15161a !important",
+                  docID: doc.id,
+                  GoalName: data.GoalName,
+                });
+            });
           });
-        });
+      }, 500);
     },
     sendPublicChatMessage() {
       if (this.store.logged) {

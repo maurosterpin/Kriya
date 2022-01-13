@@ -175,6 +175,14 @@ export default {
                 this.getPublicChatMessages();
               });
           });
+      } else {
+        db.collection("public-chat")
+          .doc("rooms")
+          .collection("general")
+          .onSnapshot(() => {
+            this.getPublicChatMessages();
+          });
+        this.getPosts();
       }
       if (this.store.quoteText == "") {
         store.quoteExist = true;
@@ -240,9 +248,9 @@ export default {
     },
     chooseRoom(room) {
       this.selectedRoom = room;
-      const userUID = firebase.auth().currentUser.uid;
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
+          const userUID = firebase.auth().currentUser.uid;
           db.collection("users")
             .doc(userUID)
             .update({
