@@ -35,7 +35,13 @@
             />
           </transition>
           <transition name="list" appear>
-            <div v-if="roomSelect" class="roomSelect"></div>
+            <div v-if="roomSelect" class="roomSelect">
+              <ul>
+                <li>general</li>
+                <li>software dev</li>
+                <li>health</li>
+              </ul>
+            </div>
           </transition>
           <div class="messages">
             <transition-group
@@ -303,6 +309,35 @@ body::-webkit-scrollbar {
 
 .rotate-90 {
   transform: rotate(-90deg);
+}
+
+.roomSelect {
+  padding: 15px;
+  border-radius: 25px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  background-color: #141518;
+  margin-top: 49px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.roomSelect ul {
+  list-style: none;
+}
+
+.roomSelect li {
+  min-width: 200px;
+  font-size: 16px;
+  margin-top: 15px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.roomSelect li:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .respondingWindow {
