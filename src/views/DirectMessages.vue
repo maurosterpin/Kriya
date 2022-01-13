@@ -96,6 +96,7 @@
         </div>
         <transition-group tag="div" name="list2" appear class="messages2">
           <Message
+            v-on:respond="UpdateResponseData($event)"
             v-for="message in messages"
             :key="message.Date"
             :info="message"
@@ -107,12 +108,20 @@
           class="input"
           @keyup.enter="sendMessage"
         >
-          <input
-            v-model="messageText"
-            class="public-chat-input"
-            type="text"
-            placeholder="Send message..."
-          />
+          <div class="inputField">
+            <transition name="list" appear>
+              <div v-if="responding" class="respondingWindow2">
+                Replying...
+                <cancelIcon class="cancelReply2" @click="cancelReply" />
+              </div>
+            </transition>
+            <input
+              v-model="messageText"
+              class="public-chat-input"
+              type="text"
+              placeholder="Send message..."
+            />
+          </div>
           <sendIcon class="send-icon" @click="sendMessage" />
         </div>
       </div>
@@ -121,6 +130,7 @@
 </template>
 
 <script>
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import sendIcon from "../assets/Icons/send-icon.svg";
 import Message from "../components/Message.vue";
 import UserContactCard from "../components/UserContactCard.vue";
@@ -148,6 +158,9 @@ export default {
       imageUrl: null,
       windowWidth: window.innerWidth,
       notificationCount: [],
+      responding: false,
+      replyUID: "",
+      responseUsername: "",
     };
   },
   components: {
@@ -157,6 +170,7 @@ export default {
     illustration,
     UserSearchContactCard,
     singleArrow,
+    cancelIcon,
   },
   mounted() {
     firebase.auth().onAuthStateChanged(function(user) {
@@ -205,6 +219,16 @@ export default {
           this.loadedContacts = [];
           this.loadedContacts = this.contacts;
         });
+    },
+    cancelReply() {
+      this.responding = false;
+      this.replyUID = "";
+    },
+    UpdateResponseData(UID) {
+      this.responding = true;
+      this.replyUID = UID;
+      const el = document.getElementById("homeInput");
+      el.focus();
     },
     chooseContact(UID, messagesID) {
       this.chosenDmId = "";
@@ -316,9 +340,13 @@ export default {
             Message: this.messageText,
             Date: Date.now(),
             UID: user.uid,
+            Reply: this.responding,
+            ReplyUID: this.replyUID,
+            Edited: false,
           })
           .then(() => {
             this.messageText = "";
+            this.cancelReply();
           });
 
         // Send notification to user
@@ -382,6 +410,9 @@ export default {
               UID: data.UID,
               docID: doc.id,
               parentDocID: temp,
+              Reply: data.Reply,
+              ReplyUID: data.ReplyUID,
+              Edited: data.Edited,
             });
           });
         });
@@ -489,6 +520,36 @@ export default {
   flex-direction: row;
   height: 891px;
   overflow: hidden;
+}
+
+.respondingWindow2 {
+  background-color: #39c75a;
+  padding: 5px 15px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  max-width: 250px;
+  text-align: center;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 90px;
+  left: 15px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.respondingWindow2:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.cancelReply2 {
+  width: 7px;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.inputField {
+  width: 100%;
+  margin-right: 25px;
+  position: relative;
 }
 
 .search-container {
@@ -717,6 +778,7 @@ input.findContactsSearch {
     width: 250px;
     margin: auto;
     padding-top: 15px;
+    position: relative;
   }
 
   @media screen and (max-width: 380px) {
