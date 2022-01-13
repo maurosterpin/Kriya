@@ -28,13 +28,26 @@
             </h6>
             <input
               v-else
-              placeholder="Type room name"
+              placeholder="Type room name..."
               v-model="roomName"
               type="text"
               class="newRoomInput"
               id="roomInput"
             />
           </transition>
+          <div v-if="createNewRoom" class="buttons">
+            <transition name="list" appear>
+              <div class="addRoomBtn" @click="addNewRoom">Add room</div>
+            </transition>
+            <transition name="list" appear>
+              <div
+                class="cancelAddRoomBtn"
+                @click="createNewRoom = !createNewRoom"
+              >
+                Cancel
+              </div>
+            </transition>
+          </div>
           <transition name="list" appear>
             <singleArrow
               v-if="!createNewRoom"
@@ -136,7 +149,7 @@ export default {
       selectedRoom: "general",
       room: [],
       createNewRoom: false,
-      roomName: null,
+      roomName: "",
     };
   },
   created() {},
@@ -190,8 +203,24 @@ export default {
     }, 400);
   },
   methods: {
+    addNewRoom() {
+      if (this.roomName.length < 1) {
+        alert("Room must have a name");
+      } else if (this.roomName in this.room) {
+        alert("Room already exists");
+      } else {
+        db.collection("roomList")
+          .doc(this.roomName)
+          .set({
+            name: this.roomName,
+          });
+        alert("Room created");
+        this.createNewRoom = !this.createNewRoom;
+      }
+    },
     createRoom() {
       this.createNewRoom = !this.createNewRoom;
+      this.roomSelect = !this.roomSelect;
     },
     getRooms() {
       db.collection("roomList")
@@ -362,6 +391,40 @@ input.textarea {
 
 *:focus {
   outline: none;
+}
+
+.buttons {
+  display: flex;
+  position: absolute;
+  margin-top: 45px;
+}
+
+.addRoomBtn {
+  padding: 5px 10px;
+  background-color: #39c75a;
+  border-radius: 100px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  margin-left: 15px;
+  transition: all 0.3s ease;
+}
+
+.addRoomBtn:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.cancelAddRoomBtn {
+  padding: 5px 10px;
+  background-color: #d31e1e;
+  border-radius: 100px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.cancelAddRoomBtn:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.8);
 }
 
 .singleArrow {
