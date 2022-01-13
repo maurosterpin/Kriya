@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     respond() {
-      console.log("DOCID:", this.info.docID);
+      this.moreOptions = false;
       var el = document.getElementById("Ev0wYQOVu1Qoz3VZgwPr");
       el.scrollIntoView(true);
       const myInterval = setInterval(() => {
@@ -69,7 +69,9 @@ export default {
       setTimeout(() => {
         clearInterval(myInterval);
       }, 600);
-      this.moreOptions = !this.moreOptions;
+      setTimeout(() => {
+        el.style.opacity = "1";
+      }, 650);
     },
     removePost() {
       if (this.isPublic) {
