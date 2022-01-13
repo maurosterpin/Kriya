@@ -206,7 +206,7 @@ export default {
     addNewRoom() {
       if (this.roomName.length < 1) {
         alert("Room must have a name");
-      } else if (this.roomName in this.room) {
+      } else if (this.room.find((element) => element === this.roomName)) {
         alert("Room already exists");
       } else {
         db.collection("roomList")
