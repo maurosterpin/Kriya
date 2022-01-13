@@ -30,21 +30,35 @@
           </transition>
         </div>
         <div class="form-dropdown">
-          <transition name="list2" appear>
-            <div class="roomSelect">{{ selectedRoom }}</div>
-            <div class="roomDropdown"></div>
-          </transition>
+          <div class="roomSelectButton">
+            {{ selectedRoom }}
+            <singleArrow
+              class="dropdownBtn"
+              @click="roomSelect = true"
+              :class="{ 'rotate-90': roomSelect }"
+            />
+          </div>
+          <div v-if="roomSelect" class="roomSelect">
+            <ul>
+              <li
+                v-for="(item, index) in room"
+                :key="item"
+                @click="chooseRoom(room[index])"
+              >
+                {{ item }}
+              </li>
+            </ul>
+          </div>
         </div>
-        <transition name="list2" appear>
-          <button
-            type="button"
-            @click="newGoal"
-            class="btn"
-            style="font-size: 13px; font-weight:600; width:250px;"
-          >
-            Submit
-          </button>
-        </transition>
+
+        <button
+          type="button"
+          @click="newGoal"
+          class="btn"
+          style="font-size: 13px; font-weight:600; width:250px;"
+        >
+          Submit
+        </button>
       </form>
     </div>
     <div class="wrapper" v-on:click="addGoal">
@@ -54,6 +68,7 @@
 </template>
 
 <script>
+import singleArrow from "../assets/Icons/single-arrow-left.svg";
 import addIcon from "../assets/Icons/add-icon.svg";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
@@ -68,14 +83,31 @@ export default {
       goalTitle: "",
       goalMessage: "",
       selectedRoom: "general",
-      rooms: [],
+      room: [],
+      roomSelect: false,
     };
   },
   props: ["info"],
   name: "Goal",
+  mounted() {
+    this.getRooms();
+  },
   methods: {
+    chooseRoom(room) {
+      this.selectedRoom = room;
+      this.roomSelect = false;
+    },
     getRooms() {
-      console.log("getRooms");
+      db.collection("roomList")
+        .get()
+        .then((query) => {
+          this.room = [];
+          query.forEach((doc) => {
+            if (doc.id != "general") {
+              this.room.push(doc.id);
+            }
+          });
+        });
     },
     addGoal() {
       this.goalSetup = !this.goalSetup;
@@ -110,6 +142,7 @@ export default {
   components: {
     addIcon,
     cancelIcon,
+    singleArrow,
   },
 };
 </script>
@@ -157,14 +190,74 @@ export default {
   border-bottom: 1px solid #39c75a;
 }
 
+.form-dropdown {
+  display: flex;
+  justify-content: center;
+}
+
+.roomSelectButton {
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
+  padding: 5px 15px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+}
+
 .roomSelect {
   color: #fff;
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
+  padding: 5px 15px;
+}
+
+.dropdownBtn {
+  width: 11px;
+  fill: #fff;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 .btn {
   margin: auto !important;
   margin-top: 25px !important;
   height: 35px;
+}
+
+.roomSelect {
+  padding: 15px;
+  border-radius: 25px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  background-color: #141518;
+  margin-top: 49px;
+  z-index: 200;
+  display: flex;
+  flex-direction: row;
+  margin-top: 33px;
+}
+
+.roomSelect ul {
+  list-style: none;
+}
+
+.roomSelect li {
+  min-width: 200px;
+  font-size: 16px;
+  margin-top: 15px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
+}
+
+.roomSelect li:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .to-do-wrapper {
