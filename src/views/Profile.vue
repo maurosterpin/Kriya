@@ -19,7 +19,7 @@
         </transition>
         <transition name="list2" appear>
           <input
-            v-model="quoteText"
+            v-model="quoteTextInput"
             class="inputField2"
             type="text"
             id="goalDescription"
@@ -101,6 +101,7 @@ export default {
       quoteAuthor: null,
       username: null,
       profilePic: null,
+      quoteTextInput: null,
     };
   },
   created() {},
@@ -139,9 +140,14 @@ export default {
     },
     addQuoteMethod() {
       this.addQuote = !this.addQuote;
+      this.quoteTextInput = this.quoteText;
     },
     submitQuote() {
-      if (this.quoteText.length > 0 && this.quoteAuthor.length > 0) {
+      if (
+        this.quoteText.length > 0 &&
+        this.quoteAuthor.length > 0 &&
+        this.quoteText != this.quoteTextInput
+      ) {
         // Get current user
         const user = firebase.auth().currentUser;
         // Add quote to user firestore collection
@@ -154,7 +160,7 @@ export default {
           .then(() => {
             dataBase = db.collection("posts");
             dataBase.add({
-              Quote: this.quoteText,
+              Quote: this.quoteTextInput,
               Author: this.quoteAuthor,
               CompletionDate: Date.now(),
               UID: user.uid,
