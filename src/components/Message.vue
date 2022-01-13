@@ -58,7 +58,7 @@ export default {
     };
   },
   name: "Message",
-  props: ["info", "isPublic", "messagesID"],
+  props: ["info", "isPublic", "messagesID", "room"],
   components: {
     optionsIcon,
   },
@@ -86,6 +86,8 @@ export default {
       if (this.info.Message != this.editText) {
         if (this.isPublic) {
           db.collection("public-chat")
+            .doc("rooms")
+            .collection(this.room)
             .doc(this.info.docID)
             .update({
               Message: this.editText,
@@ -128,6 +130,8 @@ export default {
     removePost() {
       if (this.isPublic) {
         db.collection("public-chat")
+          .doc("rooms")
+          .collection(this.room)
           .doc(this.info.docID)
           .delete();
       } else {

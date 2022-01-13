@@ -24,7 +24,7 @@
         <div class="public-chat">
           <transition name="list" appear>
             <h6 class="public-chat-h5">
-              public chat
+              {{ selectedRoom }}
             </h6>
           </transition>
           <transition name="list" appear>
@@ -37,9 +37,9 @@
           <transition name="list" appear>
             <div v-if="roomSelect" class="roomSelect">
               <ul>
-                <li>general</li>
-                <li>software dev</li>
-                <li>health</li>
+                <li @click="chooseRoom(room[0])">general</li>
+                <li @click="chooseRoom(room[1])">software dev</li>
+                <li @click="chooseRoom(room[2])">health</li>
               </ul>
             </div>
           </transition>
@@ -56,6 +56,7 @@
                 :key="message.Date"
                 :info="message"
                 :isPublic="true"
+                :room="selectedRoom"
               />
             </transition-group>
           </div>
@@ -118,6 +119,8 @@ export default {
       replyUID: "",
       responseUsername: "",
       roomSelect: false,
+      selectedRoom: "general",
+      room: ["general", "software dev", "health"],
     };
   },
   created() {},
@@ -125,9 +128,12 @@ export default {
     this.getDefaultProfilePicture();
     window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
-      db.collection("public-chat").onSnapshot(() => {
-        this.getPublicChatMessages();
-      });
+      db.collection("public-chat")
+        .doc("rooms")
+        .collection(this.selectedRoom)
+        .onSnapshot(() => {
+          this.getPublicChatMessages();
+        });
 
       this.getPosts();
       if (this.store.logged) {
@@ -179,6 +185,16 @@ export default {
           store.currentUserUid = user.uid;
         });
     },
+    chooseRoom(room) {
+      this.selectedRoom = room;
+      this.enableRoomSelect();
+      db.collection("public-chat")
+        .doc("rooms")
+        .collection(this.selectedRoom)
+        .onSnapshot(() => {
+          this.getPublicChatMessages();
+        });
+    },
     enableRoomSelect() {
       this.roomSelect = !this.roomSelect;
     },
@@ -223,7 +239,10 @@ export default {
           // Get current user
           const user = firebase.auth().currentUser;
           // Add quote to user firestore collection
-          const dataBase = db.collection("public-chat");
+          const dataBase = db
+            .collection("public-chat")
+            .doc("rooms")
+            .collection(this.selectedRoom);
 
           dataBase
             .add({
@@ -257,6 +276,8 @@ export default {
     getPublicChatMessages() {
       console.log("getPublicChatMessages");
       db.collection("public-chat")
+        .doc("rooms")
+        .collection(this.selectedRoom)
         .orderBy("Date", "asc")
         .get()
         .then((query) => {
@@ -301,7 +322,7 @@ body::-webkit-scrollbar {
   width: 10px;
   fill: #fff;
   position: absolute;
-  left: 115px;
+  left: 15px;
   margin-top: 19px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -489,6 +510,7 @@ body::-webkit-scrollbar {
   padding: 15px 25px;
   background-color: #141518;
   border-radius: 25px;
+  padding-left: 35px;
 }
 
 .public-chat-input {
