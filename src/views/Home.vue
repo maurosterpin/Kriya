@@ -272,9 +272,10 @@ export default {
     },
     chooseRoom(room) {
       this.selectedRoom = room;
-      const userUID = firebase.auth().currentUser.uid;
+
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
+          const userUID = firebase.auth().currentUser.uid;
           db.collection("users")
             .doc(userUID)
             .update({
