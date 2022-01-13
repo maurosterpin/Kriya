@@ -29,6 +29,12 @@
             />
           </transition>
         </div>
+        <div class="form-dropdown">
+          <transition name="list2" appear>
+            <div class="roomSelect">{{ selectedRoom }}</div>
+            <div class="roomDropdown"></div>
+          </transition>
+        </div>
         <transition name="list2" appear>
           <button
             type="button"
@@ -61,11 +67,16 @@ export default {
       goalSetup: false,
       goalTitle: "",
       goalMessage: "",
+      selectedRoom: "general",
+      rooms: [],
     };
   },
   props: ["info"],
   name: "Goal",
   methods: {
+    getRooms() {
+      console.log("getRooms");
+    },
     addGoal() {
       this.goalSetup = !this.goalSetup;
     },
@@ -87,6 +98,7 @@ export default {
           goalMsg: this.goalMessage,
           completed: false,
           date: Date.now(),
+          room: this.selectedRoom,
         })
         .then(() => {
           console.log("GET GOALS!");
@@ -143,6 +155,10 @@ export default {
 .goal-form input {
   margin-left: 0;
   border-bottom: 1px solid #39c75a;
+}
+
+.roomSelect {
+  color: #fff;
 }
 
 .btn {

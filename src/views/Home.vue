@@ -37,9 +37,13 @@
           <transition name="list" appear>
             <div v-if="roomSelect" class="roomSelect">
               <ul>
-                <li @click="chooseRoom(room[0])">general</li>
-                <li @click="chooseRoom(room[1])">software dev</li>
-                <li @click="chooseRoom(room[2])">health</li>
+                <li
+                  v-for="(item, index) in room"
+                  :key="item"
+                  @click="chooseRoom(room[index])"
+                >
+                  {{ item }}
+                </li>
               </ul>
             </div>
           </transition>
@@ -120,11 +124,12 @@ export default {
       responseUsername: "",
       roomSelect: false,
       selectedRoom: "general",
-      room: ["general", "software dev", "health"],
+      room: [],
     };
   },
   created() {},
   mounted() {
+    this.getRooms();
     this.getDefaultProfilePicture();
     window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
@@ -171,6 +176,16 @@ export default {
     }, 400);
   },
   methods: {
+    getRooms() {
+      db.collection("roomList")
+        .get()
+        .then((query) => {
+          this.room = [];
+          query.forEach((doc) => {
+            this.room.push(doc.id);
+          });
+        });
+    },
     getQuote() {
       console.log("getQuote");
       // Get current user
