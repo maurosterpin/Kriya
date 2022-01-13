@@ -3,7 +3,7 @@
     <div class="home">
       <div class="feed-wrapper">
         <div class="feed">
-          <div v-for="card in posts" :key="card.name">
+          <div v-for="card in posts" :key="card">
             <transition name="list" appear>
               <FeedCard
                 v-if="card.ListType"
@@ -247,6 +247,8 @@ export default {
         });
     },
     chooseRoom(room) {
+      this.$forceUpdate();
+      this.$emit("emitter");
       this.selectedRoom = room;
       this.enableRoomSelect();
       db.collection("public-chat")
@@ -280,7 +282,8 @@ export default {
             const data = doc.data();
             if (
               this.selectedRoom === "general" ||
-              doc.data().room === this.selectedRoom
+              doc.data().room === this.selectedRoom ||
+              data.Quote
             )
               this.posts.push({
                 Tasks: data.Tasks,

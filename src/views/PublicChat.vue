@@ -4,7 +4,52 @@
       <div class="public-chat-relative2">
         <div class="public-chat2">
           <transition name="list" appear>
-            <h6 class="public-chat-h6">public chat</h6>
+            <h6 v-if="!createNewRoom" class="public-chat-h5">
+              {{ selectedRoom }}
+            </h6>
+            <input
+              v-else
+              placeholder="Type room name..."
+              v-model="roomName"
+              type="text"
+              class="newRoomInput"
+              id="roomInput"
+            />
+          </transition>
+          <div v-if="createNewRoom" class="buttons">
+            <transition name="list" appear>
+              <div class="addRoomBtn" @click="addNewRoom">Add room</div>
+            </transition>
+            <transition name="list" appear>
+              <div
+                class="cancelAddRoomBtn"
+                @click="createNewRoom = !createNewRoom"
+              >
+                Cancel
+              </div>
+            </transition>
+          </div>
+          <transition name="list" appear>
+            <singleArrow
+              v-if="!createNewRoom"
+              class="singleArrow"
+              :class="{ 'rotate-90': roomSelect }"
+              @click="enableRoomSelect"
+            />
+          </transition>
+          <transition name="list" appear>
+            <div v-if="roomSelect" class="roomSelect">
+              <ul>
+                <li @click="createRoom">create new room +</li>
+                <li
+                  v-for="(item, index) in room"
+                  :key="item"
+                  @click="chooseRoom(room[index])"
+                >
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
           </transition>
           <div class="messages3">
             <transition-group tag="div" name="list" appear>
@@ -43,6 +88,7 @@
 
 <script>
 import cancelIcon from "../assets/Icons/cancel-Icon.svg";
+import singleArrow from "../assets/Icons/single-arrow-left.svg";
 import store from "@/store";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
@@ -55,6 +101,7 @@ export default {
     sendIcon,
     Message,
     cancelIcon,
+    singleArrow,
   },
   data() {
     return {
@@ -67,6 +114,11 @@ export default {
       responding: false,
       replyUID: "",
       responseUsername: "",
+      roomSelect: false,
+      selectedRoom: "general",
+      room: [],
+      createNewRoom: false,
+      roomName: "",
     };
   },
   mounted() {

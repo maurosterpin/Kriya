@@ -6,4 +6,5 @@ export default {
   quoteText: "",
   quoteAuthor: "",
   quoteExist: null,
+  roomName: "general",
 };

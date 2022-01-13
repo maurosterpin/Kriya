@@ -116,6 +116,8 @@ export default {
         });
     },
     getUserData() {
+      this.username = "";
+      this.profilePic = "";
       db.collection("users")
         .doc(this.info.UID)
         .get()
