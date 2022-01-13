@@ -23,12 +23,21 @@
       <div class="public-chat-relative">
         <div class="public-chat">
           <transition name="list" appear>
-            <h6 class="public-chat-h5">
+            <h6 v-if="!createNewRoom" class="public-chat-h5">
               {{ selectedRoom }}
             </h6>
+            <input
+              v-else
+              placeholder="Type room name"
+              v-model="roomName"
+              type="text"
+              class="newRoomInput"
+              id="roomInput"
+            />
           </transition>
           <transition name="list" appear>
             <singleArrow
+              v-if="!createNewRoom"
               class="singleArrow"
               :class="{ 'rotate-90': roomSelect }"
               @click="enableRoomSelect"
@@ -37,6 +46,7 @@
           <transition name="list" appear>
             <div v-if="roomSelect" class="roomSelect">
               <ul>
+                <li @click="createRoom">create new room +</li>
                 <li
                   v-for="(item, index) in room"
                   :key="item"
@@ -125,11 +135,15 @@ export default {
       roomSelect: false,
       selectedRoom: "general",
       room: [],
+      createNewRoom: false,
+      roomName: null,
     };
   },
   created() {},
   mounted() {
-    this.getRooms();
+    db.collection("roomList").onSnapshot(() => {
+      this.getRooms();
+    });
     this.getDefaultProfilePicture();
     window.removeEventListener("resize", this.routerPush);
     setTimeout(() => {
@@ -176,6 +190,9 @@ export default {
     }, 400);
   },
   methods: {
+    createRoom() {
+      this.createNewRoom = !this.createNewRoom;
+    },
     getRooms() {
       db.collection("roomList")
         .get()
@@ -331,6 +348,20 @@ body::-webkit-scrollbar {
   justify-content: center;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
+}
+
+.newRoomInput {
+  border: none !important;
+  border-radius: 100px;
+  padding: 13px 20px !important;
+}
+
+input.textarea {
+  margin-left: 25px;
+}
+
+*:focus {
+  outline: none;
 }
 
 .singleArrow {
