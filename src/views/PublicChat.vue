@@ -9,6 +9,7 @@
           <div class="messages3">
             <transition-group tag="div" name="list" appear>
               <Message
+                v-on:respond="UpdateResponseData($event)"
                 v-for="message in publicChat"
                 :key="message.Date"
                 :info="message"
@@ -16,10 +17,15 @@
               />
             </transition-group>
           </div>
+          <div v-if="responding" class="respondingWindow">
+            Replying...
+            <cancelIcon class="cancelReply" @click="cancelReply" />
+          </div>
           <div class="input2" @keyup.enter="sendPublicChatMessage">
             <sendIcon class="send-icon2" @click="sendPublicChatMessage" />
             <transition name="list" appear>
               <input
+                id="publicChatInput"
                 v-model="messageText"
                 class="public-chat-input-2"
                 type="text"
@@ -34,6 +40,7 @@
 </template>
 
 <script>
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import store from "@/store";
 import Message from "../components/Message.vue";
 import sendIcon from "../assets/Icons/send-icon.svg";
@@ -45,6 +52,7 @@ export default {
   components: {
     sendIcon,
     Message,
+    cancelIcon,
   },
   data() {
     return {
@@ -54,6 +62,9 @@ export default {
       messageText: null,
       publicChat: [],
       defaultProfilePicture: null,
+      responding: false,
+      replyUID: "",
+      responseUsername: "",
     };
   },
   mounted() {
@@ -121,6 +132,16 @@ export default {
           store.currentUserUid = user.uid;
         });
     },
+    cancelReply() {
+      this.responding = false;
+      this.replyUID = "";
+    },
+    UpdateResponseData(UID) {
+      this.responding = true;
+      this.replyUID = UID;
+      const el = document.getElementById("publicChatInput");
+      el.focus();
+    },
     routerPush() {
       if (window.innerWidth > 960) {
         window.removeEventListener("resize", this.routerPush);
@@ -159,11 +180,18 @@ export default {
         // Add quote to user firestore collection
         const dataBase = db.collection("public-chat");
 
-        dataBase.add({
-          Message: this.messageText,
-          UID: user.uid,
-          Date: Date.now(),
-        });
+        dataBase
+          .add({
+            Message: this.messageText,
+            UID: user.uid,
+            Date: Date.now(),
+            Reply: this.responding,
+            ReplyUID: this.replyUID,
+            Edited: false,
+          })
+          .then(() => {
+            this.cancelReply();
+          });
         this.messageText = "";
       } else {
         console.log("Unable to send empty message");
