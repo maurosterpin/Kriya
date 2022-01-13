@@ -284,7 +284,7 @@ export default {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 600px) {
   h5 {
     font-size: 12px !important;
   }

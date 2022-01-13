@@ -123,7 +123,9 @@ export default {
     };
   },
   mounted() {
-    this.getRooms();
+    db.collection("roomList").onSnapshot(() => {
+      this.getRooms();
+    });
     if (window.innerWidth > 960) {
       router.push({
         name: "Home",

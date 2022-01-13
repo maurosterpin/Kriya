@@ -260,7 +260,7 @@ export default {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 600px) {
   .container-feed-card {
     padding: 10px;
     max-width: 250px;

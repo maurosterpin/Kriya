@@ -302,7 +302,7 @@ export default {
   cursor: pointer;
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 600px) {
   .container-feed-card {
     padding: 10px;
     max-width: 250px;
