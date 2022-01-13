@@ -4,17 +4,19 @@
       <div class="public-chat-relative2">
         <div class="public-chat2">
           <transition name="list" appear>
-            <h6 v-if="!createNewRoom" class="public-chat-h5">
-              {{ selectedRoom }}
-            </h6>
-            <input
-              v-else
-              placeholder="Type room name..."
-              v-model="roomName"
-              type="text"
-              class="newRoomInput"
-              id="roomInput"
-            />
+            <div class="roomContainer2">
+              <h6 v-if="!createNewRoom" class="public-chat-h52">
+                {{ selectedRoom }}
+              </h6>
+              <input
+                v-else
+                placeholder="Type room name..."
+                v-model="roomName"
+                type="text"
+                class="newRoomInput"
+                id="roomInput"
+              />
+            </div>
           </transition>
           <div v-if="createNewRoom" class="buttons">
             <transition name="list" appear>
@@ -32,13 +34,13 @@
           <transition name="list" appear>
             <singleArrow
               v-if="!createNewRoom"
-              class="singleArrow"
+              class="singleArrow2"
               :class="{ 'rotate-90': roomSelect }"
               @click="enableRoomSelect"
             />
           </transition>
           <transition name="list" appear>
-            <div v-if="roomSelect" class="roomSelect">
+            <div v-if="roomSelect" class="roomSelect2">
               <ul>
                 <li @click="createRoom">create new room +</li>
                 <li
@@ -122,6 +124,7 @@ export default {
     };
   },
   mounted() {
+    this.getRooms();
     if (window.innerWidth > 960) {
       router.push({
         name: "Home",
@@ -186,6 +189,9 @@ export default {
           store.currentUserUid = user.uid;
         });
     },
+    enableRoomSelect() {
+      this.roomSelect = !this.roomSelect;
+    },
     cancelReply() {
       this.responding = false;
       this.replyUID = "";
@@ -203,6 +209,19 @@ export default {
           name: "Home",
         });
       }
+    },
+    chooseRoom(room) {
+      this.$forceUpdate();
+      this.$emit("emitter");
+      this.selectedRoom = room;
+      this.enableRoomSelect();
+      db.collection("public-chat")
+        .doc("rooms")
+        .collection(this.selectedRoom)
+        .onSnapshot(() => {
+          this.getPublicChatMessages();
+          this.getPosts();
+        });
     },
     getPosts() {
       db.collection("posts")
@@ -259,9 +278,25 @@ export default {
           this.defaultProfilePicture = doc.data().profilePic;
         });
     },
+    createRoom() {
+      this.createNewRoom = !this.createNewRoom;
+      this.roomSelect = !this.roomSelect;
+    },
+    getRooms() {
+      db.collection("roomList")
+        .get()
+        .then((query) => {
+          this.room = [];
+          query.forEach((doc) => {
+            this.room.push(doc.id);
+          });
+        });
+    },
     getPublicChatMessages() {
       console.log("getPublicChatMessages");
       db.collection("public-chat")
+        .doc("rooms")
+        .collection(this.selectedRoom)
         .orderBy("Date", "asc")
         .get()
         .then((query) => {
@@ -304,6 +339,20 @@ export default {
   max-width: 100%;
 }
 
+.roomContainer2 {
+  padding: 0px 15px;
+  width: 100%;
+}
+
+.public-chat-h52 {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 15px 25px;
+  background-color: #141518;
+  border-radius: 25px;
+  padding-left: 35px;
+}
+
 .public-chat2 {
   margin: auto;
   position: relative;
@@ -336,6 +385,18 @@ export default {
   width: 90vw;
 }
 
+.singleArrow2 {
+  width: 10px;
+  fill: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 500;
+  position: absolute;
+  bottom: 32px;
+  left: 34px;
+  top: 50px;
+}
+
 .send-icon2 {
   fill: #fff;
   width: 13px;
@@ -355,6 +416,40 @@ export default {
 
 .input2 {
   margin-top: 15px;
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
+}
+
+.roomSelect2 {
+  padding: 15px;
+  border-radius: 25px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  background-color: #141518;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  top: 75px;
+  left: 15px;
+}
+
+.roomSelect2 ul {
+  list-style: none;
+}
+
+.roomSelect2 li {
+  min-width: 200px;
+  font-size: 16px;
+  margin-top: 15px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.roomSelect2 li:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 @media screen and (max-height: 812px) {
