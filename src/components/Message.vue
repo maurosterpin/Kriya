@@ -10,6 +10,7 @@
         alt="ProfilePicture"
         class="PfpImg"
       />{{ username }}
+      <span v-if="info.Edited" class="Edited">edited</span>
       <span class="public-chat-msg-head-time">{{ postedFromNow }}</span>
       <optionsIcon class="optionsIcon" @click="moreOptions = !moreOptions" />
       <transition name="list" appear>
@@ -30,9 +31,9 @@
       {{ info.Message }}
     </div>
     <div v-else class="public-chat-msg-body">
-      <input type="text" class="editMsgInput" :value="info.Message" />
+      <input v-model="editText" type="text" class="editMsgInput" />
       <div class="editBtns">
-        <div class="editUpdateBtn">Update</div>
+        <div class="editUpdateBtn" @click="editPostMsg">Update</div>
         <div class="editCancelBtn" @click="cancelEdit">Cancel</div>
       </div>
     </div>
@@ -53,6 +54,7 @@ export default {
       currentUID: null,
       moreOptions: false,
       edit: false,
+      editText: this.info.Message,
     };
   },
   name: "Message",
@@ -79,6 +81,35 @@ export default {
     },
     cancelEdit() {
       this.edit = !this.edit;
+    },
+    editPostMsg() {
+      if (this.info.Message != this.editText) {
+        if (this.isPublic) {
+          db.collection("public-chat")
+            .doc(this.info.docID)
+            .update({
+              Message: this.editText,
+              Edited: true,
+            })
+            .then(() => {
+              this.cancelEdit();
+            });
+        } else {
+          db.collection("direct-messages")
+            .doc(this.info.parentDocID)
+            .collection("messages")
+            .doc(this.info.docID)
+            .update({
+              Message: this.editText,
+              Edited: true,
+            })
+            .then(() => {
+              this.cancelEdit();
+            });
+        }
+      } else {
+        this.cancelEdit();
+      }
     },
     responseView() {
       this.moreOptions = false;
@@ -178,6 +209,11 @@ export default {
 
 .editMsgInput {
   border: none;
+}
+
+.Edited {
+  margin-left: 10px;
+  opacity: 0.3;
 }
 
 input {
