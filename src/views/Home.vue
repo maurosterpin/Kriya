@@ -254,6 +254,7 @@ export default {
         .collection(this.selectedRoom)
         .onSnapshot(() => {
           this.getPublicChatMessages();
+          this.getPosts();
         });
     },
     enableRoomSelect() {
@@ -277,19 +278,23 @@ export default {
           this.posts = [];
           query.forEach((doc) => {
             const data = doc.data();
-            this.posts.push({
-              Tasks: data.Tasks,
-              ListType: data.ListType,
-              Date: data.Date,
-              Completed: data.Completed,
-              CompletionDate: data.CompletionDate,
-              UID: data.UID,
-              Quote: data.Quote,
-              Author: data.Author,
-              Color: "#15161a !important",
-              docID: doc.id,
-              GoalName: data.GoalName,
-            });
+            if (
+              this.selectedRoom === "general" ||
+              doc.data().room === this.selectedRoom
+            )
+              this.posts.push({
+                Tasks: data.Tasks,
+                ListType: data.ListType,
+                Date: data.Date,
+                Completed: data.Completed,
+                CompletionDate: data.CompletionDate,
+                UID: data.UID,
+                Quote: data.Quote,
+                Author: data.Author,
+                Color: "#15161a !important",
+                docID: doc.id,
+                GoalName: data.GoalName,
+              });
           });
         });
     },
