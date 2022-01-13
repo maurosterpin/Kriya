@@ -30,7 +30,7 @@
       {{ info.Message }}
     </div>
     <div v-else class="public-chat-msg-body">
-      Editing
+      <input type="text" class="editMsgInput" :value="info.Message" />
       <div class="editBtns">
         <div class="editUpdateBtn">Update</div>
         <div class="editCancelBtn" @click="cancelEdit">Cancel</div>
@@ -174,6 +174,21 @@ export default {
 
 .public-chat-msg:hover {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
+}
+
+.editMsgInput {
+  border: none;
+}
+
+input {
+  padding: 0;
+  margin: 0;
+  width: 90%;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
 }
 
 .editBtns {
