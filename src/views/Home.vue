@@ -33,6 +33,7 @@
               appear
             >
               <Message
+                v-on:respond="UpdateResponseData($event)"
                 v-for="message in publicChat"
                 :key="message.Date"
                 :info="message"
@@ -40,10 +41,15 @@
               />
             </transition-group>
           </div>
+          <div v-if="responding" class="respondingWindow">
+            Replying...
+            <cancelIcon class="cancelReply" @click="cancelReply" />
+          </div>
           <div class="input" @keyup.enter="sendPublicChatMessage">
             <sendIcon class="send-icon" />
             <transition name="list" appear>
               <input
+                id="homeInput"
                 v-model="messageText"
                 class="public-chat-input"
                 type="text"
@@ -59,6 +65,7 @@
 </template>
 
 <script>
+import cancelIcon from "../assets/Icons/cancel-Icon.svg";
 import store from "@/store";
 import FeedCard from "../components/FeedCard.vue";
 import FeedCardQuote from "../components/FeedCardQuote.vue";
@@ -75,6 +82,7 @@ export default {
     FeedCard,
     FeedCardQuote,
     FeedCardGoal,
+    cancelIcon,
   },
   data() {
     return {
@@ -84,6 +92,9 @@ export default {
       messageText: "",
       publicChat: [],
       defaultProfilePicture: null,
+      responding: false,
+      replyUID: "",
+      responseUsername: "",
     };
   },
   created() {},
@@ -145,6 +156,16 @@ export default {
           store.currentUserUid = user.uid;
         });
     },
+    cancelReply() {
+      this.responding = false;
+      this.replyUID = "";
+    },
+    UpdateResponseData(UID) {
+      this.responding = true;
+      this.replyUID = UID;
+      const el = document.getElementById("homeInput");
+      el.focus();
+    },
     getPosts() {
       db.collection("posts")
         .orderBy("CompletionDate", "desc")
@@ -178,11 +199,19 @@ export default {
           // Add quote to user firestore collection
           const dataBase = db.collection("public-chat");
 
-          dataBase.add({
-            Message: this.messageText,
-            UID: user.uid,
-            Date: Date.now(),
-          });
+          dataBase
+            .add({
+              Message: this.messageText,
+              UID: user.uid,
+              Date: Date.now(),
+              Reply: this.responding,
+              ReplyUID: this.replyUID,
+              Edited: false,
+            })
+            .then(() => {
+              this.responding = false;
+              this.replyUID = "";
+            });
           this.messageText = "";
         } else {
           console.log("Unable to send empty message");
@@ -213,6 +242,9 @@ export default {
               Date: data.Date,
               UID: data.UID,
               docID: doc.id,
+              Reply: data.Reply,
+              ReplyUID: data.ReplyUID,
+              Edited: data.Edited,
             });
           });
         });
@@ -237,6 +269,24 @@ body::-webkit-scrollbar {
   justify-content: center;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
+}
+
+.respondingWindow {
+  background-color: #39c75a;
+  padding: 5px 15px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  max-width: 250px;
+  text-align: center;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 115px;
+  left: 15px;
+}
+
+.cancelReply {
+  width: 7px;
+  margin-left: 15px;
+  cursor: pointer;
 }
 
 .feed-wrapper {

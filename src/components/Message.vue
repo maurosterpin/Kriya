@@ -1,5 +1,8 @@
 <template>
   <div :id="info.docID" class="public-chat-msg">
+    <div v-if="info.Reply" @click="responseView" class="reply">
+      Written as a reply
+    </div>
     <div class="public-chat-msg-head">
       <img
         @click="visitProfile"
@@ -60,8 +63,12 @@ export default {
   },
   methods: {
     respond() {
+      this.$emit("respond", this.info.docID);
       this.moreOptions = false;
-      var el = document.getElementById("Ev0wYQOVu1Qoz3VZgwPr");
+    },
+    responseView() {
+      this.moreOptions = false;
+      var el = document.getElementById(this.info.ReplyUID);
       el.scrollIntoView(true);
       const myInterval = setInterval(() => {
         el.style.opacity = el.style.opacity == "0.5" ? "" : "0.5";
@@ -148,9 +155,27 @@ export default {
   margin-bottom: 20px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .public-chat-msg:hover {
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
+}
+
+.reply {
+  top: -15px;
+  left: 0px;
+  background-color: #39c75a;
+  padding: 5px 15px;
+  position: absolute;
+  border-radius: 100px;
+  z-index: 102;
+  cursor: pointer;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.reply:hover {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
@@ -177,6 +202,7 @@ export default {
   width: 150px;
   right: -10px;
   top: 10px;
+  z-index: 200;
 }
 
 ul {
