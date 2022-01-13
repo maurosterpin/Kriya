@@ -290,29 +290,35 @@ export default {
         });
     },
     sendPublicChatMessage() {
-      console.log("sendPublicChatMessage");
-      if (this.messageText != "") {
-        // Get current user
-        const user = firebase.auth().currentUser;
-        // Add quote to user firestore collection
-        const dataBase = db.collection("public-chat");
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          console.log("sendPublicChatMessage");
+          if (this.messageText != "") {
+            // Get current user
+            const user = firebase.auth().currentUser;
+            // Add quote to user firestore collection
+            const dataBase = db.collection("public-chat");
 
-        dataBase
-          .add({
-            Message: this.messageText,
-            UID: user.uid,
-            Date: Date.now(),
-            Reply: this.responding,
-            ReplyUID: this.replyUID,
-            Edited: false,
-          })
-          .then(() => {
-            this.cancelReply();
-          });
-        this.messageText = "";
-      } else {
-        console.log("Unable to send empty message");
-      }
+            dataBase
+              .add({
+                Message: this.messageText,
+                UID: user.uid,
+                Date: Date.now(),
+                Reply: this.responding,
+                ReplyUID: this.replyUID,
+                Edited: false,
+              })
+              .then(() => {
+                this.cancelReply();
+              });
+            this.messageText = "";
+          } else {
+            console.log("Unable to send empty message");
+          }
+        } else {
+          alert("You must be logged in to perform this action");
+        }
+      });
     },
     getDefaultProfilePicture() {
       db.collection("default")

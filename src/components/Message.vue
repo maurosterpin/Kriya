@@ -46,6 +46,7 @@ import moment from "moment";
 import { db } from "@/firebase";
 import firebase from "@/firebase";
 import router from "@/router";
+import store from "../store.js";
 export default {
   data() {
     return {
@@ -72,14 +73,12 @@ export default {
   },
   methods: {
     respond() {
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          this.$emit("respond", this.info.docID);
-          this.moreOptions = false;
-        } else {
-          alert("You must be logged in to perform this action");
-        }
-      });
+      if (store.logged) {
+        this.$emit("respond", this.info.docID);
+        this.moreOptions = false;
+      } else {
+        alert("You must be logged in to perform this action");
+      }
     },
     editMsg() {
       this.edit = !this.edit;

@@ -94,7 +94,7 @@
             </div>
           </transition>
           <div class="input" @keyup.enter="sendPublicChatMessage">
-            <sendIcon class="send-icon" />
+            <sendIcon class="send-icon" @click="sendPublicChatMessage" />
             <transition name="list" appear>
               <input
                 id="homeInput"
