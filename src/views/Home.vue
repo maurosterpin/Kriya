@@ -194,6 +194,14 @@ export default {
               }, 50);
               console.log("User added!");
             }
+          })
+          .then(() => {
+            db.collection("users")
+              .doc(user.uid)
+              .get()
+              .then((doc) => {
+                this.selectedRoom = doc.data().selectedRoom;
+              });
           });
       }
       if (this.store.quoteText == "") {
@@ -247,9 +255,17 @@ export default {
         });
     },
     chooseRoom(room) {
-      this.$forceUpdate();
-      this.$emit("emitter");
       this.selectedRoom = room;
+      const userUID = firebase.auth().currentUser.uid;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          db.collection("users")
+            .doc(userUID)
+            .update({
+              selectedRoom: room,
+            });
+        }
+      });
       this.enableRoomSelect();
       db.collection("public-chat")
         .doc("rooms")
