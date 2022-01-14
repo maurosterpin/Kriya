@@ -480,10 +480,11 @@ input.textarea {
   margin-top: 19px;
   cursor: pointer;
   transition: all 0.3s ease;
+  transform: rotate(-90deg);
 }
 
 .rotate-90 {
-  transform: rotate(-90deg);
+  transform: rotate(-180deg);
 }
 
 .roomSelect {

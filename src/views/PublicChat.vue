@@ -497,6 +497,7 @@ export default {
   bottom: 32px;
   left: 34px;
   top: 50px;
+  transform: rotate(-90deg);
 }
 
 .send-icon2 {
@@ -521,7 +522,7 @@ export default {
 }
 
 .rotate-90 {
-  transform: rotate(-90deg);
+  transform: rotate(-180deg);
 }
 
 .roomSelect2 {
