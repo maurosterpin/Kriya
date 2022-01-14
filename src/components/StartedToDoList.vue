@@ -179,7 +179,7 @@ export default {
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 1);
 }
 
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 1000px) {
   .wrapper {
     min-width: 250px !important;
     padding: 25px !important;
